@@ -276,6 +276,30 @@ export default function AdminCuratedProductsPage() {
     }
   };
 
+  const [isSavingDefaults, setIsSavingDefaults] = useState(false);
+
+  const handleSaveDefaults = async () => {
+    setIsSavingDefaults(true);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/admin/save-defaults", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          curatedProducts,
+          priceOverrides,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al guardar");
+      setMessage({ text: data.message || "¡Catálogo guardado en el código base con éxito! Ahora puedes hacer git push.", type: "success" });
+    } catch (err: any) {
+      setMessage({ text: err.message || "Error al guardar catálogo", type: "error" });
+    } finally {
+      setIsSavingDefaults(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-brand-sand-light flex flex-col font-sans text-brand-charcoal">
       <Header />
@@ -297,7 +321,15 @@ export default function AdminCuratedProductsPage() {
             </p>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleSaveDefaults}
+              disabled={isSavingDefaults}
+              className="inline-flex items-center space-x-2 px-4 py-2.5 bg-brand-clay text-white rounded-xl font-bold text-xs hover:bg-brand-clay/90 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            >
+              <span>{isSavingDefaults ? "Guardando..." : "💾 Sincronizar y Guardar para GitHub"}</span>
+            </button>
+
             <Link
               href="/admin/catalogo"
               className="inline-flex items-center space-x-2 px-4 py-2.5 bg-brand-charcoal text-brand-sand-light rounded-xl font-bold text-xs hover:bg-brand-charcoal/90 transition-all shadow-sm"

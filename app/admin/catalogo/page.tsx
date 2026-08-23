@@ -152,20 +152,35 @@ export default function AdminCatalogPage() {
 
     // 2. Cargar productos curados y sus precios fijados
     const saved = localStorage.getItem("kinekids_curated_products");
+    let curatedList: Product[] = [];
     if (saved) {
       try {
-        const parsed = JSON.parse(saved) as Product[];
-        setSyncedIds(new Set(parsed.map((p) => p.id)));
-        parsed.forEach((p) => {
-          const pvp = p.retail_price_override ?? (p as any).retail_price ?? (p as any).price;
-          if (pvp && !initialOverrides[p.id]) {
-            initialOverrides[p.id] = Math.round(pvp);
-          }
-        });
+        curatedList = JSON.parse(saved) as Product[];
       } catch (e) {
         console.error(e);
       }
     }
+
+    // Si localStorage está vacío (primera visita en GitHub Pages), inicializar con DEFAULT_CURATED_PRODUCTS
+    if (curatedList.length === 0) {
+      import("@/lib/default_catalog").then(({ DEFAULT_CURATED_PRODUCTS, DEFAULT_PRICE_OVERRIDES }) => {
+        setSyncedIds(new Set(DEFAULT_CURATED_PRODUCTS.map((p) => p.id)));
+        setPriceOverrides({ ...DEFAULT_PRICE_OVERRIDES, ...initialOverrides });
+        try {
+          localStorage.setItem("kinekids_curated_products", JSON.stringify(DEFAULT_CURATED_PRODUCTS));
+          localStorage.setItem("kinekids_price_overrides", JSON.stringify({ ...DEFAULT_PRICE_OVERRIDES, ...initialOverrides }));
+        } catch (_) {}
+      });
+      return;
+    }
+
+    setSyncedIds(new Set(curatedList.map((p) => p.id)));
+    curatedList.forEach((p) => {
+      const pvp = p.retail_price_override ?? (p as any).retail_price ?? (p as any).price;
+      if (pvp && !initialOverrides[p.id]) {
+        initialOverrides[p.id] = Math.round(pvp);
+      }
+    });
 
     setPriceOverrides(initialOverrides);
   }, []);

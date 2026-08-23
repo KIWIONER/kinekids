@@ -69,11 +69,12 @@ export default function AdminCuratedProductsPage() {
 
         // 2.1 Fallback garantizado: si no hay productos, cargar catálogo curado por defecto
         if (localList.length === 0 && dbList.length === 0) {
-          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
+          const { DEFAULT_CURATED_PRODUCTS, DEFAULT_PRICE_OVERRIDES } = await import("@/lib/default_catalog");
           localList = DEFAULT_CURATED_PRODUCTS;
           if (typeof window !== "undefined") {
             try {
               localStorage.setItem("kinekids_curated_products", JSON.stringify(DEFAULT_CURATED_PRODUCTS));
+              localStorage.setItem("kinekids_price_overrides", JSON.stringify(DEFAULT_PRICE_OVERRIDES));
             } catch (_) {}
           }
         }

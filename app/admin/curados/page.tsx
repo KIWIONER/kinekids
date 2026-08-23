@@ -45,14 +45,17 @@ export default function AdminCuratedProductsPage() {
       setIsLoading(true);
       try {
         // 1. Cargar desde LocalStorage
-        let localList: Product[] = [];
         const saved = localStorage.getItem("kinekids_curated_products");
-        if (saved) {
+        let localList: Product[] = [];
+        let isFirstTime = false;
+        if (saved !== null) {
           try {
             localList = JSON.parse(saved) as Product[];
           } catch (e) {
             console.error(e);
           }
+        } else {
+          isFirstTime = true;
         }
 
         // 2. Cargar desde API Supabase
@@ -67,16 +70,10 @@ export default function AdminCuratedProductsPage() {
           console.error("Error al cargar de Supabase:", e);
         }
 
-        // 2.1 Fallback garantizado: si no hay productos, cargar catálogo curado por defecto
-        if (localList.length === 0 && dbList.length === 0) {
-          const { DEFAULT_CURATED_PRODUCTS, DEFAULT_PRICE_OVERRIDES } = await import("@/lib/default_catalog");
+        // 2.1 Solo si es la primera vez (localStorage es null) y no hay DB, usar catálogo por defecto
+        if (isFirstTime && dbList.length === 0) {
+          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
           localList = DEFAULT_CURATED_PRODUCTS;
-          if (typeof window !== "undefined") {
-            try {
-              localStorage.setItem("kinekids_curated_products", JSON.stringify(DEFAULT_CURATED_PRODUCTS));
-              localStorage.setItem("kinekids_price_overrides", JSON.stringify(DEFAULT_PRICE_OVERRIDES));
-            } catch (_) {}
-          }
         }
 
         // 3. Combinar y deduplicar por ID
@@ -255,48 +252,20 @@ export default function AdminCuratedProductsPage() {
 
       if (!res.ok) throw new Error("Fallo al eliminar de Supabase.");
 
-      // Eliminar del estado
-      setCuratedProducts((prev) => prev.filter((p) => p.id !== productId));
-
-      // LocalStorage remove
-      const saved = localStorage.getItem("kinekids_curated_products");
-      if (saved) {
+      // Eliminar del estado local y actualizar localStorage siempre
+      setCuratedProducts((prev) => {
+        const nextList = prev.filter((p) => p.id !== productId);
         try {
-          let list = JSON.parse(saved) as Product[];
-          list = list.filter((p) => p.id !== productId);
-          localStorage.setItem("kinekids_curated_products", JSON.stringify(list));
+          localStorage.setItem("kinekids_curated_products", JSON.stringify(nextList));
         } catch (_) {}
-      }
+        return nextList;
+      });
 
       setMessage({ text: `"${productTitle}" ha sido retirado de la Web Oficial.`, type: "success" });
     } catch (err: any) {
       setMessage({ text: err.message || "Error al retirar producto.", type: "error" });
     } finally {
       setIsRemoving(null);
-    }
-  };
-
-  const [isSavingDefaults, setIsSavingDefaults] = useState(false);
-
-  const handleSaveDefaults = async () => {
-    setIsSavingDefaults(true);
-    setMessage(null);
-    try {
-      const res = await fetch("/api/admin/save-defaults", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          curatedProducts,
-          priceOverrides,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Error al guardar");
-      setMessage({ text: data.message || "¡Catálogo guardado en el código base con éxito! Ahora puedes hacer git push.", type: "success" });
-    } catch (err: any) {
-      setMessage({ text: err.message || "Error al guardar catálogo", type: "error" });
-    } finally {
-      setIsSavingDefaults(false);
     }
   };
 
@@ -321,15 +290,7 @@ export default function AdminCuratedProductsPage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={handleSaveDefaults}
-              disabled={isSavingDefaults}
-              className="inline-flex items-center space-x-2 px-4 py-2.5 bg-brand-clay text-white rounded-xl font-bold text-xs hover:bg-brand-clay/90 transition-all shadow-sm cursor-pointer disabled:opacity-50"
-            >
-              <span>{isSavingDefaults ? "Guardando..." : "💾 Sincronizar y Guardar para GitHub"}</span>
-            </button>
-
+          <div className="flex items-center space-x-3">
             <Link
               href="/admin/catalogo"
               className="inline-flex items-center space-x-2 px-4 py-2.5 bg-brand-charcoal text-brand-sand-light rounded-xl font-bold text-xs hover:bg-brand-charcoal/90 transition-all shadow-sm"

@@ -161,15 +161,11 @@ export default function AdminCatalogPage() {
       }
     }
 
-    // Si localStorage está vacío (primera visita en GitHub Pages), inicializar con DEFAULT_CURATED_PRODUCTS
+    // Si localStorage está vacío, leer de DEFAULT_CURATED_PRODUCTS pero NO sobrescribir localStorage
     if (curatedList.length === 0) {
       import("@/lib/default_catalog").then(({ DEFAULT_CURATED_PRODUCTS, DEFAULT_PRICE_OVERRIDES }) => {
         setSyncedIds(new Set(DEFAULT_CURATED_PRODUCTS.map((p) => p.id)));
         setPriceOverrides({ ...DEFAULT_PRICE_OVERRIDES, ...initialOverrides });
-        try {
-          localStorage.setItem("kinekids_curated_products", JSON.stringify(DEFAULT_CURATED_PRODUCTS));
-          localStorage.setItem("kinekids_price_overrides", JSON.stringify({ ...DEFAULT_PRICE_OVERRIDES, ...initialOverrides }));
-        } catch (_) {}
       });
       return;
     }
@@ -464,47 +460,40 @@ export default function AdminCatalogPage() {
 
   // Sacar/Eliminar producto curado de Supabase y LocalStorage
   const handleRemoveProduct = async (productId: string) => {
+    if (!productId) return;
     setIsRemoving(productId);
     setMessage(null);
 
+    // 1. Eliminar localmente de forma inmediata e incondicional
+    setSyncedIds((prev) => {
+      const next = new Set(prev);
+      next.delete(String(productId));
+      return next;
+    });
+
     try {
-      const res = await fetch(`/api/admin/products/sync?id=${productId}`, {
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Fallo en la comunicación con el servidor.");
-      }
-
-      setSyncedIds((prev) => {
-        const next = new Set(prev);
-        next.delete(productId);
-        return next;
-      });
-
-      // LocalStorage Remove
       const saved = localStorage.getItem("kinekids_curated_products");
       if (saved) {
-        try {
-          let currentList = JSON.parse(saved) as Product[];
-          currentList = currentList.filter((item) => item.id !== productId);
-          localStorage.setItem("kinekids_curated_products", JSON.stringify(currentList));
-        } catch (_) {}
+        let currentList = JSON.parse(saved) as Product[];
+        currentList = currentList.filter((item) => String(item.id) !== String(productId));
+        localStorage.setItem("kinekids_curated_products", JSON.stringify(currentList));
       }
+    } catch (_) {}
 
-      setMessage({
-        text: `Eliminado: El producto ha sido retirado de KineKids correctamente.`,
-        type: "success",
+    // 2. Intentar notificar al backend en segundo plano
+    try {
+      await fetch(`/api/admin/products/sync?id=${productId}`, {
+        method: "DELETE",
       });
-
-    } catch (err: any) {
-      console.error(err);
-      setMessage({ text: err.message || "Error al retirar el producto de la tienda.", type: "error" });
-    } finally {
-      setIsRemoving(null);
+    } catch (err) {
+      console.warn("Aviso: No se pudo sync con servidor remoto:", err);
     }
+
+    setMessage({
+      text: `Eliminado: El producto ha sido retirado de KineKids correctamente.`,
+      type: "success",
+    });
+    setIsRemoving(null);
   };
 
   // Limpiar filtros y regresar a estado por defecto

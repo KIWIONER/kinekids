@@ -1,0 +1,33 @@
+# Lista de Tareas - KineKids Frontend & Admin Curation
+
+- [x] **Fase 1: Andamiaje e Inicialización de Next.js**
+  - [x] Inicializar proyecto Next.js en el directorio raíz (`create-next-app`)
+  - [x] Instalar dependencias core (`framer-motion`, `zustand`, `ai`, `@ai-sdk/google`, `lucide-react`, `@ai-sdk/react`)
+  - [x] Configurar tipografía, tema y colores minimalistas escandinavos en Tailwind
+- [x] **Fase 2: Diseño Web y Rejilla de Productos (Value Ladder)**
+  - [x] Implementar Layouts base (Header, Footer, Contenedores)
+  - [x] Construir la rejilla de productos estructurada bajo el *Value Ladder* (Sets, Módulos y Accesorios)
+  - [x] Adaptar layouts estáticos para asegurar responsividad móvil
+- [x] **Fase 3: Interactividad y Zustand (Carrito)**
+  - [x] Crear tienda Zustand para gestión del carrito de compras (`useCart`)
+  - [x] Maquetar y programar el panel/modal lateral deslizante del carrito
+  - [x] Integrar micro-animaciones en tarjetas de productos y botones mediante Framer Motion
+- [x] **Fase 4: Asesor IA y Mock API Nativa**
+  - [x] Crear el Route Handler para productos (`app/api/products/route.ts`)
+  - [x] Crear el Route Handler para el chat con Gemini (`app/api/chat/route.ts`) utilizando Vercel AI SDK
+  - [x] Construir el widget flotante del chat de la IA en la esquina inferior derecha con `useChat`
+- [x] **Fase 5: Integración de API Real y Panel de Curación (Hertwill)**
+  - [x] Conectar con las credenciales live de la API de Hertwill mediante proxy seguro
+  - [x] Diseñar el panel admin interactivo `/admin/catalogo` para curar productos y sincronizarlos con Supabase
+  - [x] Añadir sistema avanzado de paginación del servidor (limitado a 20 items para legibilidad)
+  - [x] Desarrollar el endpoint de búsqueda profunda en background (`/api/admin/products/search`)
+- [x] **Fase 6: Ficha de Detalle y Galería de Imágenes**
+  - [x] Crear la ruta dinámica de producto `/products/[id]` con slider interactivo de miniaturas
+  - [x] Añadir visualizador Lightbox fullscreen con navegación y contador
+  - [x] Modificar `ProductCard` para enlazar directamente a la página del producto
+- [x] **Fase 7: Margen de Envío y Curation Plan**
+  - [x] Implementar motor de cálculo de márgenes (`lib/pricing.ts`) con redondeo psicotécnico a múltiplos de 5
+  - [x] Crear cachés de marcas y tarifas de envío a España en servidor para asociar `shipping_cost`
+  - [x] Mostrar coste Hertwill, tarifa de envío, PVP editable y Margen Neto Real en las cards del admin
+  - [x] Alinear umbrales de categorías en el mapeador de Hertwill para que coincidan con la escalera de valor
+  - [x] Hacer dinámico el System Prompt del Chat Agent vinculándolo directamente a Supabase

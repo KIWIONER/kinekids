@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getHertwillProducts, getCuratedProducts } from "@/lib/hertwill";
 
+export const dynamic = "force-static";
+
 export interface Product {
   id: string;
   title: string;

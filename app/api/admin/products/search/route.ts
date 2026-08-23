@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getHertwillProducts } from "@/lib/hertwill";
 import { Product } from "@/app/api/products/route";
 
+export const dynamic = "force-static";
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

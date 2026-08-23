@@ -1,8 +1,14 @@
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 import { getCuratedProducts } from "@/lib/hertwill";
+import { NextResponse } from "next/server";
 
+export const dynamic = "force-static";
 export const maxDuration = 30;
+
+export async function GET() {
+  return NextResponse.json({ status: "ok" });
+}
 
 export async function POST(req: Request) {
   try {

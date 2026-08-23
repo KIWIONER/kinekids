@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
+export const dynamic = "force-static";
+
+export async function GET() {
+  return NextResponse.json({ status: "ok" });
+}
+
 export async function POST(request: Request) {
   try {
     const product = await request.json();

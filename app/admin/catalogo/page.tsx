@@ -121,6 +121,40 @@ export default function AdminCatalogPage() {
           items = DEFAULT_CURATED_PRODUCTS;
         }
 
+        // Extraer marcas y categorías dinámicamente si no venían de la API
+        const brandCounts = new Map<string, number>();
+        const catCounts = new Map<string, number>();
+
+        items.forEach((p: any) => {
+          let b = p.brand?.name || p.brand_name || p.brand || "";
+          if (!b) {
+            const t = (p.title || "").toUpperCase();
+            if (t.includes("IGLU")) b = "IGLU Soft Play";
+            else if (t.includes("MEOWBABY") || t.includes("ARCO DE ESPUMA")) b = "MeowBaby";
+            else if (t.includes("TOKU")) b = "TOKU Shoes";
+            else if (t.includes("ELIN") || t.includes("KOTTO")) b = "KOTTO Furniture";
+            else b = "Hertwill Brands";
+          }
+
+          let c = p.category_name || "";
+          if (!c) {
+            const cat = (p.category || "").toLowerCase();
+            if (cat === "set" || cat.includes("set")) c = "Sets de Psicomotricidad";
+            else if (cat === "module" || cat.includes("modul")) c = "Módulos y Mobiliario";
+            else c = "Accesorios Sensoriales";
+          }
+
+          brandCounts.set(b, (brandCounts.get(b) || 0) + 1);
+          catCounts.set(c, (catCounts.get(c) || 0) + 1);
+        });
+
+        if (apiBrands.length === 0) {
+          setApiBrands(Array.from(brandCounts.entries()).map(([value, count]) => ({ value, count })));
+        }
+        if (apiCategories.length === 0) {
+          setApiCategories(Array.from(catCounts.entries()).map(([value, count]) => ({ value, count })));
+        }
+
         setProducts(items);
         setFilteredProducts(items);
       } catch (err: any) {

@@ -67,6 +67,17 @@ export default function AdminCuratedProductsPage() {
           console.error("Error al cargar de Supabase:", e);
         }
 
+        // 2.1 Fallback garantizado: si no hay productos, cargar catálogo curado por defecto
+        if (localList.length === 0 && dbList.length === 0) {
+          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
+          localList = DEFAULT_CURATED_PRODUCTS;
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem("kinekids_curated_products", JSON.stringify(DEFAULT_CURATED_PRODUCTS));
+            } catch (_) {}
+          }
+        }
+
         // 3. Combinar y deduplicar por ID
         const combinedMap = new Map<string, Product>();
         localList.forEach((p) => combinedMap.set(p.id, p));

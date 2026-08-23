@@ -43,6 +43,17 @@ export default function Home() {
           console.error("Error al conectar con Supabase API:", e);
         }
 
+        // 2.1 Fallback garantizado: si no hay productos, cargar catálogo curado por defecto
+        const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
+        if (localItems.length === 0 && dbItems.length === 0) {
+          localItems = DEFAULT_CURATED_PRODUCTS;
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem("kinekids_curated_products", JSON.stringify(DEFAULT_CURATED_PRODUCTS));
+            } catch (_) {}
+          }
+        }
+
         // 3. Combinar y deduplicar la lista plana antes de agrupar por variantes
         const combinedFlatMap = new Map<string, Product>();
         localItems.forEach((item) => combinedFlatMap.set(item.id, item));

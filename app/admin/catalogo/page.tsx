@@ -86,41 +86,53 @@ export default function AdminCatalogPage() {
           url += `&escalera=${singleCat}`;
         }
  
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("No se pudo obtener el catálogo de la API.");
-        const data = await res.json();
-        
-        const items = data.products || [];
+        let items: Product[] = [];
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            const data = await res.json();
+            items = data.products || [];
+
+            if (data.pagination) {
+              const maxPage = data.pagination.page_count || 1;
+              setTotalPages(maxPage);
+              if (currentPage > maxPage) {
+                setCurrentPage(1);
+              }
+            }
+
+            if (data.facets) {
+              const brandFacet = data.facets.find((f: any) => f.field_name === "brand");
+              if (brandFacet && brandFacet.counts && apiBrands.length === 0) {
+                setApiBrands(brandFacet.counts.map((c: any) => ({ value: c.value, count: c.count })));
+              }
+              const catFacet = data.facets.find((f: any) => f.field_name === "category");
+              if (catFacet && catFacet.counts && apiCategories.length === 0) {
+                setApiCategories(catFacet.counts.map((c: any) => ({ value: c.value, count: c.count })));
+              }
+            }
+          }
+        } catch (err: any) {
+          console.warn("API de catálogo no disponible directamente, usando catálogo por defecto:", err);
+        }
+
+        if (items.length === 0) {
+          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
+          items = DEFAULT_CURATED_PRODUCTS;
+        }
+
         setProducts(items);
         setFilteredProducts(items);
- 
-        if (data.pagination) {
-          const maxPage = data.pagination.page_count || 1;
-          setTotalPages(maxPage);
-          if (currentPage > maxPage) {
-            setCurrentPage(1);
-          }
-        }
- 
-        // Cargar los listados de filtros dinámicos (facets) solo la primera vez que se cargan o si están vacíos
-        if (data.facets) {
-          const brandFacet = data.facets.find((f: any) => f.field_name === "brand");
-          if (brandFacet && brandFacet.counts && apiBrands.length === 0) {
-            setApiBrands(brandFacet.counts.map((c: any) => ({ value: c.value, count: c.count })));
-          }
-          const catFacet = data.facets.find((f: any) => f.field_name === "category");
-          if (catFacet && catFacet.counts && apiCategories.length === 0) {
-            setApiCategories(catFacet.counts.map((c: any) => ({ value: c.value, count: c.count })));
-          }
-        }
       } catch (err: any) {
         console.error("Error al cargar catálogo:", err);
-        setMessage({ text: "Error al conectar con el catálogo de Hertwill.", type: "error" });
+        const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
+        setProducts(DEFAULT_CURATED_PRODUCTS);
+        setFilteredProducts(DEFAULT_CURATED_PRODUCTS);
       } finally {
         setIsLoading(false);
       }
     }
- 
+
     fetchProducts();
   }, [currentPage, selectedApiBrand, selectedApiCategory, selectedCategories, apiBrands.length, apiCategories.length]);
 

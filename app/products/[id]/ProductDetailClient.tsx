@@ -154,6 +154,51 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
           }
         }
 
+        // 3. Fallback garantizado: si no se encontró en API ni en localStorage, buscar en catálogo por defecto
+        if (!data) {
+          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
+          const found = DEFAULT_CURATED_PRODUCTS.find((it) => String(it.id) === String(id));
+          if (found) {
+            data = {
+              id: String(found.id),
+              slug: String(found.id),
+              name: found.title,
+              description: found.description || "",
+              sku: found.id,
+              price: found.price || found.retail_price || 0,
+              sale_price: null,
+              stock_status: "instock",
+              brand: { name: "IGLU", slug: "iglu" },
+              category: { name: found.category || "Sets", slug: found.category || "set" },
+              collections: [{ name: "Colección Montessori", slug: "montessori" }],
+              images: [found.imageUrl || ""],
+              created_at: new Date().toISOString(),
+              variants: [],
+            };
+
+            const { baseName: searchBase } = parseProductTitle(data.name);
+            const matching = DEFAULT_CURATED_PRODUCTS.filter((it) => {
+              const { baseName } = parseProductTitle(it.title);
+              return baseName.toLowerCase() === searchBase.toLowerCase();
+            });
+
+            if (matching.length > 0) {
+              data.variants = matching.map((m) => {
+                const { variantName } = parseProductTitle(m.title);
+                return {
+                  id: m.id,
+                  title: m.title,
+                  variantName: variantName || "Estándar",
+                  price: m.retail_price_override || m.retail_price || m.price,
+                  imageUrl: m.imageUrl || "",
+                  wholesale_price: m.wholesale_price,
+                  shipping_cost: m.shipping_cost,
+                };
+              });
+            }
+          }
+        }
+
         if (data) {
           setProduct(data);
         } else {

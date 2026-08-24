@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/app/api/products/route";
 import { calculatePricing, formatCurrency, getTierLabel, calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
 import { parseProductTitle } from "@/lib/variants";
+import Header from "@/components/Header";
 import AdminSubHeader from "@/components/AdminSubHeader";
 
 export default function AdminCatalogPage() {
@@ -44,6 +45,7 @@ export default function AdminCatalogPage() {
   // Estados de Filtros Remotos (API de Hertwill - Server Side)
   const [apiBrands, setApiBrands] = useState<{ value: string; count: number }[]>([]);
   const [apiCategories, setApiCategories] = useState<{ value: string; count: number }[]>([]);
+  const [apiCategoryGroups, setApiCategoryGroups] = useState<{ groupName: string; items: { name: string; slug: string }[] }[]>([]);
   const [selectedApiBrand, setSelectedApiBrand] = useState("all");
   const [selectedApiCategory, setSelectedApiCategory] = useState("all");
   
@@ -59,6 +61,50 @@ export default function AdminCatalogPage() {
   
   // Estados de Carga e Interfaz
   const [isLoading, setIsLoading] = useState(true);
+
+  // 0. Cargar el listado completo de las 177 marcas y todas las categorías de la API de Hertwill al montar la página
+  useEffect(() => {
+    async function loadAllBrandsAndCategories() {
+      try {
+        const [brandsRes, catsRes] = await Promise.all([
+          fetch("/api/admin/brands"),
+          fetch("/api/admin/categories"),
+        ]);
+
+        if (brandsRes.ok) {
+          const data = await brandsRes.json();
+          if (data.brands && data.brands.length > 0) {
+            setApiBrands(
+              data.brands.map((b: any) => ({
+                value: b.slug || b.name,
+                label: b.name,
+                count: undefined,
+              }))
+            );
+          }
+        }
+
+        if (catsRes.ok) {
+          const data = await catsRes.json();
+          if (data.groups && data.groups.length > 0) {
+            setApiCategoryGroups(data.groups);
+          }
+          if (data.categories && data.categories.length > 0) {
+            setApiCategories(
+              data.categories.map((c: any) => ({
+                value: c.slug || c.name,
+                label: c.name,
+                count: undefined,
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.warn("No se pudieron cargar marcas/categorías de Hertwill:", err);
+      }
+    }
+    loadAllBrandsAndCategories();
+  }, []);
   const [isSyncing, setIsSyncing] = useState<string | null>(null);
   const [isRemoving, setIsRemoving] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
@@ -100,17 +146,6 @@ export default function AdminCatalogPage() {
                 setCurrentPage(1);
               }
             }
-
-            if (data.facets) {
-              const brandFacet = data.facets.find((f: any) => f.field_name === "brand");
-              if (brandFacet && brandFacet.counts && apiBrands.length === 0) {
-                setApiBrands(brandFacet.counts.map((c: any) => ({ value: c.value, count: c.count })));
-              }
-              const catFacet = data.facets.find((f: any) => f.field_name === "category");
-              if (catFacet && catFacet.counts && apiCategories.length === 0) {
-                setApiCategories(catFacet.counts.map((c: any) => ({ value: c.value, count: c.count })));
-              }
-            }
           }
         } catch (err: any) {
           console.warn("API de catálogo no disponible directamente, usando catálogo por defecto:", err);
@@ -119,40 +154,6 @@ export default function AdminCatalogPage() {
         if (items.length === 0) {
           const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
           items = DEFAULT_CURATED_PRODUCTS;
-        }
-
-        // Extraer marcas y categorías dinámicamente si no venían de la API
-        const brandCounts = new Map<string, number>();
-        const catCounts = new Map<string, number>();
-
-        items.forEach((p: any) => {
-          let b = p.brand?.name || p.brand_name || p.brand || "";
-          if (!b) {
-            const t = (p.title || "").toUpperCase();
-            if (t.includes("IGLU")) b = "IGLU Soft Play";
-            else if (t.includes("MEOWBABY") || t.includes("ARCO DE ESPUMA")) b = "MeowBaby";
-            else if (t.includes("TOKU")) b = "TOKU Shoes";
-            else if (t.includes("ELIN") || t.includes("KOTTO")) b = "KOTTO Furniture";
-            else b = "Hertwill Brands";
-          }
-
-          let c = p.category_name || "";
-          if (!c) {
-            const cat = (p.category || "").toLowerCase();
-            if (cat === "set" || cat.includes("set")) c = "Sets de Psicomotricidad";
-            else if (cat === "module" || cat.includes("modul")) c = "Módulos y Mobiliario";
-            else c = "Accesorios Sensoriales";
-          }
-
-          brandCounts.set(b, (brandCounts.get(b) || 0) + 1);
-          catCounts.set(c, (catCounts.get(c) || 0) + 1);
-        });
-
-        if (apiBrands.length === 0) {
-          setApiBrands(Array.from(brandCounts.entries()).map(([value, count]) => ({ value, count })));
-        }
-        if (apiCategories.length === 0) {
-          setApiCategories(Array.from(catCounts.entries()).map(([value, count]) => ({ value, count })));
         }
 
         setProducts(items);
@@ -169,6 +170,13 @@ export default function AdminCatalogPage() {
 
     fetchProducts();
   }, [currentPage, selectedApiBrand, selectedApiCategory, selectedCategories, apiBrands.length, apiCategories.length]);
+
+  // Al cambiar de página en el catálogo, hacer scroll automático hacia la parte superior
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentPage]);
 
   // Cargar IDs ya curados/sincronizados y overrides de precios desde LocalStorage al montar
   useEffect(() => {
@@ -245,6 +253,7 @@ export default function AdminCatalogPage() {
         (p) =>
           p.title.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q) ||
+          (p.brand_name || (typeof p.brand === "string" ? p.brand : (p as any).brand?.name) || "").toLowerCase().includes(q) ||
           p.id.includes(q)
       );
     }
@@ -554,33 +563,12 @@ export default function AdminCatalogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-sand-light text-brand-charcoal font-sans antialiased">
-      {/* Header Admin */}
-      <header className="h-20 border-b border-brand-sand-dark/60 bg-brand-sand-light/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-brand-charcoal text-brand-sand-light rounded-xl font-bold text-xs uppercase tracking-wider">
-            Admin
-          </div>
-          <div>
-            <h1 className="text-base font-bold tracking-tight">KineKids Control Panel</h1>
-            <p className="text-[10px] text-brand-charcoal/50 uppercase tracking-widest font-semibold">
-              Filtros Avanzados (Facets de la API)
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-3">
-          <a
-            href="/"
-            className="px-4 py-2 bg-brand-charcoal text-brand-sand-light hover:bg-brand-clay rounded-xl text-xs font-semibold transition-all shadow-xs"
-          >
-            Ver Web Oficial
-          </a>
-        </div>
-      </header>
+    <div className="min-h-screen bg-brand-sand-light text-brand-charcoal font-sans antialiased flex flex-col">
+      <Header />
+      <AdminSubHeader />
 
       {/* Main Admin Area */}
-      <main className="max-w-7xl mx-auto p-6 space-y-6">
+      <main className="max-w-7xl mx-auto p-6 space-y-6 flex-1 w-full">
         
         {/* Banner de Feedback */}
         <AnimatePresence>
@@ -628,8 +616,27 @@ export default function AdminCatalogPage() {
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Título, SKU o descripción..."
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setSearchQuery(val);
+                    
+                    // Si el usuario escribe el nombre exacto o parcial de una marca existente, seleccionar esa marca
+                    if (val.trim().length >= 2) {
+                      const lower = val.toLowerCase().trim();
+                      const matchedBrand = apiBrands.find((b) => b.value.toLowerCase().includes(lower));
+                      if (matchedBrand && selectedApiBrand === "all") {
+                        setSelectedApiBrand(matchedBrand.value);
+                        setCurrentPage(1);
+                      }
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && searchQuery.trim()) {
+                      e.preventDefault();
+                      handleDeepSearch();
+                    }
+                  }}
+                  placeholder="Escribe 'iglu', marca o producto y pulsa Enter..."
                   className="w-full bg-brand-sand-light border border-brand-sand-dark/80 text-brand-charcoal text-xs rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-brand-clay placeholder-brand-charcoal/40"
                 />
                 <Search className="absolute left-3 top-3 w-4 h-4 text-brand-charcoal/30" />
@@ -676,16 +683,16 @@ export default function AdminCatalogPage() {
                     }}
                     className="w-full bg-brand-sand-light border border-brand-sand-dark/80 text-brand-charcoal text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-brand-clay font-medium"
                   >
-                    <option value="all">Todas las marcas ({apiBrands.reduce((acc, b) => acc + b.count, 0)})</option>
+                    <option value="all">Todas las marcas ({apiBrands.length > 0 ? `${apiBrands.length} marcas` : "Cargando..."})</option>
                     {apiBrands.map((b) => (
                       <option key={b.value} value={b.value}>
-                        {b.value} ({b.count})
+                        {(b as any).label || b.value} {b.count !== undefined ? `(${b.count})` : ""}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                {/* Dropdown dinámico de categorías */}
+                {/* Dropdown dinámico de categorías organizado por Secciones */}
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase font-bold text-brand-charcoal/60">Categoría (Hertwill)</label>
                   <select
@@ -696,12 +703,24 @@ export default function AdminCatalogPage() {
                     }}
                     className="w-full bg-brand-sand-light border border-brand-sand-dark/80 text-brand-charcoal text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-brand-clay font-medium"
                   >
-                    <option value="all">Todas las categorías ({apiCategories.reduce((acc, c) => acc + c.count, 0)})</option>
-                    {apiCategories.map((c) => (
-                      <option key={c.value} value={c.value}>
-                        {c.value} ({c.count})
-                      </option>
-                    ))}
+                    <option value="all">📁 Todas las categorías ({apiCategories.length > 0 ? `${apiCategories.length} categorías` : "Cargando..."})</option>
+                    {apiCategoryGroups.length > 0 ? (
+                      apiCategoryGroups.map((group) => (
+                        <optgroup key={group.groupName} label={group.groupName}>
+                          {group.items.map((c) => (
+                            <option key={c.slug} value={c.slug}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))
+                    ) : (
+                      apiCategories.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {(c as any).label || c.value} {c.count !== undefined ? `(${c.count})` : ""}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
               </div>
@@ -944,6 +963,28 @@ export default function AdminCatalogPage() {
                             }`}>
                               {getTierLabel(pricing.tier)}
                             </div>
+                            {/* Badge stock de proveedor (Colores Pastel Suaves) */}
+                            {(() => {
+                              const rawStock = product.stock;
+                              const stockVal = rawStock !== undefined && rawStock !== null ? Number(rawStock) : NaN;
+                              const statusVal = product.stock_status || "instock";
+                              const isOutOfStock = statusVal === "outofstock" || stockVal === 0;
+
+                              return (
+                                <div className={`absolute bottom-3 left-3 px-2 py-0.5 rounded-lg text-[9px] font-extrabold flex items-center gap-1.5 backdrop-blur-md shadow-xs ${
+                                  isOutOfStock
+                                    ? "bg-[#FCE8E6] text-[#C5221F] border border-[#FAD2CF]" 
+                                    : "bg-[#E6F4EA] text-[#137333] border border-[#CEEAD6]"
+                                }`}>
+                                  <span className={`w-1.5 h-1.5 rounded-full ${isOutOfStock ? "bg-[#D93025] animate-pulse" : "bg-[#188038]"}`} />
+                                  {isOutOfStock
+                                    ? "Agotado en Hertwill"
+                                    : !isNaN(stockVal) && stockVal > 0
+                                      ? `${stockVal} uds. disponibles`
+                                      : "Stock Disponible"}
+                                </div>
+                              );
+                            })()}
                             {/* Badge curado */}
                             {isSynced && (
                               <div className="absolute top-3 right-3 p-1.5 bg-brand-sage rounded-xl">

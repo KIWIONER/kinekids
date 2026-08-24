@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getHertwillProducts, getCuratedProducts } from "@/lib/hertwill";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 export interface Product {
   id: string;
@@ -12,12 +12,17 @@ export interface Product {
   imageUrl: string;
   ageRange: string;
   dimensions: string;
+  brand?: string;
+  brand_name?: string;
+  brand_slug?: string;
   // Campos de pricing (presentes en el catálogo del admin, opcionales en curados)
   wholesale_price?: number;      // = price (coste del proveedor)
   markup_multiplier?: number;    // Multiplicador aplicado según peldaño
   retail_price?: number;         // PVP calculado y redondeado (precio que ve el cliente)
   retail_price_override?: number;// PVP fijado manualmente por el admin
   shipping_cost?: number;        // Coste de envío de la marca a España
+  stock_status?: "instock" | "outofstock" | string;
+  stock?: number | null;
   variants?: {
     id: string;
     title: string;
@@ -40,8 +45,14 @@ export async function GET(request: Request) {
       const page = parseInt(pageStr || "1", 10);
       const limit = parseInt(limitStr || "20", 10);
       const brand = searchParams.get("brand") || undefined;
-      const category = searchParams.get("category") || undefined;
-      const escalera = searchParams.get("escalera") || undefined; // 'set' | 'module' | 'accessory'
+      let category = searchParams.get("category") || undefined;
+      let escalera = searchParams.get("escalera") || undefined; // 'set' | 'module' | 'accessory'
+      
+      // Si la categoría seleccionada es de la Escalera de Valor de KineKids, redirigirla al filtro de escalera
+      if (category === "set" || category === "module" || category === "accessory") {
+        escalera = category;
+        category = undefined;
+      }
       
       const start = (page - 1) * limit;
       const end = start + limit;
@@ -171,8 +182,20 @@ export async function GET(request: Request) {
       }
     }
 
-    // Si no tiene parámetros, es una consulta de la tienda para el catálogo curado en Supabase (agrupado por variantes)
-    const curated = await getCuratedProducts();
+    // Si no tiene parámetros, es una consulta de la tienda para el catálogo curado
+    let curated = await getCuratedProducts();
+
+    // Fallback en vivo a la API de Hertwill si Supabase no tiene datos
+    if (!curated || curated.length === 0) {
+      const [res1, res2, res3, res4] = await Promise.all([
+        getHertwillProducts(1, 50),
+        getHertwillProducts(2, 50),
+        getHertwillProducts(3, 50),
+        getHertwillProducts(4, 50),
+      ]);
+      curated = [...res1.products, ...res2.products, ...res3.products, ...res4.products];
+    }
+
     const { translateDescription } = await import("@/lib/translator");
     const translatedCurated = await Promise.all(
       curated.map(async (p) => {

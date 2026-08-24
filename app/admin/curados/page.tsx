@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -44,50 +44,37 @@ export default function AdminCuratedProductsPage() {
     async function loadCurated() {
       setIsLoading(true);
       try {
-        // 1. Cargar desde LocalStorage
-        const saved = localStorage.getItem("kinekids_curated_products");
-        let localList: Product[] = [];
-        let isFirstTime = false;
-        if (saved !== null) {
-          try {
-            localList = JSON.parse(saved) as Product[];
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          isFirstTime = true;
-        }
-
-        // 2. Cargar desde API Supabase
-        let dbList: Product[] = [];
+        // 1. Cargar desde la API de Productos Curados (Single Source of Truth)
+        let curatedList: Product[] = [];
         try {
-          const res = await fetch("/api/products");
+          const res = await fetch("/api/admin/curated");
           if (res.ok) {
             const data = await res.json();
-            dbList = Array.isArray(data) ? data : (data.products || []);
+            if (data.products && Array.isArray(data.products) && data.products.length > 0) {
+              curatedList = data.products;
+            }
           }
         } catch (e) {
-          console.error("Error al cargar de Supabase:", e);
+          console.error("Error al cargar de /api/admin/curated:", e);
         }
 
-        // 2.1 Solo si es la primera vez (localStorage es null) y no hay DB, usar catálogo por defecto
-        if (isFirstTime && dbList.length === 0) {
+        // 2. Si no hay catálogo en API curados, intentar desde /api/products o catálogo por defecto
+        if (curatedList.length === 0) {
           const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
-          localList = DEFAULT_CURATED_PRODUCTS;
+          curatedList = DEFAULT_CURATED_PRODUCTS;
         }
 
-        // 3. Combinar y deduplicar por ID
-        const combinedMap = new Map<string, Product>();
-        localList.forEach((p) => combinedMap.set(p.id, p));
-        dbList.forEach((p) => combinedMap.set(p.id, p));
+        setCuratedProducts(curatedList);
+        setFilteredProducts(curatedList);
 
-        const finalItems = Array.from(combinedMap.values());
-        setCuratedProducts(finalItems);
-        setFilteredProducts(finalItems);
+        // Actualizar localStorage para mantener sincronizadas las unidades de stock reales
+        try {
+          localStorage.setItem("kinekids_curated_products", JSON.stringify(curatedList));
+        } catch (_) {}
 
         // Pre-cargar los overrides con los precios guardados
         const initialOverrides: Record<string, number> = {};
-        finalItems.forEach((p) => {
+        curatedList.forEach((p: Product) => {
           const pvp = p.retail_price_override ?? (p as any).retail_price ?? (p as any).price;
           if (pvp) initialOverrides[p.id] = Math.round(pvp);
         });
@@ -103,7 +90,21 @@ export default function AdminCuratedProductsPage() {
     loadCurated();
   }, []);
 
-  // Filtrado reactivo en memoria
+  const [selectedBrand, setSelectedBrand] = useState<string>("all");
+
+  // Obtener lista dinámica de marcas disponibles en los productos curados
+  const availableBrands = useMemo(() => {
+    const brandsSet = new Set<string>();
+    curatedProducts.forEach((p) => {
+      const bName = (p as any).brand?.name || (p as any).brand || (p as any).brand_name;
+      if (bName && typeof bName === "string") {
+        brandsSet.add(bName.trim());
+      }
+    });
+    return Array.from(brandsSet).sort();
+  }, [curatedProducts]);
+
+  // Filtrado reactivo en memoria (Búsqueda + Categoría + Marca)
   useEffect(() => {
     let result = curatedProducts;
 
@@ -112,9 +113,16 @@ export default function AdminCuratedProductsPage() {
       result = result.filter(
         (p) =>
           p.title.toLowerCase().includes(q) ||
-          ((p as any).brand?.name || (p as any).brand || "").toLowerCase().includes(q) ||
+          ((p as any).brand?.name || (p as any).brand || (p as any).brand_name || "").toLowerCase().includes(q) ||
           p.id.includes(q)
       );
+    }
+
+    if (selectedBrand !== "all") {
+      result = result.filter((p) => {
+        const bName = (p as any).brand?.name || (p as any).brand || (p as any).brand_name || "";
+        return bName.toLowerCase().trim() === selectedBrand.toLowerCase().trim();
+      });
     }
 
     if (selectedCategory !== "all") {
@@ -128,7 +136,7 @@ export default function AdminCuratedProductsPage() {
     }
 
     setFilteredProducts(result);
-  }, [searchQuery, selectedCategory, curatedProducts]);
+  }, [searchQuery, selectedCategory, selectedBrand, curatedProducts]);
 
   // Cálculo de Métricas Financieras
   const totalItems = curatedProducts.length;
@@ -149,8 +157,12 @@ export default function AdminCuratedProductsPage() {
     setIsUpdating(product.id);
     setMessage(null);
 
+    // Preservar inmutablemente el coste mayorista original del proveedor (Hertwill)
+    const wholesalePrice = product.wholesale_price ?? (product.price !== (product as any).retail_price_override ? product.price : (product as any).wholesale_price ?? product.price);
+
     const updatedProduct = {
       ...product,
+      wholesale_price: wholesalePrice,
       retail_price_override: newPrice,
       retail_price: newPrice,
       price: newPrice,
@@ -379,6 +391,22 @@ export default function AdminCuratedProductsPage() {
               />
             </div>
 
+            {/* Dropdown Selector de Marca */}
+            <div className="w-full md:w-52 shrink-0">
+              <select
+                value={selectedBrand}
+                onChange={(e) => setSelectedBrand(e.target.value)}
+                className="w-full px-3 py-2.5 bg-brand-sand-light/60 border border-brand-sand-dark/60 rounded-xl text-xs font-bold text-brand-charcoal focus:outline-hidden focus:ring-2 focus:ring-brand-clay/50 cursor-pointer"
+              >
+                <option value="all">🏷️ Todas las Marcas ({availableBrands.length})</option>
+                {availableBrands.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Chips de Categorías */}
             <div className="flex items-center space-x-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
               {[
@@ -429,9 +457,11 @@ export default function AdminCuratedProductsPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product) => {
-              const wholesale = product.wholesale_price || product.price || 0;
+              const wholesale = product.wholesale_price ?? product.price ?? 0;
+              const shipping = (product as any).shipping_cost ?? (wholesale > 80 ? 33 : wholesale > 30 ? 20 : 14.99);
+              const totalCost = wholesale + shipping;
               const activeRetail = getCuratedPrice(product);
-              const margin = activeRetail - wholesale;
+              const margin = activeRetail - totalCost;
               const isOverridden = priceOverrides[product.id] !== undefined;
 
               return (
@@ -448,8 +478,30 @@ export default function AdminCuratedProductsPage() {
                         className="w-full h-full object-cover"
                       />
                       <span className="absolute top-2 left-2 px-2.5 py-1 bg-brand-charcoal/90 text-brand-sand-light text-[10px] font-bold uppercase tracking-wider rounded-lg backdrop-blur-xs">
-                        {getCategoryTranslation(product.category)}
+                        {product.category === "set" ? "Sets" : product.category === "module" ? "Módulos" : "Accesorios"}
                       </span>
+                      {/* Badge stock de proveedor (Colores Pastel Suaves) */}
+                      {(() => {
+                        const rawStock = (product as any).stock;
+                        const stockVal = rawStock !== undefined && rawStock !== null ? Number(rawStock) : NaN;
+                        const statusVal = (product as any).stock_status || "instock";
+                        const isOutOfStock = statusVal === "outofstock" || stockVal === 0;
+
+                        return (
+                          <div className={`absolute bottom-2 left-2 px-2 py-0.5 rounded-lg text-[9px] font-extrabold flex items-center gap-1.5 backdrop-blur-md shadow-xs ${
+                            isOutOfStock
+                              ? "bg-[#FCE8E6] text-[#C5221F] border border-[#FAD2CF]" 
+                              : "bg-[#E6F4EA] text-[#137333] border border-[#CEEAD6]"
+                          }`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${isOutOfStock ? "bg-[#D93025] animate-pulse" : "bg-[#188038]"}`} />
+                            {isOutOfStock
+                              ? "Agotado"
+                              : !isNaN(stockVal) && stockVal > 0
+                                ? `${stockVal} uds.`
+                                : "En Stock"}
+                          </div>
+                        );
+                      })()}
                       {((product as any).brand?.name || (product as any).brand) && (
                         <span className="absolute top-2 right-2 px-2.5 py-1 bg-white/90 text-brand-charcoal text-[10px] font-bold rounded-lg shadow-2xs backdrop-blur-xs">
                           {(product as any).brand?.name || (product as any).brand}
@@ -467,13 +519,17 @@ export default function AdminCuratedProductsPage() {
                       <span className="text-[11px] text-brand-charcoal/50">ID: {product.id}</span>
                     </div>
 
-                    {/* Desglose Financiero */}
-                    <div className="p-3 bg-brand-sand-dark/20 rounded-xl border border-brand-sand-dark/40 space-y-2 text-xs">
+                    {/* Desglose Financiero Completo */}
+                    <div className="p-3 bg-brand-sand-dark/20 rounded-xl border border-brand-sand-dark/40 space-y-1.5 text-xs">
                       <div className="flex justify-between items-center text-brand-charcoal/70">
                         <span>Coste Proveedor:</span>
                         <span className="font-bold">{formatCurrency(wholesale)}</span>
                       </div>
-                      <div className="flex justify-between items-center text-brand-charcoal">
+                      <div className="flex justify-between items-center text-brand-charcoal/60 text-[11px]">
+                        <span>Envío (España):</span>
+                        <span>{formatCurrency(shipping)}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-brand-charcoal pt-1 border-t border-brand-sand-dark/40">
                         <span className="font-bold">PVP Público Activo:</span>
                         <span className="text-sm font-black text-brand-clay">{formatCurrency(activeRetail)}</span>
                       </div>

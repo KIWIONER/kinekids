@@ -20,3 +20,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **Role:** Autonomous System Administrator & Data Pipeline Manager.
 - **Environment:** Coolify VPS Node environment (interacting via n8n).
 - **Responsibilities:** Monitoring API health, alerting on failed Stripe webhooks, handling retry logic for supplier fulfillment (Hertwill 5xx errors), and generating daily business intelligence summaries from Supabase data.
+
+# Rules of Architecture & Execution
+
+## 1. Single Source of Truth for Curated Catalog
+- The curated catalog MUST be persisted in `data/curated_catalog.json` (versioned in Git).
+- When products are edited or deleted in the Admin panel, the changes are saved directly to `data/curated_catalog.json`.
+- Automatic fallbacks or background scripts MUST NEVER overwrite `data/curated_catalog.json` or force-inject unwanted products.
+
+## 2. Git Execution Control
+- The agent MUST NEVER run `git push` automatically or without explicit user authorization ("haz git push").
+

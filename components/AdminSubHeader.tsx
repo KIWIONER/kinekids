@@ -33,18 +33,6 @@ export default function AdminSubHeader() {
         {/* Pestañas de Navegación del Panel Admin */}
         <nav className="flex items-center space-x-2">
           <Link
-            href="/admin/catalogo"
-            className={`inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              isCatalog
-                ? "bg-brand-charcoal text-brand-sand-light shadow-xs"
-                : "bg-brand-sand-dark/40 text-brand-charcoal/70 hover:bg-brand-sand-dark/80 hover:text-brand-charcoal"
-            }`}
-          >
-            <Search className="w-3.5 h-3.5" />
-            <span>Catálogo Mayorista (Hertwill)</span>
-          </Link>
-
-          <Link
             href="/admin/curados"
             className={`inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               isCurated
@@ -54,6 +42,18 @@ export default function AdminSubHeader() {
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Productos Curados (Web Oficial)</span>
+          </Link>
+
+          <Link
+            href="/admin/catalogo"
+            className={`inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              isCatalog
+                ? "bg-brand-charcoal text-brand-sand-light shadow-xs"
+                : "bg-brand-sand-dark/40 text-brand-charcoal/70 hover:bg-brand-sand-dark/80 hover:text-brand-charcoal"
+            }`}
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span>Catálogo Mayorista (Hertwill)</span>
           </Link>
         </nav>
       </div>

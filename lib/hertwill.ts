@@ -276,7 +276,12 @@ export async function getHertwillProducts(
     }
 
     const json = await response.json();
-    const rawProducts = json.data || [];
+    let rawProducts = json.data || [];
+    
+    // Excluir ropa interior de adultos para mantener el enfoque 100% infantil/pedagógico
+    const adultRegex = /boxer|brief|thong|bralette|underwear|panties|lingerie|men's celebration|men's daily|men's sport|signature collection/i;
+    rawProducts = rawProducts.filter((p: any) => !adultRegex.test(p.name || ""));
+
     const pagination: HertwillPagination = json.meta?.pagination || {
       page: 1,
       per_page: limit,
@@ -304,6 +309,31 @@ export async function getHertwillProducts(
       brandIdToShippingPriceMap[brandId] = price;
     }));
 
+    // 4. Enriquecer en paralelo el número exacto de stock físico real desde la API
+    await Promise.all(
+      rawProducts.map(async (p: any) => {
+        if (p.stock === null || p.stock === undefined) {
+          try {
+            const detailRes = await fetch(`https://api.hertwill.com/v1/products/${p.id}`, {
+              headers: {
+                Authorization: `Bearer ${apiKey}`,
+                Accept: "application/json",
+              },
+              next: { revalidate: 3600 },
+            });
+            if (detailRes.ok) {
+              const detailJson = await detailRes.json();
+              if (detailJson.data && typeof detailJson.data.stock === "number") {
+                p.stock = detailJson.data.stock;
+              }
+            }
+          } catch (e) {
+            // Silencioso
+          }
+        }
+      })
+    );
+
     const products = rawProducts.map((p: any) => {
       const wholesalePrice = typeof p.price === "number" ? p.price : parseFloat(p.price || "0");
       const pricing = calculatePricing(wholesalePrice);
@@ -318,6 +348,9 @@ export async function getHertwillProducts(
       const brandId = p.brand?.slug ? brandSlugToIdMap[p.brand.slug] : null;
       const shippingCost = brandId ? (brandIdToShippingPriceMap[brandId] ?? 14.99) : 14.99;
 
+      const brandName = p.brand?.name || p.brand?.slug || (p.name?.includes("IGLU") ? "IGLU" : p.name?.includes("TOKU") ? "TOKU" : p.name?.includes("ELIN") ? "KOTTO" : "Hertwill");
+      const brandSlug = p.brand?.slug || brandName.toLowerCase();
+
       return {
         id: String(p.id),
         title: p.name || "Producto de KineKids",
@@ -327,11 +360,15 @@ export async function getHertwillProducts(
         imageUrl: p.images?.featured || (p.images?.gallery && p.images.gallery[0]) || "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&q=80&w=600",
         ageRange: p.ageRange || p.metadata?.ageRange || "6 meses - 4 años",
         dimensions: p.dimensions || p.metadata?.dimensions || "Medida estándar",
-        // Pricing fields
+        brand: brandName,
+        brand_name: brandName,
+        brand_slug: brandSlug,
         wholesale_price: wholesalePrice,
         markup_multiplier: pricing.markupMultiplier,
         retail_price: pricing.retailPrice,
         shipping_cost: shippingCost,
+        stock_status: p.stock_status || "instock",
+        stock: typeof p.stock === "number" ? p.stock : null,
       };
     });
 
@@ -352,7 +389,7 @@ export async function getHertwillProducts(
   }
 }
 
-// Obtener catálogo curado desde Supabase
+// Obtener catálogo curado desde Supabase o desde la Fuente Única de Verdad (data/curated_catalog.json)
 export async function getCuratedProducts(): Promise<Product[]> {
   if (supabase) {
     try {
@@ -371,6 +408,9 @@ export async function getCuratedProducts(): Promise<Product[]> {
           imageUrl: p.image_url,
           ageRange: p.age_range,
           dimensions: p.dimensions,
+          wholesale_price: p.wholesale_price,
+          retail_price_override: p.price,
+          retail_price: p.price,
         }));
       }
     } catch (err) {
@@ -378,6 +418,6 @@ export async function getCuratedProducts(): Promise<Product[]> {
     }
   }
 
-  console.log("No hay base de datos o la tabla 'products' de Supabase está vacía.");
-  return [];
+  const { DEFAULT_CURATED_PRODUCTS } = await import("./default_catalog");
+  return DEFAULT_CURATED_PRODUCTS;
 }

@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "kinekids-python-mcp": {
+      "command": "python",
+      "args": ["-m", "backend.python.mcp_server"],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "kinekids-catalog": {
+      "command": "node",
+      "args": ["./mcp/kinekids-mcp-server.mjs"],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "supabase-db": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "${SUPABASE_DATABASE_URL}"
+      ]
+    }
+  }
+}

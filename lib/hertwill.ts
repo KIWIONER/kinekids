@@ -1,5 +1,5 @@
-import { Product } from "@/app/api/products/route";
-import { supabase } from "@/lib/supabase";
+import { Product } from "../ports/catalog.port";
+import { getCatalogRepository } from "./adapters/index";
 import { calculatePricing } from "@/lib/pricing";
 
 export const PRODUCTS_MOCK: Product[] = [
@@ -272,10 +272,13 @@ export async function getHertwillProducts(
     });
 
     if (!response.ok) {
+      const errorText = await response.text(); // Leer el cuerpo del error
+      console.error(`Hertwill API retornó código ${response.status}. Cuerpo: ${errorText}`);
       throw new Error(`Hertwill API retornó código ${response.status}`);
     }
 
     const json = await response.json();
+    console.log("Hertwill API Response (RAW):", JSON.stringify(json, null, 2)); // <-- NUEVO LOG
     let rawProducts = json.data || [];
     
     // Excluir ropa interior de adultos para mantener el enfoque 100% infantil/pedagógico
@@ -389,35 +392,21 @@ export async function getHertwillProducts(
   }
 }
 
-// Obtener catálogo curado desde Supabase o desde la Fuente Única de Verdad (data/curated_catalog.json)
+// Obtener catálogo curado delegando al Repositorio Abstracto (File o Supabase)
 export async function getCuratedProducts(): Promise<Product[]> {
-  if (supabase) {
-    try {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*");
+  try {
+    const repository = getCatalogRepository();
+    const products = await repository.getCuratedProducts();
 
-      if (!error && data && data.length > 0) {
-        console.log(`Cargados ${data.length} productos curados de Supabase.`);
-        return data.map((p: any) => ({
-          id: p.id,
-          title: p.title,
-          category: p.category,
-          price: parseFloat(p.price),
-          description: p.description,
-          imageUrl: p.image_url,
-          ageRange: p.age_range,
-          dimensions: p.dimensions,
-          wholesale_price: p.wholesale_price,
-          retail_price_override: p.price,
-          retail_price: p.price,
-        }));
-      }
-    } catch (err) {
-      console.error("Error al cargar productos de Supabase:", err);
+    if (products && products.length > 0) {
+      console.log(`[Hertwill API] Cargados ${products.length} productos curados desde el Repositorio.`);
+      return products;
     }
+  } catch (err) {
+    console.error("[Hertwill API] Error al cargar productos del Repositorio:", err);
   }
 
+  console.warn("[Hertwill API] Repositorio vacío o error. Cayendo al catálogo por defecto.");
   const { DEFAULT_CURATED_PRODUCTS } = await import("./default_catalog");
-  return DEFAULT_CURATED_PRODUCTS;
+  return DEFAULT_CURATED_PRODUCTS as Product[];
 }

@@ -4,31 +4,9 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import fs from "fs";
-import path from "path";
+import { getCatalogRepository } from "../lib/adapters/index.js";
 
-const CATALOG_PATH = path.join(process.cwd(), "data", "curated_catalog.json");
-
-function readCatalog() {
-  try {
-    if (!fs.existsSync(CATALOG_PATH)) return [];
-    return JSON.parse(fs.readFileSync(CATALOG_PATH, "utf8"));
-  } catch (e) {
-    console.error("Error al leer catálogo MCP:", e);
-    return [];
-  }
-}
-
-function writeCatalog(products) {
-  try {
-    const dir = path.dirname(CATALOG_PATH);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(CATALOG_PATH, JSON.stringify(products, null, 2), "utf8");
-  } catch (e) {
-    console.error("Error al escribir catálogo MCP:", e);
-  }
-}
-
+// Funciones de cálculo financiero locales al MCP
 function calculateFinancials(product) {
   const wholesale = product.wholesale_price ?? product.price ?? 0;
   const shipping = product.shipping_cost ?? (wholesale > 80 ? 33 : wholesale > 30 ? 20 : 14.99);
@@ -112,9 +90,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 // Ejecución de Herramientas MCP
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
+  const repository = getCatalogRepository();
 
   if (name === "kinekids_get_catalog") {
-    const products = readCatalog();
+    const products = await repository.getCuratedProducts();
     const enriched = products.map((p) => ({
       ...p,
       financials: calculateFinancials(p),
@@ -151,7 +130,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   if (name === "kinekids_update_price") {
     const { productId, newRetailPrice } = args;
-    const products = readCatalog();
+    const products = await repository.getCuratedProducts();
     const idx = products.findIndex((p) => String(p.id) === String(productId));
 
     if (idx === -1) {
@@ -173,7 +152,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       price: newPriceRound,
     };
 
-    writeCatalog(products);
+    await repository.saveCuratedProducts(products);
     const fin = calculateFinancials(products[idx]);
 
     return {
@@ -187,7 +166,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "kinekids_audit_financials") {
-    const products = readCatalog();
+    const products = await repository.getCuratedProducts();
     const lowMarginItems = [];
     let healthyCount = 0;
 

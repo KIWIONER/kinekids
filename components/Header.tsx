@@ -41,8 +41,8 @@ export default function Header() {
             Filosofía
           </a>
           <a
-            href="/admin/catalogo"
-            className="text-brand-charcoal/80 hover:bg-brand-charcoal hover:text-brand-sand-light text-[11px] font-bold uppercase tracking-wider bg-brand-sand-dark/80 px-2.5 py-1 rounded-xl border border-brand-sand-dark/40 transition-all flex items-center"
+            href="/admin/curados"
+            className="text-brand-charcoal/80 hover:bg-brand-charcoal hover:text-brand-sand-light text-[11px] font-bold uppercase tracking-wider bg-brand-sand-dark/80 px-3 py-1.5 rounded-xl border border-brand-sand-dark/40 transition-all flex items-center"
           >
             Panel Admin
           </a>

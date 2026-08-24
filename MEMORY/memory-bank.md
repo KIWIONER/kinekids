@@ -1,42 +1,50 @@
 # Memory Bank & System State - KineKids
 
 ## Current Sprint
-- **Phase:** Curación de Catálogo (Hertwill), Cálculo de Márgenes de Envío e IA Dinámica.
-- **Status:** Catálogo de KineKids completamente integrado con la API live de Hertwill. Panel de administración curado en `/admin/catalogo` con grid de tarjetas grandes, cálculos de márgenes netos reales (restando coste y envío) y PVP editable con overrides. Creada la ficha de detalle individual con slider de imágenes y lightbox. Asistente conversacional de IA (**Antigravity**) sincronizado dinámicamente con los productos curados en Supabase.
+- **Phase:** Fuente Única de Verdad de Catálogo, Motor Financiero Inmutable, Filtros por Marca/Categoría, MCP Servers e IA Dinámica.
+- **Status:** Catálogo curado en `data/curated_catalog.json` operando como **Single Source of Truth**. Panel Admin unificado en `/admin/curados` y `/admin/catalogo` con SubHeader de pestañas. Servidores **MCP (Model Context Protocol)** híbridos integrados para auditoría financiera e interacción nativa con la IA. Todas las 177 marcas de Hertwill integradas en desplegables de búsqueda.
 
 ---
 
 ## Technical Milestones Achieved
 
-### 1. Integración de API Live de Hertwill
-- Conexión proxy segura configurada en [.env.local](file:///c:/Users/balsa/Desktop/kinekids/.env.local) e implementada en [lib/hertwill.ts](file:///c:/Users/balsa/Desktop/kinekids/lib/hertwill.ts).
-- Agrupación paralela de consultas y caché en servidor de marcas y tarifas de envío a España (`ES`) a través de los endpoints de Hertwill para evitar rate-limits.
+### 1. Single Source of Truth para Productos Curados (`data/curated_catalog.json`)
+- Establecido `data/curated_catalog.json` (versionado en Git) como la fuente incondicional y primaria de productos curados.
+- Actualizados [lib/default_catalog.ts](file:///c:/Users/balsa/Desktop/kinekids/lib/default_catalog.ts) y [app/api/admin/curated/route.ts](file:///c:/Users/balsa/Desktop/kinekids/app/api/admin/curated/route.ts) para operaciones GET, POST y DELETE inmutables sobre el JSON.
+- **Blindaje del Coste Mayorista (`wholesale_price`):** El coste original del proveedor Hertwill permanece inalterable ante cualquier edición o guardado de PVP público por parte del usuario.
 
-### 2. Panel Admin y Margen de Beneficios
-- Desarrollada interfaz de edición en `/admin/catalogo` con grid de tarjetas de producto con imágenes grandes y límite optimizado de 20 por página.
-- Implementado el motor de precios ([lib/pricing.ts](file:///c:/Users/balsa/Desktop/kinekids/lib/pricing.ts)) que aplica multiplicadores por peldaño del Value Ladder (Low ×2.5, Mid ×1.8, High ×1.45) y redondeo psicotécnico a múltiplos de 5.
-- Tarjeta de producto admin que muestra Coste Hertwill, Envío (España), PVP editable inline, y Margen Neto Real.
-- Sincronización robusta bidireccional mediante upsert/delete a Supabase ([sync/route.ts](file:///c:/Users/balsa/Desktop/kinekids/app/api/admin/products/sync/route.ts)), permitiendo añadir y retirar productos del escaparate oficial al instante.
+### 2. Motor Financiero y Cálculo de Beneficio Neto Real
+- Implementada la fórmula de beneficio neto exacto descontando el Coste de Producto y los costes oficiales de transporte a España (`33€` para sets voluminosos, `20€` / `14.99€` para artículos medianos/pequeños).
+- Desglose financiero completo en cada tarjeta del panel admin mostrando: Coste Proveedor, Envío España, PVP Público Activo, Beneficio Neto Est., botón inteligente **🎯 20% Margen** y Benchmark de Amazon.
 
-### 3. Ficha de Detalle y Galería
-- Creada página dinámica en [`app/products/[id]/page.tsx`](file:///c:/Users/balsa/Desktop/kinekids/app/products/%5Bid%5D/page.tsx) con slider de miniaturas interactivo, lightbox fullscreen con botones ← → y contador de imágenes, y enlace desde `ProductCard`.
+### 3. Navegación Admin y Filtros por Marca (177 Marcas)
+- Creado el componente unificado [components/AdminSubHeader.tsx](file:///c:/Users/balsa/Desktop/kinekids/components/AdminSubHeader.tsx) con alternancia en 1 clic entre `"Productos Curados"` y `"Catálogo Mayorista (Hertwill)"`.
+- Creado el endpoint `/api/admin/brands` que sirve **las 177 marcas reales de Hertwill**.
+- Añadido selector desplegable de marca en la barra de búsqueda de `/admin/curados` y `/admin/catalogo`.
+- Corregida la asignación de slugs (`iglu-soft`, `meowbaby`, `toku`) e independizada la lista completa de marcas de sobreescrituras por facets de paginación local.
+- Filtrado automático de ropa y artículos para adultos del feed del catálogo.
 
-### 4. IA Asesora Dinámica (RAG)
-- Configurada la ruta de chat ([app/api/chat/route.ts](file:///c:/Users/balsa/Desktop/kinekids/app/api/chat/route.ts)) para obtener en tiempo real los productos curados de Supabase e inyectarlos directamente en el system prompt de Antigravity (Gemini 1.5 Flash).
+### 4. Categorización y Variantes de Color
+- Reclasificados los elementos individuales (*Arcoíris Balancín, Mega Wave, Cuñas Rampa*) a la categoría oficial de **Módulos de Psicomotricidad (`module`)**.
+- Asignadas imágenes oficiales de alta definición de Hertwill para variantes de color (*Pastel Fries, Pastel Sea, Turquoise, Pink, Light Pastel, Earth Pastel, Mint Green, Bouclé White*).
 
-### 5. Agrupación por Variantes y Persistencia
-- Implementada la utilidad de parseo y agrupación dinámica avanzada por nombre base, colores/diseños, elementos, tamaños/edades y TOGs (`lib/variants.ts`).
-- Agrupados los productos curados en la página de inicio, mostrando un único producto representativo con el distintivo `+X colores`.
-- Añadido selector interactivo de variantes en la página de detalle (`/products/[id]`) mediante chips circulares que redirigen a la variante específica, actualizando galería de imágenes, stock, SKU y PVP.
-- Integrado Zustand `persist` en `store/useCart.ts` para persistir el estado del carrito en LocalStorage, unificando la lógica de adición y abriendo el Drawer de compra de manera reactiva.
+### 5. Arquitectura Híbrida de MCP Servers (`mcp_config.json` & `kinekids-mcp-server.mjs`)
+- Implementada la especificación **Model Context Protocol (MCP)** sobre comunicación Stdio (JSON-RPC 2.0) usando `@modelcontextprotocol/sdk`.
+- Configurado `.agents/mcp_config.json` unificando el **MCP Oficial de Supabase/PostgreSQL** (`@modelcontextprotocol/server-postgres`) y el **MCP a medida de KineKids** (`kinekids-mcp`).
+- Creadas 4 herramientas nativas MCP:
+  1. `kinekids_get_catalog`: Obtiene el catálogo curado con desglose de margen bruto.
+  2. `kinekids_update_price`: Modifica el PVP preservando inmutablemente el `wholesale_price`.
+  3. `kinekids_audit_financials`: Audita en <10ms el catálogo detectando productos con margen neto <20%.
+  4. `hertwill_query_supplier`: Consulta en tiempo real stock y marcas directamente a la API de Hertwill.
 
-### 6. Localización e Idioma (Traductor con IA)
-- Creada utilidad de traducción bajo demanda ([lib/translator.ts](file:///c:/Users/balsa/Desktop/kinekids/lib/translator.ts)) que utiliza Gemini 1.5 Flash para traducir las descripciones de Hertwill del inglés al español con tono pedagógico.
-- Implementado sistema de caché híbrido en memoria y disco (`lib/translation_cache.json`) que elimina latencias de traducción tras la primera consulta.
-- Integrado en las descripciones de la Home Page y de las fichas individuales.
+### 6. Auditoría de Salud del Código (Code Refinement Suite)
+- Ejecutado el marco de trabajo **Code Refinement Suite** (`skills/kinekids-core/code-refinement-suite/SKILL.md`), generando el documento `qa_audit_report.md`.
+- **Verificación de Tipado:** `npx tsc --noEmit` **0 Errores**.
+- **Regla Inviolable de Control de Git:** Se cumple strictly que el agente **NUNCA ejecuta `git push` de forma automática**.
 
 ---
 
 ## Immediate Next Steps (Pending)
 
-1. **Checkout de Stripe Sandbox:** Configurar Stripe en modo prueba para iniciar una pasarela de pago simulada desde el botón de compra del carrito.
+1. **Pasarela de Pago Stripe Sandbox:** Configurar botones de pago y webhooks en modo prueba para procesar carritos desde el Drawer oficial.
+2. **Despliegue VPS Coolify / Docker:** Preparación del bundle de producción y variables de entorno para el agente autónomo de orquestación backend.

@@ -1,4 +1,4 @@
-import { Product } from "../ports/catalog.port";
+import { Product } from "./ports/catalog.port";
 import { getCatalogRepository } from "./adapters/index";
 import { calculatePricing } from "@/lib/pricing";
 

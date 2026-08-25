@@ -65,6 +65,7 @@ El proyecto está construido como un **BFF (Backend for Frontend) en capas con s
 | **Agosto 2026** | **Exploración de Arquitectura:** Identificación del stack tecnológico completo y la estructura de componentes, APIs y lógica de negocio (BFF + Sidecars MCP). | ✅ Completado |
 | **Agosto 2026** | **Diagnóstico y Resolución Hertwill:** Identificación del uso de mock en el catálogo debido a la falta de `HERTWILL_API_KEY`. Creación de `.env.local` y validación de carga de datos reales vía túnel SSH (`localhost:3000`). | ✅ Carga de API Real OK |
 | **Agosto 2026** | **Plan de Refinamiento Web Profundo (Nivel 3):** Creación de `docs/kinekids-web-refinement-plan.md` enfocado en optimización de imágenes (`next/image`), flujos críticos (catálogo, carrito, checkout) y robustez de la lógica de traducción/normalización de texto. | ✅ Plan Documentado |
+| **Agosto 2026** | **Sistema de Autenticación Admin & Rate-Limit Fix:** Implementación de Login para `/admin/*` mediante JWT nativo con Web Crypto API (HMAC SHA-256) y cookies `HttpOnly`. Corrección del rate-limit 429 en la API de Hertwill mediante gestión de caché de tarifas y recorridos secuenciales. | ✅ Validado (Build 0 errores) |
 
 ---
 
@@ -74,3 +75,10 @@ El proyecto está construido como un **BFF (Backend for Frontend) en capas con s
 Se detectó un fallo crítico donde los productos curados editados localmente (y guardados en `data/curated_catalog.json` por el servidor MCP) desaparecían tras un despliegue en producción.
 **Reflexión:** El fallo se debe al fuerte acoplamiento entre la lógica del catálogo (`mcp-server.mjs`) y el sistema de archivos local, el cual no está versionado.
 **Decisión:** Se creó el plan `docs/hexagonal-refactoring-implementation-plan.md` para aplicar la filosofía de Arquitectura Hexagonal (Puertos y Adaptadores). Se extraerá el acceso a datos hacia una interfaz `CatalogRepository` estandarizada, permitiendo inyectar un adaptador de base de datos (`SupabaseCatalogAdapter`) para producción y un adaptador de archivos (`LocalFileCatalogAdapter`) para desarrollo local rápido.
+
+
+### 6.2. Autenticación Nativa del Panel de Administración (`/admin`)
+Se implementó un sistema de autenticación ligero y seguro sin dependencias externas para el área de gestión de catálogo.
+* **Técnica:** Firma de tokens JWT mediante la Web Crypto API (`crypto.subtle` HMAC SHA-256) nativa en Node.js 18+ / Edge.
+* **Seguridad:** Cookies de sesión con flags `HttpOnly`, `SameSite=Strict` y `Secure` en producción.
+* **Middleware:** Interceptación global en Next.js `middleware.ts` protegiendo todas las subrutas de `/admin/*` (redirige automáticamente a `/admin/login`).

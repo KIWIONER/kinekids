@@ -200,7 +200,12 @@ async function getShippingPriceToSpain(brandId: string, apiKey: string): Promise
       next: { revalidate: 86400 }, // Cachear por 24 horas
     });
 
-    if (!res.ok) throw new Error(`Shipping price list status: ${res.status}`);
+    if (!res.ok) {
+      // Si recibimos status 429 o cualquier error HTTP de la API de Hertwill, usar fallback silencioso
+      const fallbackPrice = 14.99;
+      shippingCache[brandId] = fallbackPrice;
+      return fallbackPrice;
+    }
     const json = await res.json();
     const data = json.data || [];
 
@@ -216,7 +221,9 @@ async function getShippingPriceToSpain(brandId: string, apiKey: string): Promise
     return price;
   } catch (err) {
     console.error(`Error al obtener tarifa de envío para marca ID ${brandId}:`, err);
-    return 14.99;
+    const fallbackPrice = 14.99;
+    shippingCache[brandId] = fallbackPrice;
+    return fallbackPrice;
   }
 }
 
@@ -308,10 +315,10 @@ export async function getHertwillProducts(
     // 3. Obtener tarifa de envío para cada ID único
     const brandIdToShippingPriceMap: Record<string, number> = {};
     const uniqueBrandIds = Array.from(new Set(Object.values(brandSlugToIdMap))) as string[];
-    await Promise.all(uniqueBrandIds.map(async (brandId) => {
+    for (const brandId of uniqueBrandIds) {
       const price = await getShippingPriceToSpain(brandId, apiKey);
       brandIdToShippingPriceMap[brandId] = price;
-    }));
+    }
 
     // 4. Enriquecer en paralelo el número exacto de stock físico real desde la API
     await Promise.all(

@@ -1,15 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Search, Sparkles, LayoutDashboard, ArrowLeft } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Search, Sparkles, LayoutDashboard, ArrowLeft, LogOut } from "lucide-react";
 
 export default function AdminSubHeader() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const isCatalog = pathname === "/admin/catalogo";
   const isCurated = pathname === "/admin/curados";
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+      router.push("/admin/login");
+      router.refresh();
+    } catch (e) {
+      console.error("Error cerrando sesión", e);
+    } finally {
+      setLoggingOut(false);
+    }
+  };
 
   return (
     <div className="bg-brand-sand-light border-b border-brand-sand-dark sticky top-20 z-30 shadow-2xs">
@@ -30,7 +45,7 @@ export default function AdminSubHeader() {
           </div>
         </div>
 
-        {/* Pestañas de Navegación del Panel Admin */}
+        {/* Pestañas de Navegación del Panel Admin + Botón Logout */}
         <nav className="flex items-center space-x-2">
           <Link
             href="/admin/curados"
@@ -55,6 +70,16 @@ export default function AdminSubHeader() {
             <Search className="w-3.5 h-3.5" />
             <span>Catálogo Mayorista (Hertwill)</span>
           </Link>
+
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            title="Cerrar sesión de administrador"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors ml-2 cursor-pointer disabled:opacity-50"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>{loggingOut ? "Saliendo..." : "Salir"}</span>
+          </button>
         </nav>
       </div>
     </div>

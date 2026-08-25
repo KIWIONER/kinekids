@@ -91,7 +91,9 @@ function translateBaseTitle(rawBase: string): string {
   // Sets de Juego Blando IGLU
   if (/Multifunctional Soft Play Set/i.test(b) || /Baby Gym/i.test(b)) return "Set de Juego Blando (10 Bloques)";
   if (/Soft Play 10 Foam Block Set/i.test(b) || /10 Foam Block Set/i.test(b)) return "Set de Juego Blando (10 Bloques)";
+  if (/Soft Play 8 Foam Block Set/i.test(b) || /8 Foam Block Set/i.test(b) || /Adventurer/i.test(b)) return "Set de Juego Blando Adventurer (8 Bloques)";
   if (/Soft Play 6 Foam Block Set/i.test(b) || /6 Foam Block Set/i.test(b)) return "Set de Juego Blando (6 Bloques)";
+  if (/Montessori Soft Play Set/i.test(b) || (/Montessori/i.test(b) && /Soft Play/i.test(b))) return "Set de Juego Blando Montessori";
   if (/Soft Play Set Corner Climber/i.test(b) || /Corner Climber/i.test(b)) return "Set Escalador de Esquinas Corner Climber";
   if (/Safety and Comfort 5 Mat Set/i.test(b) || /5 Mat Set/i.test(b)) return "Set de 5 Colchonetas de Seguridad y Gateo";
   if (/Soft Play Shape Wedge/i.test(b)) return "Módulo Rampa Cuña de Psicomotricidad";

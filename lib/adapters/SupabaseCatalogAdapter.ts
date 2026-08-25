@@ -52,26 +52,32 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
     }
 
     try {
-      // Mapeo inverso: De nuestro Dominio (Product) hacia el esquema de la base de datos
-      const dbPayload = products.map(p => ({
-        id: p.id,
-        title: p.title,
-        category: p.category,
-        price: p.retail_price_override ?? p.retail_price ?? p.price,
-        description: p.description,
-        image_url: p.imageUrl,
-        age_range: p.ageRange,
-        dimensions: p.dimensions,
-        wholesale_price: p.wholesale_price,
-      }));
+      // Mapeo inverso y sanitización de datos antes de enviar a DB
+      const dbPayload = products.map(p => {
+        // Asegurar que la categoría es una de las permitidas por el CHECK constraint
+        const validCategories = ["set", "module", "accessory"];
+        const safeCategory = validCategories.includes(p.category) ? p.category : "accessory";
 
-      // Realizamos un UPSERT (Update or Insert) en bloque basándonos en la Primary Key (id)
+        return {
+          id: p.id,
+          title: p.title,
+          category: safeCategory,
+          price: p.retail_price_override ?? p.retail_price ?? p.price,
+          description: p.description,
+          image_url: p.imageUrl,
+          age_range: p.ageRange,
+          dimensions: p.dimensions,
+          wholesale_price: p.wholesale_price,
+        };
+      });
+
+      // Realizamos un UPSERT
       const { error } = await supabase
         .from("products")
         .upsert(dbPayload, { onConflict: "id" });
 
       if (error) {
-        console.error("[SupabaseAdapter] Error al realizar UPSERT en Supabase:", error);
+        console.error("[SupabaseAdapter] Error al realizar UPSERT en Supabase. Detalles del error DB:", JSON.stringify(error));
         throw error;
       }
 

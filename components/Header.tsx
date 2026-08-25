@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ShoppingBag, ArrowRight } from "lucide-react";
+import UserMenu from "@/components/UserMenu";
 import { useCart } from "@/store/useCart";
 
 export default function Header() {
@@ -49,7 +50,8 @@ export default function Header() {
         </nav>
 
         {/* Action Buttons */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
+          <UserMenu />
           {/* Cart Trigger */}
           <button
             onClick={toggleCart}
@@ -64,13 +66,7 @@ export default function Header() {
             )}
           </button>
           
-          <a
-            href="/#sets"
-            className="hidden sm:inline-flex items-center text-xs uppercase tracking-widest font-bold px-5 py-2.5 bg-brand-charcoal text-brand-sand-light rounded-full hover:bg-brand-clay transition-all"
-          >
-            Explorar Sets
-            <ArrowRight className="w-3.5 h-3.5 ml-1.5 stroke-[2]" />
-          </a>
+
         </div>
       </div>
     </header>

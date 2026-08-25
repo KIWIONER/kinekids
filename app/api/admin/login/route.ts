@@ -6,8 +6,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password } = body;
 
-    const expectedEmail = process.env.ADMIN_EMAIL || "admin@kinekids.com";
-    const expectedPassword = process.env.ADMIN_PASSWORD || "KineKids2026!AdminKey";
+    const expectedEmail = (process.env.ADMIN_EMAIL || "admin@kinekids.com").trim();
+    const expectedPassword = (process.env.ADMIN_PASSWORD || "KineKids2026!AdminKey").trim();
 
     if (!email || !password || email !== expectedEmail || password !== expectedPassword) {
       return NextResponse.json(

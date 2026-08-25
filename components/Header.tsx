@@ -18,7 +18,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Brand Logo & Essence */}
         <div className="flex flex-col">
-          <a href="#" className="text-2xl font-bold tracking-wider text-brand-charcoal hover:opacity-80">
+          <a href="/" className="text-2xl font-bold tracking-wider text-brand-charcoal hover:opacity-80">
             KineKids
           </a>
           <span className="text-[10px] uppercase tracking-widest text-brand-sage font-medium -mt-1">

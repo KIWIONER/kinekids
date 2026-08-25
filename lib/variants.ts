@@ -165,6 +165,25 @@ export function parseProductTitle(title: string): { baseName: string; variantNam
     };
   }
 
+  // 1.2 Intercepción forzosa para Adventurer y Montessori genérico
+  if (cleanTitle.toLowerCase().includes("adventurer")) {
+     const parts = cleanTitle.split(/[-–—]/);
+     const variantPart = parts.length > 1 ? parts.slice(1).join(" - ").trim() : "Estándar";
+     return {
+       baseName: "Set de Juego Blando Adventurer (8 Bloques)",
+       variantName: translateVariantColor(variantPart),
+     };
+  }
+
+  if (cleanTitle.toLowerCase().includes("montessori") && cleanTitle.toLowerCase().includes("soft play")) {
+     const parts = cleanTitle.split(/[-–—]/);
+     const variantPart = parts.length > 1 ? parts.slice(1).join(" - ").trim() : "Estándar";
+     return {
+       baseName: "Set de Juego Blando Montessori",
+       variantName: translateVariantColor(variantPart),
+     };
+  }
+
   // 2. Detección de patrones numerados de Bloques / Piezas
   const blockMatch = cleanTitle.match(/^(?:Soft Play\s*)?(\d+)\s*(?:Foam Block Set|Mat Set|Elements|Pieces|Pcs)\s*[-–—]?\s*(.*)$/i);
   if (blockMatch) {

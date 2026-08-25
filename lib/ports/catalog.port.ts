@@ -17,6 +17,7 @@ export interface Product {
   shipping_cost?: number;        // Coste de envío
   stock_status?: "instock" | "outofstock" | string;
   stock?: number | null;
+  sort_order?: number;           // Posición en la tienda oficial
 }
 
 /**

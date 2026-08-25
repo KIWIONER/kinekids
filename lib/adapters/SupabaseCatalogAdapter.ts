@@ -14,7 +14,11 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
     }
 
     try {
-      const { data, error } = await supabase.from("products").select("*");
+      // Ordenamos explícitamente por el nuevo campo sort_order
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("sort_order", { ascending: true, nullsFirst: false });
 
       if (error) {
         console.error("[SupabaseAdapter] Error de consulta a Supabase:", error);
@@ -36,6 +40,7 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
           // Mapeos inversos para campos dinámicos
           retail_price_override: p.price !== null ? parseFloat(p.price) : undefined,
           retail_price: p.price !== null ? parseFloat(p.price) : undefined,
+          sort_order: p.sort_order !== null ? parseInt(p.sort_order, 10) : 0,
         })) as Product[];
       }
       
@@ -53,7 +58,8 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
 
     try {
       // Mapeo inverso y sanitización de datos antes de enviar a DB
-      const dbPayload = products.map(p => {
+      // Asignamos el índice del array como 'sort_order' para preservar el orden visual del admin
+      const dbPayload = products.map((p, index) => {
         // Asegurar que la categoría es una de las permitidas por el CHECK constraint
         const validCategories = ["set", "module", "accessory"];
         const safeCategory = validCategories.includes(p.category) ? p.category : "accessory";
@@ -68,6 +74,7 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
           age_range: p.ageRange,
           dimensions: p.dimensions,
           wholesale_price: p.wholesale_price,
+          sort_order: index, // <--- Aquí guardamos la posición
         };
       });
 

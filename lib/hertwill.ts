@@ -272,13 +272,14 @@ export async function getHertwillProducts(
     });
 
     if (!response.ok) {
-      const errorText = await response.text(); // Leer el cuerpo del error
-      console.error(`Hertwill API retornó código ${response.status}. Cuerpo: ${errorText}`);
-      throw new Error(`Hertwill API retornó código ${response.status}`);
+      const errorText = await response.text().catch(() => 'No se pudo leer el cuerpo del error');
+      const errorMsg = `[CRÍTICO] Hertwill API retornó código ${response.status}. URL: ${url}. Cuerpo: ${errorText}`;
+      console.error(errorMsg);
+      throw new Error(errorMsg);
     }
 
     const json = await response.json();
-    console.log("Hertwill API Response (RAW):", JSON.stringify(json, null, 2)); // <-- NUEVO LOG
+    console.log(`[EXITO] Hertwill API respondió correctamente. URL: ${url}. Total productos en data:`, json.data ? json.data.length : 0);
     let rawProducts = json.data || [];
     
     // Excluir ropa interior de adultos para mantener el enfoque 100% infantil/pedagógico

@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KineKids | Herramientas de Desarrollo y Juego Libre",
-  description: "Estudio pedagógico premium de herramientas de desarrollo psicomotriz, independencia espacial y juego libre.",
+  title: "KineKids Admin | Panel de Control",
+  description: "Panel de control administrativo de KineKids.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -28,14 +28,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="es"
       className={`${montserrat.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-brand-sand-light text-brand-charcoal">{children}</body>
+      <body className="min-h-full flex flex-col bg-brand-sand-light text-brand-charcoal">
+        {children}
+      </body>
     </html>
   );
 }
-

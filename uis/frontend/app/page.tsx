@@ -259,16 +259,13 @@ export default function Home() {
               <div className="space-y-2">
                 <h3 className="text-lg font-bold text-brand-charcoal">Diseñando tu escaparate KineKids...</h3>
                 <p className="text-xs text-brand-charcoal/60 leading-relaxed">
-                  Aún no has seleccionado productos de Hertwill para mostrarlos en la tienda pública. Ve al panel de administración para curar tu catálogo.
+                  Estamos preparando los mejores productos para el desarrollo y juego libre de los peques. ¡Pronto disponibles!
                 </p>
               </div>
-              <a
-                href="/admin/catalogo"
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-brand-clay hover:bg-brand-charcoal text-brand-sand-light rounded-xl text-xs font-bold transition-all shadow-md"
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                <span>Ir al Panel Admin</span>
-              </a>
+              <div className="inline-flex items-center space-x-2 px-6 py-3 bg-brand-sand-dark/60 text-brand-charcoal/80 rounded-xl text-xs font-bold">
+                <Sparkles className="w-4 h-4 text-brand-clay" />
+                <span>Nueva Colección en Preparación</span>
+              </div>
             </div>
           ) : (
             <div className="space-y-24">

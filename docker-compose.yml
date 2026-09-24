@@ -1,0 +1,36 @@
+services:
+  frontend:
+    build:
+      context: ./uis/frontend
+      dockerfile: Dockerfile
+    container_name: kinekids-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./uis/frontend/.env.local
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - kinekids-net
+
+  backend:
+    build:
+      context: ./uis/backend
+      dockerfile: Dockerfile
+    container_name: kinekids-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./uis/backend/.env.local
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    networks:
+      - kinekids-net
+
+networks:
+  kinekids-net:
+    driver: bridge

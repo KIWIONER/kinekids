@@ -1,35 +1,18 @@
 {
-  "name": "kinekids",
-  "version": "0.1.0",
+  "name": "kinekids-workspace",
+  "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "uis/frontend",
+    "uis/backend"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@ai-sdk/google": "^4.0.45",
-    "@ai-sdk/react": "^4.0.71",
-    "@supabase/supabase-js": "^2.112.3",
-    "@vercel/analytics": "^2.0.1",
-    "ai": "^7.0.68",
-    "framer-motion": "^13.1.0",
-    "lucide-react": "^1.32.0",
-    "next": "16.3.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "zustand": "^5.0.15"
-  },
-  "devDependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.1",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "dev": "npm run dev:frontend",
+    "dev:all": "npm run dev:frontend & npm run dev:backend",
+    "dev:frontend": "npm run --prefix uis/frontend dev",
+    "dev:backend": "npm run --prefix uis/backend dev",
+    "build:frontend": "npm run --prefix uis/frontend build",
+    "build:backend": "npm run --prefix uis/backend build",
+    "lint": "npm run --prefix uis/frontend lint && npm run --prefix uis/backend lint"
   }
 }

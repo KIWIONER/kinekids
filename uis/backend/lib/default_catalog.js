@@ -1,0 +1,3166 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DEFAULT_PRICE_OVERRIDES = exports.DEFAULT_CURATED_PRODUCTS = void 0;
+exports.DEFAULT_CURATED_PRODUCTS = [
+    {
+        "id": "9656",
+        "title": "Set de Juego Blando (10 Bloques)",
+        "category": "set",
+        "price": 208,
+        "description": "<p><strong>IGLU&nbsp;Adventurer 10-piece</strong> playset is a canvas for your child's creativity. With various shapes and sizes, it offers endless possibilities for imaginative play, construction, and exploration. Watch as your child transforms their ideas into tangible creations,&nbsp;actively enhancing their problem-solving, spatial reasoning, and critical thinking skills. It's a fun way to learn through play.<br></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 132.71,
+        "markup_multiplier": 1.45,
+        "retail_price": 208,
+        "retail_price_override": 208,
+        "shipping_cost": 33,
+        "variants": [
+            {
+                "id": "9656",
+                "title": "Soft Play 10 Foam Block Set - Chocolate Factory Creativity",
+                "variantName": "Chocolate",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-chocolate-factory-2ee1419a.jpg",
+                "wholesale_price": 132.71,
+                "shipping_cost": 14.99
+            },
+            {
+                "id": "9655",
+                "title": "Soft Play 10 Foam Block Set - Pastel Fries Creativity",
+                "variantName": "Mostaza Pastel",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg",
+                "wholesale_price": 132.71,
+                "shipping_cost": 14.99
+            },
+            {
+                "id": "9654",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea Creativity",
+                "variantName": "Azul Mar Pastel",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg",
+                "wholesale_price": 132.71,
+                "shipping_cost": 14.99
+            },
+            {
+                "id": "5562",
+                "title": "Soft Play 10 Foam Block Set - Light Pastel Creativity",
+                "variantName": "Pastel Suave Creativity",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-93d1d074.jpg",
+                "wholesale_price": 132.71,
+                "shipping_cost": 33
+            }
+        ],
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "stock": 178,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9654",
+        "title": "Soft Play 10 Foam Block Set - Pastel Sea Creativity",
+        "category": "set",
+        "price": 208,
+        "description": "El juego <p><strong>IGLU Aventurero de 10 piezas</strong> es un lienzo para la creatividad de tu hijo. Con varias formas y tamaños, ofrece infinitas posibilidades para el juego, la construcción y la exploración imaginativos. Observe cómo su hijo transforma sus ideas en creaciones tangibles, mejorando activamente sus habilidades de resolución de problemas, razonamiento espacial y pensamiento crítico. Es una forma divertida de aprender a través del juego.<br></p><ul><li><p>Fomenta la actividad física</p></li><li><p>Estimula la creatividad y la imaginación</p></li><li><p>Ayuda a liberar el exceso de energía y controlar el estrés</p></li><li><p>Proporciona estimulación sensorial</p></li><li><p>Mantiene a los niños fuera de las pantallas</p></li><li><p>Promueve habilidades sociales como compartir y colaborando<br></p></li></ul><p>Las formas suaves y abrazables de IGLU son como amigos para desarrollar una amplia gama de movimientos y habilidades motoras en los niños. Las diferentes formas ayudan a los niños a mejorar su coordinación y habilidades motoras, desde mover los dedos hasta gatear, escalar y explorar alturas.</p><p>Compartir risas con hermanos, amigos y amigos potencia las habilidades sociales al generar conversaciones y conexiones.</p><p>Trabajar en equipo con padres o amigos conduce a un aprendizaje rápido y a detectar formas geométricas geniales y colores vivos. La interminable mezcla de formas es como un tesoro escondido para crear mundos imaginativos: castillos, fuertes y más.</p><p>A medida que los niños crecen, estas formas se transforman en excelentes herramientas. Construir pistas de obstáculos, jugar y conquistar escalones para llegar a la cama o a la silla: las posibilidades son infinitas. Incluso las mascotas se unen a la diversión, usando formas como juguetes y los adultos se vuelven astutos: ¡imagina las formas como un confiable soporte para computadora!<br></p><ul><li><p>Muy duradero: hecho de espuma HQ. Espuma densa pero ligera que mantiene su forma.</p></li><li><p>Fácil limpieza: se limpia con un paño húmedo.</p></li><li><p>Hecho a mano: desde la costura hasta el embalaje, todo está hecho a mano.</p></li><li><p>Certificados: los bloques se prueban rigurosamente y han recibido certificados de seguridad en la UE, EE. UU., Canadá y el Reino Unido.</p></li><li><p>Fabricado en la UE: todo está hecho en nuestra zona del norte de Europa. instalación.<br></p></li></ul><p>Los bloques blandos IGLU están hechos de espuma firme, <strong>100% reciclable</strong> <strong>de alta calidad</strong> con una estructura de células cerradas: <strong>suave y</strong> <strong>súper liviana.</strong>  Cubiertos con un resistente <strong>cuero ecológico</strong> artificial. Las formas son <strong>robustas</strong>, <strong>agradables al tacto</strong>, <strong>fáciles de cuidar</strong>, conservan bien la forma y están testadas para detectar sustancias nocivas.</p><p>Los productos IGLU tienen la marca CE según la <strong>Directiva de la UE 88/378/CEE: Seguridad de los juguetes</strong>, lo que los hace absolutamente seguros para los niños pequeños.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 132.71,
+        "markup_multiplier": 1.45,
+        "retail_price": 208,
+        "retail_price_override": 208,
+        "shipping_cost": 33,
+        "variants": [
+            {
+                "id": "9654-pastel-fries",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea Creativity",
+                "variantName": "Pastel Fries",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "9654-pastel-sea",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea Creativity",
+                "variantName": "Pastel Sea",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "9654-pastel-pink",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea Creativity",
+                "variantName": "Pastel Pink",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "9654-pastel-turquoise",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea Creativity",
+                "variantName": "Pastel Turquoise",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "9654-earth-pastel",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea Creativity",
+                "variantName": "Earth Pastel",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 111,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9409",
+        "title": "MeowBaby® Boucle Playset with Ball Pit",
+        "category": "module",
+        "price": 235,
+        "description": "<p>Bring playground fun indoors! This foam playset sparks imagination, builds creativity, and supports active development. Toddlers can climb, slide, stack, or build obstacle courses — and the blocks can even double as pouffes or seats.</p><p>Made from hypoallergenic, non-toxic polyurethane foam, the blocks are lightweight, safe, and resistant to deformation. Each element has a removable cover that’s soft to the touch and machine washable, making this set practical as well as fun.</p><p><strong>Why it works:</strong></p><ul><li><p>Soft & safe – Made from non-toxic, child-friendly materials</p></li><li><p>Multifunctional – Use as building blocks, climbing structures, or furniture</p></li><li><p>Durable – High-density foam holds its shape for years of play</p></li><li><p>Easy to clean – Removable covers, washable at 30°C</p></li><li><p>Supports development – Improves balance, coordination, and motor skills</p></li></ul><p><strong>Features:</strong></p><ul><li><p>Filling: polyurethane foam (Oeko-Tex certified)</p></li><li><p>Covers: 77% cotton / 23% polyester, zippered, soft-touch</p></li><li><p>Lightweight and easy to move</p></li><li><p>Stackable, various shapes for flexible play</p></li><li><p>Suitable for ages 1–3 (under adult supervision)</p></li></ul><p>Minimalist in design and soft in texture, this foam set blends seamlessly into playrooms, nurseries, and living spaces while offering hours of fun and developmental play.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/meowbaby-boucle-playset-with-ball-pit-white-balls-a03c3214.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 160,
+        "markup_multiplier": 1.45,
+        "retail_price": 235,
+        "shipping_cost": 33,
+        "retail_price_override": 235,
+        "variants": [
+            {
+                "id": "9409",
+                "title": "MeowBaby® Boucle Playset with Ball Pit",
+                "variantName": "Estándar",
+                "price": 235,
+                "imageUrl": "https://assets.hertwill.com/content/images/meowbaby-boucle-playset-with-ball-pit-white-balls-a03c3214.jpg",
+                "wholesale_price": 235,
+                "shipping_cost": 17.99
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8959",
+        "title": "Baby Activity Mat, 100x100cm",
+        "category": "module",
+        "price": 200,
+        "description": "A handmade activity mat designed to give babies a safe and stimulating place to explore the world from day one. Created together with a children’s physiotherapist, the mat supports early development through sensory play, textures, sounds, and movement. The calm Nordic color palette looks great in modern homes while still giving babies the visual contrast they need for early development. Perfect for tummy time, reaching, grabbing, and early play. Características principales: • Spacious 100 × 100 cm play area for comfortable exploration • Removable activity arches with three hanging toys for extra stimulation • Toys include a rattle circle, rustling rectangle, and mirror square • Interactive elements on the mat edges: squeaky toy pocket, wooden buttons, crinkling shapes, and baby mirror • Encourages sensory exploration and fine motor skill development • Velcro-attached arches are easy to remove as the baby grows • Calm but contrasting colors help stimulate visual development • Option to personalize the mat with the baby’s name Develops • Fine motor skills • Sensory perception • Coordination • Muscle strength through tummy time • Curiosity and early exploration Product details Size: 100 × 100 cm Activity arches: approx. 165 cm Materiales: GOTS-certified organic cotton Age: Suitable from birth Safety: CE-certified according to EU safety standards Origin: Handmade in Estonia",
+        "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-100x100cm-black-and-white-c59e9415.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 143.6,
+        "markup_multiplier": 1.45,
+        "retail_price": 200,
+        "shipping_cost": 33,
+        "retail_price_override": 200,
+        "variants": [
+            {
+                "id": "8959",
+                "title": "Baby Activity Mat, 100x100cm - Black and White",
+                "variantName": "Negro and Blanco",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-100x100cm-black-and-white-c59e9415.jpg",
+                "wholesale_price": 143.6,
+                "shipping_cost": 15.99
+            },
+            {
+                "id": "8958",
+                "title": "Baby Activity Mat, 100x100cm - Mint Green",
+                "variantName": "Mint Verde",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-100x100cm-green-e05d25f5.jpg",
+                "wholesale_price": 143.6,
+                "shipping_cost": 15.99
+            },
+            {
+                "id": "8957",
+                "title": "Baby Activity Mat, 100x100cm - Brown",
+                "variantName": "Brown",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-100x100cm-brown-b54e3f0c.jpg",
+                "wholesale_price": 143.6,
+                "shipping_cost": 15.99
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8958",
+        "title": "Baby Activity Mat, 100x100cm - Mint Green",
+        "category": "module",
+        "price": 200,
+        "description": "<p>A handmade activity mat designed to give babies a safe and stimulating place to explore the world from day one. Created together with a children’s physiotherapist, the mat supports early development through sensory play, textures, sounds, and movement. The calm Nordic color palette looks great in modern homes while still giving babies the visual contrast they need for early development.</p><p>Perfect for tummy time, reaching, grabbing, and early play.</p><p><strong>Key features</strong></p><p>• Spacious <strong>100 × 100 cm</strong> play area for comfortable exploration<br>• <strong>Removable activity arches</strong> with three hanging toys for extra stimulation<br>• Toys include a <strong>rattle circle, rustling rectangle, and mirror square</strong><br>• Interactive elements on the mat edges: squeaky toy pocket, wooden buttons, crinkling shapes, and baby mirror<br>• Encourages <strong>sensory exploration and fine motor skill development</strong><br>• Velcro-attached arches are <strong>easy to remove as the baby grows</strong><br>• Calm but contrasting colors help stimulate <strong>visual development</strong><br>• Option to <strong>personalize the mat with the baby’s name</strong></p><p><strong>Develops</strong></p><p>• Fine motor skills<br>• Sensory perception<br>• Coordination<br>• Muscle strength through tummy time<br>• Curiosity and early exploration</p><p><strong>Product details</strong></p><p>Size: 100 × 100 cm<br>Activity arches: approx. 165 cm<br>Material: GOTS-certified organic cotton<br>Age: Suitable from birth<br>Safety: CE-certified according to EU safety standards<br>Origin: Handmade in Estonia</p><p></p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-100x100cm-green-e05d25f5.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 143.6,
+        "markup_multiplier": 1.45,
+        "retail_price": 200,
+        "shipping_cost": 33,
+        "retail_price_override": 200,
+        "variants": [
+            {
+                "id": "8958-pastel-fries",
+                "title": "Baby Activity Mat, 100x100cm - Mint Green",
+                "variantName": "Pastel Fries",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8958-pastel-sea",
+                "title": "Baby Activity Mat, 100x100cm - Mint Green",
+                "variantName": "Pastel Sea",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8958-pastel-pink",
+                "title": "Baby Activity Mat, 100x100cm - Mint Green",
+                "variantName": "Pastel Pink",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8958-pastel-turquoise",
+                "title": "Baby Activity Mat, 100x100cm - Mint Green",
+                "variantName": "Pastel Turquoise",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8958-earth-pastel",
+                "title": "Baby Activity Mat, 100x100cm - Mint Green",
+                "variantName": "Earth Pastel",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8957",
+        "title": "Baby Activity Mat, 100x100cm - Brown",
+        "category": "module",
+        "price": 200,
+        "description": "<p>A handmade activity mat designed to give babies a safe and stimulating place to explore the world from day one. Created together with a children’s physiotherapist, the mat supports early development through sensory play, textures, sounds, and movement. The calm Nordic color palette looks great in modern homes while still giving babies the visual contrast they need for early development.</p><p>Perfect for tummy time, reaching, grabbing, and early play.</p><p><strong>Key features</strong></p><p>• Spacious <strong>100 × 100 cm</strong> play area for comfortable exploration<br>• <strong>Removable activity arches</strong> with three hanging toys for extra stimulation<br>• Toys include a <strong>rattle circle, rustling rectangle, and mirror square</strong><br>• Interactive elements on the mat edges: squeaky toy pocket, wooden buttons, crinkling shapes, and baby mirror<br>• Encourages <strong>sensory exploration and fine motor skill development</strong><br>• Velcro-attached arches are <strong>easy to remove as the baby grows</strong><br>• Calm but contrasting colors help stimulate <strong>visual development</strong><br>• Option to <strong>personalize the mat with the baby’s name</strong></p><p><strong>Develops</strong></p><p>• Fine motor skills<br>• Sensory perception<br>• Coordination<br>• Muscle strength through tummy time<br>• Curiosity and early exploration</p><p><strong>Product details</strong></p><p>Size: 100 × 100 cm<br>Activity arches: approx. 165 cm<br>Material: GOTS-certified organic cotton<br>Age: Suitable from birth<br>Safety: CE-certified according to EU safety standards<br>Origin: Handmade in Estonia</p><p></p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-100x100cm-brown-b54e3f0c.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 143.6,
+        "markup_multiplier": 1.45,
+        "retail_price": 200,
+        "shipping_cost": 33,
+        "retail_price_override": 200,
+        "variants": [
+            {
+                "id": "8957-pastel-fries",
+                "title": "Baby Activity Mat, 100x100cm - Brown",
+                "variantName": "Pastel Fries",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8957-pastel-sea",
+                "title": "Baby Activity Mat, 100x100cm - Brown",
+                "variantName": "Pastel Sea",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8957-pastel-pink",
+                "title": "Baby Activity Mat, 100x100cm - Brown",
+                "variantName": "Pastel Pink",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8957-pastel-turquoise",
+                "title": "Baby Activity Mat, 100x100cm - Brown",
+                "variantName": "Pastel Turquoise",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8957-earth-pastel",
+                "title": "Baby Activity Mat, 100x100cm - Brown",
+                "variantName": "Earth Pastel",
+                "price": 200,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8953",
+        "title": "Baby Activity Mat, 120x120cm",
+        "category": "module",
+        "price": 211,
+        "description": "A soft and spacious activity mat designed to support your baby’s first discoveries. Handmade from organic cotton, this large play mat offers a safe and stimulating space where babies can explore textures, sounds, and movement while developing early motor skills. The calm Nordic color palette keeps the environment soothing while still stimulating visual development. Perfect from the first months, the mat encourages tummy time, reaching, and grasping, helping babies strengthen muscles and coordination through play. Características principales: • Large 120 × 120 cm play area that gives babies plenty of space to explore • Handmade from GOTS-certified organic cotton • Includes removable activity arches with engaging toys • Toys stimulate vision, touch, and hearing through different textures and sounds • Soft Nordic color palette designed to support visual development without overstimulation • Velcro-attached arches are easy to remove as your child grows • Loops allow parents to add or swap additional toys • Helps develop motor skills, coordination, and tummy-time strength • Suitable for babies from birth • Option to personalize with the baby’s name Product details Materiales: Organic cotton (GOTS certified) Size: 120 × 120 cm Activity arch Altura: approx. 150 cm Safety: CE-certified according to EU safety requirements Origin: Handmade in Estonia A beautiful and functional play space that supports your baby’s development while fitting naturally into a modern home.",
+        "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-120x120cm-mint-green-f328d07e.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 152.1,
+        "markup_multiplier": 1.45,
+        "retail_price": 211,
+        "shipping_cost": 33,
+        "retail_price_override": 211,
+        "variants": [
+            {
+                "id": "8953",
+                "title": "Baby Activity Mat, 120x120cm - Mint Green",
+                "variantName": "Mint Verde",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-120x120cm-mint-green-f328d07e.jpg",
+                "wholesale_price": 152.1,
+                "shipping_cost": 15.99
+            },
+            {
+                "id": "8954",
+                "title": "Baby Activity Mat, 120x120cm - Brown",
+                "variantName": "Brown",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-120x120cm-brown-bf2dac0a.jpg",
+                "wholesale_price": 152.1,
+                "shipping_cost": 15.99
+            },
+            {
+                "id": "8955",
+                "title": "Baby Activity Mat, 120x120cm - Blue",
+                "variantName": "Azul",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-120x120cm-blue-b1e4d976.jpg",
+                "wholesale_price": 152.1,
+                "shipping_cost": 15.99
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8954",
+        "title": "Baby Activity Mat, 120x120cm - Brown",
+        "category": "module",
+        "price": 211,
+        "description": "<p>A soft and spacious activity mat designed to support your baby’s first discoveries. Handmade from organic cotton, this large play mat offers a safe and stimulating space where babies can explore textures, sounds, and movement while developing early motor skills. The calm Nordic color palette keeps the environment soothing while still stimulating visual development.</p><p>Perfect from the first months, the mat encourages tummy time, reaching, and grasping, helping babies strengthen muscles and coordination through play.</p><p><strong>Key features</strong></p><p>• Large 120 × 120 cm play area that gives babies plenty of space to explore<br>• Handmade from GOTS-certified organic cotton<br>• Includes removable activity arches with engaging toys<br>• Toys stimulate vision, touch, and hearing through different textures and sounds<br>• Soft Nordic color palette designed to support visual development without overstimulation<br>• Velcro-attached arches are easy to remove as your child grows<br>• Loops allow parents to add or swap additional toys<br>• Helps develop motor skills, coordination, and tummy-time strength<br>• Suitable for babies from birth<br>• Option to personalize with the baby’s name</p><p><strong>Product details</strong></p><p>Material: Organic cotton (GOTS certified)<br>Size: 120 × 120 cm<br>Activity arch height: approx. 150 cm<br>Safety: CE-certified according to EU safety requirements<br>Origin: Handmade in Estonia</p><p>A beautiful and functional play space that supports your baby’s development while fitting naturally into a modern home.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-120x120cm-brown-bf2dac0a.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 152.1,
+        "markup_multiplier": 1.45,
+        "retail_price": 211,
+        "shipping_cost": 33,
+        "retail_price_override": 211,
+        "variants": [
+            {
+                "id": "8954-pastel-fries",
+                "title": "Baby Activity Mat, 120x120cm - Brown",
+                "variantName": "Pastel Fries",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8954-pastel-sea",
+                "title": "Baby Activity Mat, 120x120cm - Brown",
+                "variantName": "Pastel Sea",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8954-pastel-pink",
+                "title": "Baby Activity Mat, 120x120cm - Brown",
+                "variantName": "Pastel Pink",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8954-pastel-turquoise",
+                "title": "Baby Activity Mat, 120x120cm - Brown",
+                "variantName": "Pastel Turquoise",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8954-earth-pastel",
+                "title": "Baby Activity Mat, 120x120cm - Brown",
+                "variantName": "Earth Pastel",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8955",
+        "title": "Baby Activity Mat, 120x120cm - Blue",
+        "category": "set",
+        "price": 211,
+        "description": "<p>A soft and spacious activity mat designed to support your baby’s first discoveries. Handmade from organic cotton, this large play mat offers a safe and stimulating space where babies can explore textures, sounds, and movement while developing early motor skills. The calm Nordic color palette keeps the environment soothing while still stimulating visual development.</p><p>Perfect from the first months, the mat encourages tummy time, reaching, and grasping, helping babies strengthen muscles and coordination through play.</p><p><strong>Key features</strong></p><p>• Large 120 × 120 cm play area that gives babies plenty of space to explore<br>• Handmade from GOTS-certified organic cotton<br>• Includes removable activity arches with engaging toys<br>• Toys stimulate vision, touch, and hearing through different textures and sounds<br>• Soft Nordic color palette designed to support visual development without overstimulation<br>• Velcro-attached arches are easy to remove as your child grows<br>• Loops allow parents to add or swap additional toys<br>• Helps develop motor skills, coordination, and tummy-time strength<br>• Suitable for babies from birth<br>• Option to personalize with the baby’s name</p><p><strong>Product details</strong></p><p>Material: Organic cotton (GOTS certified)<br>Size: 120 × 120 cm<br>Activity arch height: approx. 150 cm<br>Safety: CE-certified according to EU safety requirements<br>Origin: Handmade in Estonia</p><p>A beautiful and functional play space that supports your baby’s development while fitting naturally into a modern home.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/baby-activity-mat-120x120cm-blue-b1e4d976.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 152.1,
+        "markup_multiplier": 1.45,
+        "retail_price": 211,
+        "shipping_cost": 33,
+        "retail_price_override": 211,
+        "variants": [
+            {
+                "id": "8955-pastel-fries",
+                "title": "Baby Activity Mat, 120x120cm - Blue",
+                "variantName": "Pastel Fries",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8955-pastel-sea",
+                "title": "Baby Activity Mat, 120x120cm - Blue",
+                "variantName": "Pastel Sea",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8955-pastel-pink",
+                "title": "Baby Activity Mat, 120x120cm - Blue",
+                "variantName": "Pastel Pink",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8955-pastel-turquoise",
+                "title": "Baby Activity Mat, 120x120cm - Blue",
+                "variantName": "Pastel Turquoise",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8955-earth-pastel",
+                "title": "Baby Activity Mat, 120x120cm - Blue",
+                "variantName": "Earth Pastel",
+                "price": 211,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8726",
+        "title": "Rainbow Bridge Juego Blando Set",
+        "category": "module",
+        "price": 193,
+        "description": "A modular soft play set made for climbing, crawling and balance play. The curved shapes can be stacked and rearranged into bridges, tunnels or simple obstacle courses, giving kids plenty of room to move, experiment and burn energy indoors. Soft foam construction keeps things safe, quiet and stress-free for everyone else in the house. Made in a fully certified production environment and tested to meet strict toy safety standards in the EU, USA and Canada. CE marked and compliant with EN71, ASTM F963 and CPSIA requirements. Materials are tested for flammability, heavy metals, lead and phthalates. • Supports balance, coordination and motor skill development • Open-ended shapes for creative and active play • Soft, lightweight foam with rounded edges • Durable, easy-clean Piel ecológica suave y resistente cover",
+        "imageUrl": "https://assets.hertwill.com/content/images/rainbow-bridge-soft-play-set-light-pastel-88df9e23.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 121.22,
+        "markup_multiplier": 1.45,
+        "retail_price": 193,
+        "shipping_cost": 33,
+        "retail_price_override": 193,
+        "variants": [
+            {
+                "id": "8726",
+                "title": "Rainbow Bridge Soft Play Set - Light Pastel",
+                "variantName": "Pastel Suave",
+                "price": 193,
+                "imageUrl": "https://assets.hertwill.com/content/images/rainbow-bridge-soft-play-set-light-pastel-88df9e23.jpg",
+                "wholesale_price": 121.22,
+                "shipping_cost": 33
+            },
+            {
+                "id": "8727",
+                "title": "Rainbow Bridge Soft Play Set - Beige & Honey",
+                "variantName": "Beige & Honey",
+                "price": 193,
+                "imageUrl": "https://assets.hertwill.com/content/images/rainbow-bridge-soft-play-set-beige-honey-617c982f.jpg",
+                "wholesale_price": 121.22,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 28,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8725",
+        "title": "Módulo Escalera y Tobogán de Espuma",
+        "category": "module",
+        "price": 202,
+        "description": "Los módulos y formas de psicomotricidad IGLU están fabricados con espuma de alta densidad de primera calidad, 100% reciclable y con estructura celular cerrada: suave, ultraligera y de máxima durabilidad. Revestidos en piel ecológica de tacto agradable, impermeable y muy fácil de limpiar con un paño húmedo.",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-turquoise-6bf3f8b1.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 127.9,
+        "markup_multiplier": 1.45,
+        "retail_price": 202,
+        "shipping_cost": 33,
+        "retail_price_override": 202,
+        "variants": [
+            {
+                "id": "8725",
+                "title": "Soft Play Step and Slide Set - Pastel Turquoise",
+                "variantName": "Pastel Turquoise",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-turquoise-6bf3f8b1.jpg",
+                "wholesale_price": 127.9,
+                "shipping_cost": 33
+            },
+            {
+                "id": "8724",
+                "title": "Soft Play Step and Slide Set - Pink & Beige Gray",
+                "variantName": "Rosa & Beige Gris",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-pink-beige-grey-a61962e1.jpg",
+                "wholesale_price": 127.9,
+                "shipping_cost": 33
+            },
+            {
+                "id": "7493",
+                "title": "Soft Play Step and Slide Set - Blue and Red",
+                "variantName": "Azul and Red",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-blue-and-red-dd8c52ee.jpg",
+                "wholesale_price": 127.9,
+                "shipping_cost": 33
+            },
+            {
+                "id": "7495",
+                "title": "Soft Play Step and Slide Set - Green",
+                "variantName": "Verde",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-green-e2cc58f8.jpg",
+                "wholesale_price": 127.9,
+                "shipping_cost": 33
+            },
+            {
+                "id": "7492",
+                "title": "Soft Play Step and Slide Set - Pastel",
+                "variantName": "Pastel",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-pastel-07c3f596.jpg",
+                "wholesale_price": 127.9,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 61,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8724",
+        "title": "Soft Play Step and Slide Set - Pink & Beige Gray",
+        "category": "module",
+        "price": 202,
+        "description": "<p>Let the fun begin! Explore the soft play world one shape at a time. Our Mega Fun Slider set opens up a world of excitement, inviting your child to climb, slide, and explore. It's an adventure waiting to be discovered.&nbsp;Built to withstand hours of enthusiastic play, the Mega Fun Slider set is durable and designed for long-lasting entertainment.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-pink-beige-grey-a61962e1.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 127.9,
+        "markup_multiplier": 1.45,
+        "retail_price": 202,
+        "shipping_cost": 33,
+        "retail_price_override": 202,
+        "variants": [
+            {
+                "id": "8724-pastel-fries",
+                "title": "Soft Play Step and Slide Set - Pink & Beige Gray",
+                "variantName": "Pastel Fries",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8724-pastel-sea",
+                "title": "Soft Play Step and Slide Set - Pink & Beige Gray",
+                "variantName": "Pastel Sea",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8724-pastel-pink",
+                "title": "Soft Play Step and Slide Set - Pink & Beige Gray",
+                "variantName": "Pastel Pink",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8724-pastel-turquoise",
+                "title": "Soft Play Step and Slide Set - Pink & Beige Gray",
+                "variantName": "Pastel Turquoise",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8724-earth-pastel",
+                "title": "Soft Play Step and Slide Set - Pink & Beige Gray",
+                "variantName": "Earth Pastel",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 70,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8723",
+        "title": "Montessori Juego Blando Set",
+        "category": "module",
+        "price": 177,
+        "description": "A soft play set designed around Montessori principles to support active, independent play. The colorful shapes invite kids to build, climb, crawl and explore in a safe indoor environment. Ideal for developing movement, coordination and creativity through open-ended play. • Encourages independent thinking and problem solving • Supports motor skills, balance and coordination • Sensory-friendly design with bright rainbow colors • Soft foam pieces with rounded edges for safe play • Lightweight and easy for kids to move and stack • Durable foam with Piel ecológica suave y resistente cover • Easy to wipe clean and maintain • Made in Europe from high-quality, recyclable materials This product is made in a fully certified production environment and meets strict toy safety standards in the EU, USA and Canada. • Manufacturing certified to ISO 9001, ISO 14001, ISO 45001 and ISO 50001 • Meets EU toy safety directive 2009/48/EC and EN71 standards • CE marked for toy safety A solid choice for playrooms, nurseries and any home where kids are allowed to be kids.",
+        "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 177,
+        "markup_multiplier": 1.45,
+        "retail_price": 177,
+        "shipping_cost": 33,
+        "retail_price_override": 177,
+        "variants": [
+            {
+                "id": "8723",
+                "title": "Montessori Juego Blando Set",
+                "variantName": "Estándar",
+                "price": 177,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg",
+                "wholesale_price": 108.53,
+                "shipping_cost": 33
+            },
+            {
+                "id": "8722",
+                "title": "Montessori Soft Play Set - Light Pastel",
+                "variantName": "Pastel Suave",
+                "price": 177,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-light-pastel-eeeec0d0.jpg",
+                "wholesale_price": 108.53,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 40,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8722",
+        "title": "Montessori Soft Play Set - Light Pastel",
+        "category": "module",
+        "price": 177,
+        "description": "<p>A soft play set designed around Montessori principles to support active, independent play. The colorful shapes invite kids to build, climb, crawl and explore in a safe indoor environment. Ideal for developing movement, coordination and creativity through open-ended play.</p><p>• Encourages independent thinking and problem solving<br>• Supports motor skills, balance and coordination<br>• Sensory-friendly design with bright rainbow colors<br>• Soft foam pieces with rounded edges for safe play<br>• Lightweight and easy for kids to move and stack<br>• Durable foam with eco-leather cover<br>• Easy to wipe clean and maintain<br>• Made in Europe from high-quality, recyclable materials<br><br>This product is made in a fully certified production environment and meets strict toy safety standards in the EU, USA and Canada.</p><p>• Manufacturing certified to ISO 9001, ISO 14001, ISO 45001 and ISO 50001<br>• Meets EU toy safety directive 2009/48/EC and EN71 standards<br>• CE marked for toy safety<br></p><p>A solid choice for playrooms, nurseries and any home where kids are allowed to be kids.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-light-pastel-eeeec0d0.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 108.53,
+        "markup_multiplier": 1.45,
+        "retail_price": 177,
+        "shipping_cost": 33,
+        "retail_price_override": 177,
+        "variants": [
+            {
+                "id": "8722-pastel-fries",
+                "title": "Montessori Soft Play Set - Light Pastel",
+                "variantName": "Pastel Fries",
+                "price": 177,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8722-pastel-sea",
+                "title": "Montessori Soft Play Set - Light Pastel",
+                "variantName": "Pastel Sea",
+                "price": 177,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8722-pastel-pink",
+                "title": "Montessori Soft Play Set - Light Pastel",
+                "variantName": "Pastel Pink",
+                "price": 177,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8722-pastel-turquoise",
+                "title": "Montessori Soft Play Set - Light Pastel",
+                "variantName": "Pastel Turquoise",
+                "price": 177,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8722-earth-pastel",
+                "title": "Montessori Soft Play Set - Light Pastel",
+                "variantName": "Earth Pastel",
+                "price": 177,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 44,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9447",
+        "title": "Módulo Rampa Cuña de Psicomotricidad",
+        "category": "module",
+        "price": 40,
+        "description": "<p>IGLU products are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft & super light.  Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity & imagination</p></li><li><p>Helps release excess energy & manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing & collaborating</p></li><li><p>Measurements: 40 x 40 x 20 cm</p></li><li><p>For kids ages 6-36 months</p></li><li><p>Made in Latvia</p></li><li><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-shape-wedge-salmon-6940c3b9.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 16.48,
+        "markup_multiplier": 2.5,
+        "retail_price": 40,
+        "shipping_cost": 33,
+        "retail_price_override": 40,
+        "variants": [
+            {
+                "id": "9447",
+                "title": "Soft Play Shape Wedge - Salmon",
+                "variantName": "Salmón",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-shape-wedge-salmon-6940c3b9.jpg",
+                "wholesale_price": 16.48,
+                "shipping_cost": 33
+            },
+            {
+                "id": "9446",
+                "title": "Soft Play Shape Wedge - Lavender",
+                "variantName": "Lavanda",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-shape-wedge-lavender-0d7efdc6.jpg",
+                "wholesale_price": 16.48,
+                "shipping_cost": 33
+            },
+            {
+                "id": "9445",
+                "title": "Soft Play Shape Wedge - Blue",
+                "variantName": "Azul",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-shape-wedge-blue-c5e1ff20.jpg",
+                "wholesale_price": 16.48,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 86,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9446",
+        "title": "Soft Play Shape Wedge - Lavender",
+        "category": "module",
+        "price": 40,
+        "description": "<p>IGLU products are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft &amp; super light.&nbsp; Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating</p></li><li><p>Measurements: 40 x 40 x 20 cm</p></li><li><p>For kids ages 6-36 months</p></li><li><p>Made in Latvia</p></li><li><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-shape-wedge-lavender-0d7efdc6.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 16.48,
+        "markup_multiplier": 2.5,
+        "retail_price": 40,
+        "shipping_cost": 33,
+        "retail_price_override": 40,
+        "variants": [
+            {
+                "id": "9446-pastel-fries",
+                "title": "Soft Play Shape Wedge - Lavender",
+                "variantName": "Pastel Fries",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "9446-pastel-sea",
+                "title": "Soft Play Shape Wedge - Lavender",
+                "variantName": "Pastel Sea",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "9446-pastel-pink",
+                "title": "Soft Play Shape Wedge - Lavender",
+                "variantName": "Pastel Pink",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "9446-pastel-turquoise",
+                "title": "Soft Play Shape Wedge - Lavender",
+                "variantName": "Pastel Turquoise",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "9446-earth-pastel",
+                "title": "Soft Play Shape Wedge - Lavender",
+                "variantName": "Earth Pastel",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 89,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9445",
+        "title": "Soft Play Shape Wedge - Blue",
+        "category": "module",
+        "price": 40,
+        "description": "<p>IGLU products are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft &amp; super light.&nbsp; Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating</p></li><li><p>Measurements: 40 x 40 x 20 cm</p></li><li><p>For kids ages 6-36 months</p></li><li><p>Made in Latvia</p></li><li><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-shape-wedge-blue-c5e1ff20.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 16.48,
+        "markup_multiplier": 2.5,
+        "retail_price": 40,
+        "shipping_cost": 33,
+        "retail_price_override": 40,
+        "variants": [
+            {
+                "id": "9445-pastel-fries",
+                "title": "Soft Play Shape Wedge - Blue",
+                "variantName": "Pastel Fries",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "9445-pastel-sea",
+                "title": "Soft Play Shape Wedge - Blue",
+                "variantName": "Pastel Sea",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "9445-pastel-pink",
+                "title": "Soft Play Shape Wedge - Blue",
+                "variantName": "Pastel Pink",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "9445-pastel-turquoise",
+                "title": "Soft Play Shape Wedge - Blue",
+                "variantName": "Pastel Turquoise",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "9445-earth-pastel",
+                "title": "Soft Play Shape Wedge - Blue",
+                "variantName": "Earth Pastel",
+                "price": 40,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 104,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8798",
+        "title": "Soft Play 5 Foam Block Set - Light Pastel",
+        "category": "module",
+        "price": 130,
+        "description": "<p><strong>IGLU&nbsp;Corner Climber 5-piece corner climber</strong> set is designed to promote gross motor skills, balance, coordination, and strength development as your child explores this soft play landscape. Built to withstand enthusiastic play, the Corner Climber set is durable and designed to provide hours of active fun and exploration.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/rainbow-bridge-soft-play-set-light-pastel-88df9e23.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 71.82,
+        "markup_multiplier": 1.8,
+        "retail_price": 130,
+        "shipping_cost": 33,
+        "retail_price_override": 130,
+        "variants": [
+            {
+                "id": "8798-pastel-fries",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel",
+                "variantName": "Pastel Fries",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8798-pastel-sea",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel",
+                "variantName": "Pastel Sea",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8798-pastel-pink",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel",
+                "variantName": "Pastel Pink",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8798-pastel-turquoise",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel",
+                "variantName": "Pastel Turquoise",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8798-earth-pastel",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel",
+                "variantName": "Earth Pastel",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 443,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8733",
+        "title": "Soft Play Mega Wave - Salmon Pink",
+        "category": "module",
+        "price": 130,
+        "description": "<p>A versatile, soft foam play set that brings big movement and creative play indoors. Kids can stack, climb, roll, balance, and build their own obstacle courses with the wave-shaped blocks and supporting pieces.<br></p><ul><li><p>Encourages gross motor skills, balance, and coordination</p></li><li><p>Soft foam feels safe even when they go full-speed</p></li><li><p>Lightweight and easy to move around</p></li><li><p>Durable, wipe-clean surface that stands up to daily play</p></li></ul><p><strong>Safety and quality</strong></p><ul><li><p>CE marked toy safety</p></li><li><p>Meets EN71 standards for mechanical safety, flammability, and chemical safety</p></li><li><p>Made under certified quality processes</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-mega-wave-salmon-pink-ccf6c1a9.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 70.89,
+        "markup_multiplier": 1.8,
+        "retail_price": 130,
+        "shipping_cost": 33,
+        "retail_price_override": 130,
+        "variants": [
+            {
+                "id": "8733-pastel-fries",
+                "title": "Soft Play Mega Wave - Salmon Pink",
+                "variantName": "Pastel Fries",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8733-pastel-sea",
+                "title": "Soft Play Mega Wave - Salmon Pink",
+                "variantName": "Pastel Sea",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8733-pastel-pink",
+                "title": "Soft Play Mega Wave - Salmon Pink",
+                "variantName": "Pastel Pink",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8733-pastel-turquoise",
+                "title": "Soft Play Mega Wave - Salmon Pink",
+                "variantName": "Pastel Turquoise",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8733-earth-pastel",
+                "title": "Soft Play Mega Wave - Salmon Pink",
+                "variantName": "Earth Pastel",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 28,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8734",
+        "title": "Soft Play Mega Wave - Baby Blue",
+        "category": "module",
+        "price": 130,
+        "description": "<p>A versatile, soft foam play set that brings big movement and creative play indoors. Kids can stack, climb, roll, balance, and build their own obstacle courses with the wave-shaped blocks and supporting pieces.<br></p><ul><li><p>Encourages gross motor skills, balance, and coordination</p></li><li><p>Soft foam feels safe even when they go full-speed</p></li><li><p>Lightweight and easy to move around</p></li><li><p>Durable, wipe-clean surface that stands up to daily play</p></li></ul><p><strong>Safety and quality</strong></p><ul><li><p>CE marked toy safety</p></li><li><p>Meets EN71 standards for mechanical safety, flammability, and chemical safety</p></li><li><p>Made under certified quality processes</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-mega-wave-baby-blue-54f8931d.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 70.89,
+        "markup_multiplier": 1.8,
+        "retail_price": 130,
+        "shipping_cost": 33,
+        "retail_price_override": 130,
+        "variants": [
+            {
+                "id": "8734-pastel-fries",
+                "title": "Soft Play Mega Wave - Baby Blue",
+                "variantName": "Pastel Fries",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8734-pastel-sea",
+                "title": "Soft Play Mega Wave - Baby Blue",
+                "variantName": "Pastel Sea",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8734-pastel-pink",
+                "title": "Soft Play Mega Wave - Baby Blue",
+                "variantName": "Pastel Pink",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8734-pastel-turquoise",
+                "title": "Soft Play Mega Wave - Baby Blue",
+                "variantName": "Pastel Turquoise",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8734-earth-pastel",
+                "title": "Soft Play Mega Wave - Baby Blue",
+                "variantName": "Earth Pastel",
+                "price": 130,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 34,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8732",
+        "title": "Foam Mega Cube Building Block - Blue & Red",
+        "category": "module",
+        "price": 102,
+        "description": "<p>A soft but sturdy foam block that makes building and imagination play easy and safe indoors. Perfect for towers, forts, paths, and whatever your kid decides to create next.<br></p><ul><li><p>Encourages creativity and spatial play</p></li><li><p>Lightweight and easy to move around</p></li><li><p>Soft foam keeps play safe on floors</p></li><li><p>Durable, wipe-clean surface</p></li></ul><p><strong>Safety and quality</strong></p><ul><li><p>CE marked for toy safety</p></li><li><p>Meets EN71 standards for mechanical safety, flammability, and chemical migration</p></li><li><p>Produced under certified quality and safety processes</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/foam-mega-cube-building-block-blue-red-64189303.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 48.36,
+        "markup_multiplier": 1.8,
+        "retail_price": 102,
+        "shipping_cost": 33,
+        "retail_price_override": 102,
+        "variants": [
+            {
+                "id": "8732-pastel-fries",
+                "title": "Foam Mega Cube Building Block - Blue & Red",
+                "variantName": "Pastel Fries",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8732-pastel-sea",
+                "title": "Foam Mega Cube Building Block - Blue & Red",
+                "variantName": "Pastel Sea",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8732-pastel-pink",
+                "title": "Foam Mega Cube Building Block - Blue & Red",
+                "variantName": "Pastel Pink",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8732-pastel-turquoise",
+                "title": "Foam Mega Cube Building Block - Blue & Red",
+                "variantName": "Pastel Turquoise",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8732-earth-pastel",
+                "title": "Foam Mega Cube Building Block - Blue & Red",
+                "variantName": "Earth Pastel",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 7,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8731",
+        "title": "Foam Mega Cube Building Block - Pine Green",
+        "category": "module",
+        "price": 102,
+        "description": "<p>A soft but sturdy foam block that makes building and imagination play easy and safe indoors. Perfect for towers, forts, paths, and whatever your kid decides to create next.<br></p><ul><li><p>Encourages creativity and spatial play</p></li><li><p>Lightweight and easy to move around</p></li><li><p>Soft foam keeps play safe on floors</p></li><li><p>Durable, wipe-clean surface</p></li></ul><p><strong>Safety and quality</strong></p><ul><li><p>CE marked for toy safety</p></li><li><p>Meets EN71 standards for mechanical safety, flammability, and chemical migration</p></li><li><p>Produced under certified quality and safety processes</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/foam-mega-cube-building-block-green-38037d22.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 48.36,
+        "markup_multiplier": 1.8,
+        "retail_price": 102,
+        "shipping_cost": 33,
+        "retail_price_override": 102,
+        "variants": [
+            {
+                "id": "8731-pastel-fries",
+                "title": "Foam Mega Cube Building Block - Pine Green",
+                "variantName": "Pastel Fries",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8731-pastel-sea",
+                "title": "Foam Mega Cube Building Block - Pine Green",
+                "variantName": "Pastel Sea",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8731-pastel-pink",
+                "title": "Foam Mega Cube Building Block - Pine Green",
+                "variantName": "Pastel Pink",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8731-pastel-turquoise",
+                "title": "Foam Mega Cube Building Block - Pine Green",
+                "variantName": "Pastel Turquoise",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8731-earth-pastel",
+                "title": "Foam Mega Cube Building Block - Pine Green",
+                "variantName": "Earth Pastel",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 12,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8730",
+        "title": "Foam Mega Cube Building Block - Ivory",
+        "category": "module",
+        "price": 102,
+        "description": "<p>A soft but sturdy foam block that makes building and imagination play easy and safe indoors. Perfect for towers, forts, paths, and whatever your kid decides to create next.<br></p><ul><li><p>Encourages creativity and spatial play</p></li><li><p>Lightweight and easy to move around</p></li><li><p>Soft foam keeps play safe on floors</p></li><li><p>Durable, wipe-clean surface</p></li></ul><p><strong>Safety and quality</strong></p><ul><li><p>CE marked for toy safety</p></li><li><p>Meets EN71 standards for mechanical safety, flammability, and chemical migration</p></li><li><p>Produced under certified quality and safety processes</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/foam-mega-cube-building-block-ivory-b7fd60f5.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 48.36,
+        "markup_multiplier": 1.8,
+        "retail_price": 102,
+        "shipping_cost": 33,
+        "retail_price_override": 102,
+        "variants": [
+            {
+                "id": "8730-pastel-fries",
+                "title": "Foam Mega Cube Building Block - Ivory",
+                "variantName": "Pastel Fries",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8730-pastel-sea",
+                "title": "Foam Mega Cube Building Block - Ivory",
+                "variantName": "Pastel Sea",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8730-pastel-pink",
+                "title": "Foam Mega Cube Building Block - Ivory",
+                "variantName": "Pastel Pink",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8730-pastel-turquoise",
+                "title": "Foam Mega Cube Building Block - Ivory",
+                "variantName": "Pastel Turquoise",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8730-earth-pastel",
+                "title": "Foam Mega Cube Building Block - Ivory",
+                "variantName": "Earth Pastel",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 66,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8729",
+        "title": "Foam Mega Cube Building Block - Honey",
+        "category": "module",
+        "price": 102,
+        "description": "<p>A soft but sturdy foam block that makes building and imagination play easy and safe indoors. Perfect for towers, forts, paths, and whatever your kid decides to create next.<br></p><ul><li><p>Encourages creativity and spatial play</p></li><li><p>Lightweight and easy to move around</p></li><li><p>Soft foam keeps play safe on floors</p></li><li><p>Durable, wipe-clean surface</p></li></ul><p><strong>Safety and quality</strong></p><ul><li><p>CE marked for toy safety</p></li><li><p>Meets EN71 standards for mechanical safety, flammability, and chemical migration</p></li><li><p>Produced under certified quality and safety processes</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/foam-mega-cube-building-block-honey-8895c1ee.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 48.36,
+        "markup_multiplier": 1.8,
+        "retail_price": 102,
+        "shipping_cost": 33,
+        "retail_price_override": 102,
+        "variants": [
+            {
+                "id": "8729-pastel-fries",
+                "title": "Foam Mega Cube Building Block - Honey",
+                "variantName": "Pastel Fries",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8729-pastel-sea",
+                "title": "Foam Mega Cube Building Block - Honey",
+                "variantName": "Pastel Sea",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8729-pastel-pink",
+                "title": "Foam Mega Cube Building Block - Honey",
+                "variantName": "Pastel Pink",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8729-pastel-turquoise",
+                "title": "Foam Mega Cube Building Block - Honey",
+                "variantName": "Pastel Turquoise",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8729-earth-pastel",
+                "title": "Foam Mega Cube Building Block - Honey",
+                "variantName": "Earth Pastel",
+                "price": 102,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 49,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8728",
+        "title": "Juego Blando Activity Set Balance Bridge",
+        "category": "module",
+        "price": 169,
+        "description": "Los módulos y formas de psicomotricidad IGLU están fabricados con espuma de alta densidad de primera calidad, 100% reciclable y con estructura celular cerrada: suave, ultraligera y de máxima durabilidad. Revestidos en piel ecológica de tacto agradable, impermeable y muy fácil de limpiar con un paño húmedo.",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-beige-honey-c0cc43e2.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 101.47,
+        "markup_multiplier": 1.45,
+        "retail_price": 169,
+        "shipping_cost": 33,
+        "retail_price_override": 169,
+        "variants": [
+            {
+                "id": "8728",
+                "title": "Soft Play Activity Set Balance Bridge - Beige & Honey",
+                "variantName": "Beige & Honey",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-beige-honey-c0cc43e2.jpg",
+                "wholesale_price": 101.47,
+                "shipping_cost": 33
+            },
+            {
+                "id": "8720",
+                "title": "Soft Play Activity Set Balance Bridge - Blue & Red",
+                "variantName": "Azul & Red",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-blue-red-ccf6d905.jpg",
+                "wholesale_price": 101.47,
+                "shipping_cost": 33
+            },
+            {
+                "id": "8042",
+                "title": "Soft Play Activity Set Balance Bridge - Light Pastel",
+                "variantName": "Pastel Suave",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-light-pastel-34374c52.jpg",
+                "wholesale_price": 101.47,
+                "shipping_cost": 33
+            },
+            {
+                "id": "8040",
+                "title": "Soft Play Activity Set Balance Bridge - Green",
+                "variantName": "Verde",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-green-046f70f4.jpg",
+                "wholesale_price": 101.47,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 45,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8727",
+        "title": "Rainbow Bridge Soft Play Set - Beige & Honey",
+        "category": "module",
+        "price": 193,
+        "description": "<p>A modular soft play set made for climbing, crawling and balance play. The curved shapes can be stacked and rearranged into bridges, tunnels or simple obstacle courses, giving kids plenty of room to move, experiment and burn energy indoors. Soft foam construction keeps things safe, quiet and stress-free for everyone else in the house.</p><p>Made in a fully certified production environment and tested to meet strict toy safety standards in the EU, USA and Canada. CE marked and compliant with EN71, ASTM F963 and CPSIA requirements. Materials are tested for flammability, heavy metals, lead and phthalates.</p><p>• Supports balance, coordination and motor skill development<br>• Open-ended shapes for creative and active play<br>• Soft, lightweight foam with rounded edges<br>• Durable, easy-clean eco-leather cover</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/rainbow-bridge-soft-play-set-beige-honey-617c982f.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 121.22,
+        "markup_multiplier": 1.45,
+        "retail_price": 193,
+        "shipping_cost": 33,
+        "retail_price_override": 193,
+        "variants": [
+            {
+                "id": "8727-pastel-fries",
+                "title": "Rainbow Bridge Soft Play Set - Beige & Honey",
+                "variantName": "Pastel Fries",
+                "price": 193,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8727-pastel-sea",
+                "title": "Rainbow Bridge Soft Play Set - Beige & Honey",
+                "variantName": "Pastel Sea",
+                "price": 193,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8727-pastel-pink",
+                "title": "Rainbow Bridge Soft Play Set - Beige & Honey",
+                "variantName": "Pastel Pink",
+                "price": 193,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8727-pastel-turquoise",
+                "title": "Rainbow Bridge Soft Play Set - Beige & Honey",
+                "variantName": "Pastel Turquoise",
+                "price": 193,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8727-earth-pastel",
+                "title": "Rainbow Bridge Soft Play Set - Beige & Honey",
+                "variantName": "Earth Pastel",
+                "price": 193,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 31,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8720",
+        "title": "Soft Play Activity Set Balance Bridge - Blue & Red",
+        "category": "module",
+        "price": 169,
+        "description": "<p>Improve your child's playtime with the IGLU Soft Play Balance Bridge Activity Set. It's not just a playset; it's a platform for learning, physical activities, balance development, and imaginative adventures. Provide your child with a safe, stimulating, and adventurous space where they can explore, challenge themselves, and embark on thrilling balancing acts right at home.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating</p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-blue-red-ccf6d905.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 101.47,
+        "markup_multiplier": 1.45,
+        "retail_price": 169,
+        "shipping_cost": 33,
+        "retail_price_override": 169,
+        "variants": [
+            {
+                "id": "8720-pastel-fries",
+                "title": "Soft Play Activity Set Balance Bridge - Blue & Red",
+                "variantName": "Pastel Fries",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8720-pastel-sea",
+                "title": "Soft Play Activity Set Balance Bridge - Blue & Red",
+                "variantName": "Pastel Sea",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8720-pastel-pink",
+                "title": "Soft Play Activity Set Balance Bridge - Blue & Red",
+                "variantName": "Pastel Pink",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8720-pastel-turquoise",
+                "title": "Soft Play Activity Set Balance Bridge - Blue & Red",
+                "variantName": "Pastel Turquoise",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8720-earth-pastel",
+                "title": "Soft Play Activity Set Balance Bridge - Blue & Red",
+                "variantName": "Earth Pastel",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 7,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8472",
+        "title": "Soft Play 6 Foam Block Set - Pastel Pink Explorer",
+        "category": "set",
+        "price": 165,
+        "description": "<p>Create endless adventures with the IGLU Explorer Set — a 6-piece collection of soft play shapes including ramps and corners. Toddlers can build, climb, and explore while developing motor skills, creativity, and problem-solving — a perfect Montessori toy for active, imaginative play.</p><p><strong>Benefits:</strong></p><ul><li><p>Encourages physical activity &amp; coordination</p></li><li><p>Boosts creativity and storytelling</p></li><li><p>Helps manage energy &amp; stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Promotes social skills &amp; teamwork</p></li><li><p>Keeps kids engaged and off screens</p></li></ul><p><strong>Product Details:</strong></p><ul><li><p>Made from durable, high-quality foam — dense yet lightweight</p></li><li><p>Easy to clean with a damp cloth</p></li><li><p>Handmade with care in Northern Europe</p></li><li><p>Certified safe in the EU, USA, Canada &amp; UK</p></li><li><p>100% recyclable materials with eco-leather cover</p></li><li><p>CE marked according to EU Directive 88/378 / EEC: Toy Safety</p></li></ul><p>Soft, safe, and endlessly fun — IGLU shapes inspire movement, learning, and imagination for kids (and even pets!).</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-pink-6b4331d3.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 87.77,
+        "markup_multiplier": 1.45,
+        "retail_price": 165,
+        "shipping_cost": 33,
+        "retail_price_override": 165,
+        "variants": [
+            {
+                "id": "8472-pastel-fries",
+                "title": "Soft Play 6 Foam Block Set - Pastel Pink Explorer",
+                "variantName": "Pastel Fries",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8472-pastel-sea",
+                "title": "Soft Play 6 Foam Block Set - Pastel Pink Explorer",
+                "variantName": "Pastel Sea",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8472-pastel-pink",
+                "title": "Soft Play 6 Foam Block Set - Pastel Pink Explorer",
+                "variantName": "Pastel Pink",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8472-pastel-turquoise",
+                "title": "Soft Play 6 Foam Block Set - Pastel Pink Explorer",
+                "variantName": "Pastel Turquoise",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8472-earth-pastel",
+                "title": "Soft Play 6 Foam Block Set - Pastel Pink Explorer",
+                "variantName": "Earth Pastel",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 371,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8471",
+        "title": "Soft Play 6 Foam Block Set - Pastel Turquoise Explorer",
+        "category": "set",
+        "price": 165,
+        "description": "<p>Create endless adventures with the IGLU Explorer Set — a 6-piece collection of soft play shapes including ramps and corners. Toddlers can build, climb, and explore while developing motor skills, creativity, and problem-solving — a perfect Montessori toy for active, imaginative play.</p><p><strong>Benefits:</strong></p><ul><li><p>Encourages physical activity &amp; coordination</p></li><li><p>Boosts creativity and storytelling</p></li><li><p>Helps manage energy &amp; stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Promotes social skills &amp; teamwork</p></li><li><p>Keeps kids engaged and off screens</p></li></ul><p><strong>Product Details:</strong></p><ul><li><p>Made from durable, high-quality foam — dense yet lightweight</p></li><li><p>Easy to clean with a damp cloth</p></li><li><p>Handmade with care in Northern Europe</p></li><li><p>Certified safe in the EU, USA, Canada &amp; UK</p></li><li><p>100% recyclable materials with eco-leather cover</p></li><li><p>CE marked according to EU Directive 88/378 / EEC: Toy Safety</p></li></ul><p>Soft, safe, and endlessly fun — IGLU shapes inspire movement, learning, and imagination for kids (and even pets!).</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 87.77,
+        "markup_multiplier": 1.45,
+        "retail_price": 165,
+        "shipping_cost": 33,
+        "retail_price_override": 165,
+        "variants": [
+            {
+                "id": "8471-pastel-fries",
+                "title": "Soft Play 6 Foam Block Set - Pastel Turquoise Explorer",
+                "variantName": "Pastel Fries",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8471-pastel-sea",
+                "title": "Soft Play 6 Foam Block Set - Pastel Turquoise Explorer",
+                "variantName": "Pastel Sea",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8471-pastel-pink",
+                "title": "Soft Play 6 Foam Block Set - Pastel Turquoise Explorer",
+                "variantName": "Pastel Pink",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8471-pastel-turquoise",
+                "title": "Soft Play 6 Foam Block Set - Pastel Turquoise Explorer",
+                "variantName": "Pastel Turquoise",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8471-earth-pastel",
+                "title": "Soft Play 6 Foam Block Set - Pastel Turquoise Explorer",
+                "variantName": "Earth Pastel",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 307,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8042",
+        "title": "Soft Play Activity Set Balance Bridge - Light Pastel",
+        "category": "module",
+        "price": 169,
+        "description": "<p>Improve your child's playtime with the IGLU Soft Play Balance Bridge Activity Set. It's not just a playset; it's a platform for learning, physical activities, balance development, and imaginative adventures. Provide your child with a safe, stimulating, and adventurous space where they can explore, challenge themselves, and embark on thrilling balancing acts right at home.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating</p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-light-pastel-34374c52.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 101.47,
+        "markup_multiplier": 1.45,
+        "retail_price": 169,
+        "shipping_cost": 33,
+        "retail_price_override": 169,
+        "variants": [
+            {
+                "id": "8042-pastel-fries",
+                "title": "Soft Play Activity Set Balance Bridge - Light Pastel",
+                "variantName": "Pastel Fries",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8042-pastel-sea",
+                "title": "Soft Play Activity Set Balance Bridge - Light Pastel",
+                "variantName": "Pastel Sea",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8042-pastel-pink",
+                "title": "Soft Play Activity Set Balance Bridge - Light Pastel",
+                "variantName": "Pastel Pink",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8042-pastel-turquoise",
+                "title": "Soft Play Activity Set Balance Bridge - Light Pastel",
+                "variantName": "Pastel Turquoise",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8042-earth-pastel",
+                "title": "Soft Play Activity Set Balance Bridge - Light Pastel",
+                "variantName": "Earth Pastel",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 19,
+        "stock_status": "instock"
+    },
+    {
+        "id": "8040",
+        "title": "Soft Play Activity Set Balance Bridge - Green",
+        "category": "module",
+        "price": 169,
+        "description": "<p>Improve your child's playtime with the IGLU Soft Play Balance Bridge Activity Set. It's not just a playset; it's a platform for learning, physical activities, balance development, and imaginative adventures. Provide your child with a safe, stimulating, and adventurous space where they can explore, challenge themselves, and embark on thrilling balancing acts right at home.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating</p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-activity-set-balance-bridge-green-046f70f4.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 101.47,
+        "markup_multiplier": 1.45,
+        "retail_price": 169,
+        "shipping_cost": 33,
+        "retail_price_override": 169,
+        "variants": [
+            {
+                "id": "8040-pastel-fries",
+                "title": "Soft Play Activity Set Balance Bridge - Green",
+                "variantName": "Pastel Fries",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "8040-pastel-sea",
+                "title": "Soft Play Activity Set Balance Bridge - Green",
+                "variantName": "Pastel Sea",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "8040-pastel-pink",
+                "title": "Soft Play Activity Set Balance Bridge - Green",
+                "variantName": "Pastel Pink",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "8040-pastel-turquoise",
+                "title": "Soft Play Activity Set Balance Bridge - Green",
+                "variantName": "Pastel Turquoise",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "8040-earth-pastel",
+                "title": "Soft Play Activity Set Balance Bridge - Green",
+                "variantName": "Earth Pastel",
+                "price": 169,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 12,
+        "stock_status": "instock"
+    },
+    {
+        "id": "7814",
+        "title": "Juego Blando Ball Pit",
+        "category": "module",
+        "price": 473,
+        "description": "Los módulos y formas de psicomotricidad IGLU están fabricados con espuma de alta densidad de primera calidad, 100% reciclable y con estructura celular cerrada: suave, ultraligera y de máxima durabilidad. Revestidos en piel ecológica de tacto agradable, impermeable y muy fácil de limpiar con un paño húmedo.",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ball-pit-beige-9d66f713.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 235,
+        "markup_multiplier": 1.45,
+        "retail_price": 473,
+        "shipping_cost": 33,
+        "retail_price_override": 473,
+        "variants": [
+            {
+                "id": "7814",
+                "title": "Soft Play Ball Pit - Beige",
+                "variantName": "Beige",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ball-pit-beige-9d66f713.jpg",
+                "wholesale_price": 160.76,
+                "shipping_cost": 33
+            },
+            {
+                "id": "5571",
+                "title": "Soft Play Ball Pit - Light Pastel",
+                "variantName": "Pastel Suave",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-lightpastel-5e733bc6.jpg",
+                "wholesale_price": 160.76,
+                "shipping_cost": 33
+            },
+            {
+                "id": "5570",
+                "title": "Soft Play Ball Pit - White",
+                "variantName": "Blanco",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-white-4befd919.jpg",
+                "wholesale_price": 160.76,
+                "shipping_cost": 33
+            },
+            {
+                "id": "5569",
+                "title": "Soft Play Ball Pit - Multicolor",
+                "variantName": "Multicolor",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-multicolor-b35b21d0.jpg",
+                "wholesale_price": 160.76,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "7500",
+        "title": "Juego Blando Ride On Toy",
+        "category": "module",
+        "price": 265,
+        "description": "<p>Abróchate el cinturón para disfrutar de un paseo divertido. Este juego suave equivalente a un juguete mecedor clásico es la manera perfecta de practicar el equilibrio y la imaginación de su hijo. También ayuda a desarrollar la motricidad gruesa, el equilibrio, la coordinación y el desarrollo muscular. Es una manera emocionante para que su hijo se mantenga activo y comprometido.<br></p><ul><li><p>Fomenta la actividad física</p></li><li><p>Estimula la creatividad y la imaginación</p></li><li><p>Ayuda a liberar el exceso de energía y controlar el estrés</p></li><li><p>Proporciona estimulación sensorial</p></li><li><p>Mantiene a los niños fuera de las pantallas</p></li><li><p>Promueve habilidades sociales como compartir y colaborar<br></p></li></ul><p>Las formas suaves y abrazables de IGLU son como amigos para desarrollar una amplia gama de movimientos y habilidades motoras en los niños. Las diferentes formas ayudan a los niños a mejorar su coordinación y habilidades motoras, desde mover los dedos hasta gatear, escalar y explorar alturas.</p><p>Compartir risas con hermanos, amigos y amigos potencia las habilidades sociales al generar conversaciones y conexiones.</p><p>Trabajar en equipo con padres o amigos conduce a un aprendizaje rápido y a detectar formas geométricas geniales y colores vivos. La interminable mezcla de formas es como un tesoro escondido para crear mundos imaginativos: castillos, fuertes y más.</p><p>A medida que los niños crecen, estas formas se transforman en excelentes herramientas. Construir pistas de obstáculos, jugar y conquistar escalones para llegar a la cama o a la silla: las posibilidades son infinitas. Incluso las mascotas se unen a la diversión, usando formas como juguetes y los adultos se vuelven astutos: ¡imagina las formas como un confiable soporte para computadora!<br></p><ul><li><p>Muy duradero: hecho de espuma HQ. Espuma densa pero ligera que mantiene su forma.</p></li><li><p>Fácil limpieza: se limpia con un paño húmedo.</p></li><li><p>Hecho a mano: desde la costura hasta el embalaje, todo está hecho a mano.</p></li><li><p>Certificados: los bloques se prueban rigurosamente y han recibido certificados de seguridad en la UE, EE. UU., Canadá y el Reino Unido.</p></li><li><p>Fabricado en la UE: todo está hecho en nuestra zona del norte de Europa. instalación.<br></p></li></ul><p>Los bloques blandos IGLU están hechos de espuma firme, <strong>100% reciclable</strong> <strong>de alta calidad</strong> con una estructura de células cerradas: <strong>suave y</strong> <strong>súper liviana.</strong>  Cubiertos con un resistente <strong>cuero ecológico</strong> artificial. Las formas son <strong>robustas</strong>, <strong>agradables al tacto</strong>, <strong>fáciles de cuidar</strong>, conservan bien la forma y están testadas para detectar sustancias nocivas.</p><p>Los productos IGLU tienen la marca CE según la <strong>Directiva de la UE 88/378/CEE: Seguridad de los juguetes</strong>, lo que los hace absolutamente seguros para los niños pequeños.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ride-on-toy-lightblue-car-24c7be54.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 180,
+        "markup_multiplier": 1.8,
+        "retail_price": 265,
+        "shipping_cost": 33,
+        "retail_price_override": 265,
+        "variants": [
+            {
+                "id": "7500",
+                "title": "Soft Play Ride On Toy - Light Blue Car",
+                "variantName": "Light Azul Car",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ride-on-toy-lightblue-car-24c7be54.jpg",
+                "wholesale_price": 54.46,
+                "shipping_cost": 33
+            },
+            {
+                "id": "7498",
+                "title": "Soft Play Ride On Toy - Red Car",
+                "variantName": "Red Car",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ride-on-toy-red-car-aaa9fa98.jpg",
+                "wholesale_price": 54.46,
+                "shipping_cost": 33
+            },
+            {
+                "id": "7497",
+                "title": "Soft Play Ride On Toy - Blue Car",
+                "variantName": "Azul Car",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ride-on-toy-blue-car-9107b4cb.jpg",
+                "wholesale_price": 54.46,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 25,
+        "stock_status": "instock"
+    },
+    {
+        "id": "7498",
+        "title": "Soft Play Ride On Toy - Red Car",
+        "category": "module",
+        "price": 110,
+        "description": "<p>Buckle up for a fun ride. This soft play equivalent of a classic rocking toy is the perfect way to practice your child's balance and imagination. It also helps develop gross motor skills, balance, coordination, and muscle development. It's an exciting way for your child to stay active and engaged.<br></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ride-on-toy-red-car-aaa9fa98.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 54.46,
+        "markup_multiplier": 1.8,
+        "retail_price": 110,
+        "shipping_cost": 33,
+        "retail_price_override": 110,
+        "variants": [
+            {
+                "id": "7498-pastel-fries",
+                "title": "Soft Play Ride On Toy - Red Car",
+                "variantName": "Pastel Fries",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "7498-pastel-sea",
+                "title": "Soft Play Ride On Toy - Red Car",
+                "variantName": "Pastel Sea",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "7498-pastel-pink",
+                "title": "Soft Play Ride On Toy - Red Car",
+                "variantName": "Pastel Pink",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "7498-pastel-turquoise",
+                "title": "Soft Play Ride On Toy - Red Car",
+                "variantName": "Pastel Turquoise",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "7498-earth-pastel",
+                "title": "Soft Play Ride On Toy - Red Car",
+                "variantName": "Earth Pastel",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 25,
+        "stock_status": "instock"
+    },
+    {
+        "id": "7497",
+        "title": "Soft Play Ride On Toy - Blue Car",
+        "category": "module",
+        "price": 110,
+        "description": "<p>Buckle up for a fun ride. This soft play equivalent of a classic rocking toy is the perfect way to practice your child's balance and imagination. It also helps develop gross motor skills, balance, coordination, and muscle development. It's an exciting way for your child to stay active and engaged.<br></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ride-on-toy-blue-car-9107b4cb.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 54.46,
+        "markup_multiplier": 1.8,
+        "retail_price": 110,
+        "shipping_cost": 33,
+        "retail_price_override": 110,
+        "variants": [
+            {
+                "id": "7497-pastel-fries",
+                "title": "Soft Play Ride On Toy - Blue Car",
+                "variantName": "Pastel Fries",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "7497-pastel-sea",
+                "title": "Soft Play Ride On Toy - Blue Car",
+                "variantName": "Pastel Sea",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "7497-pastel-pink",
+                "title": "Soft Play Ride On Toy - Blue Car",
+                "variantName": "Pastel Pink",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "7497-pastel-turquoise",
+                "title": "Soft Play Ride On Toy - Blue Car",
+                "variantName": "Pastel Turquoise",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "7497-earth-pastel",
+                "title": "Soft Play Ride On Toy - Blue Car",
+                "variantName": "Earth Pastel",
+                "price": 110,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 24,
+        "stock_status": "instock"
+    },
+    {
+        "id": "7493",
+        "title": "Soft Play Step and Slide Set - Blue and Red",
+        "category": "set",
+        "price": 202,
+        "description": "<p>Let the fun begin! Explore the soft play world one shape at a time. Our Mega Fun Slider set opens up a world of excitement, inviting your child to climb, slide, and explore. It's an adventure waiting to be discovered.&nbsp;Built to withstand hours of enthusiastic play, the Mega Fun Slider set is durable and designed for long-lasting entertainment.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-blue-and-red-dd8c52ee.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 127.9,
+        "markup_multiplier": 1.45,
+        "retail_price": 202,
+        "shipping_cost": 33,
+        "retail_price_override": 202,
+        "variants": [
+            {
+                "id": "7493-pastel-fries",
+                "title": "Soft Play Step and Slide Set - Blue and Red",
+                "variantName": "Pastel Fries",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "7493-pastel-sea",
+                "title": "Soft Play Step and Slide Set - Blue and Red",
+                "variantName": "Pastel Sea",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "7493-pastel-pink",
+                "title": "Soft Play Step and Slide Set - Blue and Red",
+                "variantName": "Pastel Pink",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "7493-pastel-turquoise",
+                "title": "Soft Play Step and Slide Set - Blue and Red",
+                "variantName": "Pastel Turquoise",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "7493-earth-pastel",
+                "title": "Soft Play Step and Slide Set - Blue and Red",
+                "variantName": "Earth Pastel",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 17,
+        "stock_status": "instock"
+    },
+    {
+        "id": "7495",
+        "title": "Soft Play Step and Slide Set - Green",
+        "category": "module",
+        "price": 202,
+        "description": "<p>Let the fun begin! Explore the soft play world one shape at a time. Our Mega Fun Slider set opens up a world of excitement, inviting your child to climb, slide, and explore. It's an adventure waiting to be discovered.&nbsp;Built to withstand hours of enthusiastic play, the Mega Fun Slider set is durable and designed for long-lasting entertainment.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-green-e2cc58f8.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 127.9,
+        "markup_multiplier": 1.45,
+        "retail_price": 202,
+        "shipping_cost": 33,
+        "retail_price_override": 202,
+        "variants": [
+            {
+                "id": "7495-pastel-fries",
+                "title": "Soft Play Step and Slide Set - Green",
+                "variantName": "Pastel Fries",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "7495-pastel-sea",
+                "title": "Soft Play Step and Slide Set - Green",
+                "variantName": "Pastel Sea",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "7495-pastel-pink",
+                "title": "Soft Play Step and Slide Set - Green",
+                "variantName": "Pastel Pink",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "7495-pastel-turquoise",
+                "title": "Soft Play Step and Slide Set - Green",
+                "variantName": "Pastel Turquoise",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "7495-earth-pastel",
+                "title": "Soft Play Step and Slide Set - Green",
+                "variantName": "Earth Pastel",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 29,
+        "stock_status": "instock"
+    },
+    {
+        "id": "7492",
+        "title": "Soft Play Step and Slide Set - Pastel",
+        "category": "module",
+        "price": 202,
+        "description": "<p>Let the fun begin! Explore the soft play world one shape at a time. Our Mega Fun Slider set opens up a world of excitement, inviting your child to climb, slide, and explore. It's an adventure waiting to be discovered.&nbsp;Built to withstand hours of enthusiastic play, the Mega Fun Slider set is durable and designed for long-lasting entertainment.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-step-and-slide-set-pastel-07c3f596.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 127.9,
+        "markup_multiplier": 1.45,
+        "retail_price": 202,
+        "shipping_cost": 33,
+        "retail_price_override": 202,
+        "variants": [
+            {
+                "id": "7492-pastel-fries",
+                "title": "Soft Play Step and Slide Set - Pastel",
+                "variantName": "Pastel Fries",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "7492-pastel-sea",
+                "title": "Soft Play Step and Slide Set - Pastel",
+                "variantName": "Pastel Sea",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "7492-pastel-pink",
+                "title": "Soft Play Step and Slide Set - Pastel",
+                "variantName": "Pastel Pink",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "7492-pastel-turquoise",
+                "title": "Soft Play Step and Slide Set - Pastel",
+                "variantName": "Pastel Turquoise",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "7492-earth-pastel",
+                "title": "Soft Play Step and Slide Set - Pastel",
+                "variantName": "Earth Pastel",
+                "price": 202,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 48,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5573",
+        "title": "Juego Blando Ball Pit Balls 500pc",
+        "category": "accessory",
+        "price": 112,
+        "description": "Soft and durable plastic balls in light pastel colors, perfect for filling your child's ball pit or creating a sensory play space! Create a calming and inviting play environment with these soothing pastel tones. These gentle colors are perfect for younger babies and promote sensory exploration. Features: Safe and Gentle: Made with high-quality, non-toxic materials, ensuring safe playtime for your little one. Hypoallergenic and odorless. Perfect Size: 7cm diameter. Designed to be the ideal size for little hands to grasp and throw, promoting motor skill development. High Quality: These balls stand up to endless bouncing and rolling, providing long-lasting entertainment. They resist abrasion, shock, and cracking, guaranteeing longevity. When compressed, they quickly regain their original shape. Turn playtime into an adventure! Choose the IGLU Soft Play balls that best suit your child's personality and play space. Size: Large, 7cm Quantity: 500 pcs, perfect for 1 ball pit",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-balls-pastel-94ce8e4e.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 112,
+        "markup_multiplier": 1.8,
+        "retail_price": 112,
+        "shipping_cost": 33,
+        "retail_price_override": 112,
+        "variants": [
+            {
+                "id": "5573",
+                "title": "Soft Play Ball Pit Balls 500pc - Pastel",
+                "variantName": "Pastel",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-balls-pastel-94ce8e4e.jpg",
+                "wholesale_price": 56.29,
+                "shipping_cost": 33
+            },
+            {
+                "id": "5572",
+                "title": "Soft Play Ball Pit Balls 500pc - White",
+                "variantName": "Blanco",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-balls-white-363d0d8b.jpg",
+                "wholesale_price": 56.29,
+                "shipping_cost": 33
+            },
+            {
+                "id": "5574",
+                "title": "Soft Play Ball Pit Balls 500pc - Multicolor",
+                "variantName": "Multicolor",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ball-pit-balls-500pc-multicolor-c8682951.jpg",
+                "wholesale_price": 56.29,
+                "shipping_cost": 33
+            }
+        ],
+        "stock": 185,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5572",
+        "title": "Soft Play Ball Pit Balls 500pc - White",
+        "category": "module",
+        "price": 112,
+        "description": "<p>Soft and durable plastic balls in light pastel colors, perfect for filling your child's ball pit or creating a sensory play space!</p><p>Create a calming and inviting play environment with these soothing pastel tones. These gentle colors are perfect for younger babies and promote sensory exploration.</p><p><strong>Features:</strong></p><ul><li><p><strong>Safe and Gentle:</strong>&nbsp;Made with high-quality, non-toxic materials, ensuring safe playtime for your little one. Hypoallergenic and odorless.</p></li><li><p><strong>Perfect Size:</strong> 7cm diameter. Designed to be the ideal size for little hands to grasp and throw, promoting motor skill development.</p></li><li><p><strong>High Quality:</strong>&nbsp;These balls stand up to endless bouncing and rolling, providing long-lasting entertainment. They resist abrasion, shock, and cracking, guaranteeing longevity. When compressed, they quickly regain their original shape.</p></li></ul><p><strong>Turn playtime into an adventure!</strong> Choose the IGLU Soft Play balls that best suit your child's personality and play space.</p><p><strong>Size:</strong> Large, 7cm</p><p><strong>Quantity:</strong> 500 pcs, perfect for 1 ball pit</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-balls-white-363d0d8b.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 56.29,
+        "markup_multiplier": 1.8,
+        "retail_price": 112,
+        "shipping_cost": 33,
+        "retail_price_override": 112,
+        "variants": [
+            {
+                "id": "5572-pastel-fries",
+                "title": "Soft Play Ball Pit Balls 500pc - White",
+                "variantName": "Pastel Fries",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5572-pastel-sea",
+                "title": "Soft Play Ball Pit Balls 500pc - White",
+                "variantName": "Pastel Sea",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5572-pastel-pink",
+                "title": "Soft Play Ball Pit Balls 500pc - White",
+                "variantName": "Pastel Pink",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5572-pastel-turquoise",
+                "title": "Soft Play Ball Pit Balls 500pc - White",
+                "variantName": "Pastel Turquoise",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5572-earth-pastel",
+                "title": "Soft Play Ball Pit Balls 500pc - White",
+                "variantName": "Earth Pastel",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 138,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5571",
+        "title": "Soft Play Ball Pit - Light Pastel",
+        "category": "module",
+        "price": 243,
+        "description": "<p>Transform playtime into a joyful, imaginative, sensory-filled experience with our vibrant and interactive playset. This 120 x 120 cm foam ball pit engages your child's sense of touch, sight, and proprioception, fostering sensory development. The low-profile entrance makes it easy for little ones to climb in and out independently.</p><p>This ball pit for toddlers is made of soft foam with a vinyl cover, ensuring a safe play environment for your little ones. Rigid non-toxic foam will hold the shape and make the playtime safe.</p><p>Designed for babies and toddlers, this soft play ball pit creates a sensory wonderland for little ones to explore, climb, and play. Perfect for ages 1 and up, it provides a safe and stimulating environment that encourages imaginative play and motor skill development. Suitable both for indoor and outdoor use.<br></p><p><strong>Ball Pit balls are not included in the set (500 balls required).<br></strong><br>IGLU Soft blocks are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft &amp; super light.&nbsp; Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-lightpastel-5e733bc6.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 160.76,
+        "markup_multiplier": 1.45,
+        "retail_price": 243,
+        "shipping_cost": 33,
+        "retail_price_override": 243,
+        "variants": [
+            {
+                "id": "5571-pastel-fries",
+                "title": "Soft Play Ball Pit - Light Pastel",
+                "variantName": "Pastel Fries",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5571-pastel-sea",
+                "title": "Soft Play Ball Pit - Light Pastel",
+                "variantName": "Pastel Sea",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5571-pastel-pink",
+                "title": "Soft Play Ball Pit - Light Pastel",
+                "variantName": "Pastel Pink",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5571-pastel-turquoise",
+                "title": "Soft Play Ball Pit - Light Pastel",
+                "variantName": "Pastel Turquoise",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5571-earth-pastel",
+                "title": "Soft Play Ball Pit - Light Pastel",
+                "variantName": "Earth Pastel",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 119,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5562",
+        "title": "Soft Play 10 Foam Block Set - Pastel Sea",
+        "category": "set",
+        "price": 208,
+        "description": "<p><strong>IGLU&nbsp;Adventurer 10-piece</strong> playset is a canvas for your child's creativity. With various shapes and sizes, it offers endless possibilities for imaginative play, construction, and exploration. Watch as your child transforms their ideas into tangible creations,&nbsp;actively enhancing their problem-solving, spatial reasoning, and critical thinking skills. It's a fun way to learn through play.<br></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 132.71,
+        "markup_multiplier": 1.45,
+        "retail_price": 208,
+        "shipping_cost": 33,
+        "retail_price_override": 208,
+        "variants": [
+            {
+                "id": "5562-pastel-fries",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea",
+                "variantName": "Pastel Fries",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5562-pastel-sea",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea",
+                "variantName": "Pastel Sea",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5562-pastel-pink",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea",
+                "variantName": "Pastel Pink",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5562-pastel-turquoise",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea",
+                "variantName": "Pastel Turquoise",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5562-earth-pastel",
+                "title": "Soft Play 10 Foam Block Set - Pastel Sea",
+                "variantName": "Earth Pastel",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 245,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5557",
+        "title": "Soft Play 8 Foam Block Set - Pastel Pink",
+        "category": "set",
+        "price": 190,
+        "description": "<p><strong>IGLU&nbsp;Adventurer 8-piece</strong> playset is designed to inspire curiosity, promote physical activity, and encourage imaginative journeys.&nbsp;From climbing and crawling to imaginative storytelling, this playset provides the perfect backdrop for your child's explorations.&nbsp;This set includes a variety of soft play shapes and elements, each with its own purpose.<br></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 118.97,
+        "markup_multiplier": 1.45,
+        "retail_price": 190,
+        "shipping_cost": 33,
+        "retail_price_override": 190,
+        "variants": [
+            {
+                "id": "5557-pastel-fries",
+                "title": "Soft Play 8 Foam Block Set - Pastel Pink",
+                "variantName": "Pastel Fries",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5557-pastel-sea",
+                "title": "Soft Play 8 Foam Block Set - Pastel Pink",
+                "variantName": "Pastel Sea",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5557-pastel-pink",
+                "title": "Soft Play 8 Foam Block Set - Pastel Pink",
+                "variantName": "Pastel Pink",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5557-pastel-turquoise",
+                "title": "Soft Play 8 Foam Block Set - Pastel Pink",
+                "variantName": "Pastel Turquoise",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5557-earth-pastel",
+                "title": "Soft Play 8 Foam Block Set - Pastel Pink",
+                "variantName": "Earth Pastel",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 232,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5554",
+        "title": "Soft Play 8 Foam Block Set - Pastel Turquoise Adventurer",
+        "category": "set",
+        "price": 190,
+        "description": "<p><strong>IGLU&nbsp;Adventurer 8-piece</strong> playset is designed to inspire curiosity, promote physical activity, and encourage imaginative journeys.&nbsp;From climbing and crawling to imaginative storytelling, this playset provides the perfect backdrop for your child's explorations.&nbsp;This set includes a variety of soft play shapes and elements, each with its own purpose.<br></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-adventurer-turquoise-8180060e.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 118.97,
+        "markup_multiplier": 1.45,
+        "retail_price": 190,
+        "shipping_cost": 33,
+        "retail_price_override": 190,
+        "variants": [
+            {
+                "id": "5554-pastel-fries",
+                "title": "Soft Play 8 Foam Block Set - Pastel Turquoise Adventurer",
+                "variantName": "Pastel Fries",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5554-pastel-sea",
+                "title": "Soft Play 8 Foam Block Set - Pastel Turquoise Adventurer",
+                "variantName": "Pastel Sea",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5554-pastel-pink",
+                "title": "Soft Play 8 Foam Block Set - Pastel Turquoise Adventurer",
+                "variantName": "Pastel Pink",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5554-pastel-turquoise",
+                "title": "Soft Play 8 Foam Block Set - Pastel Turquoise Adventurer",
+                "variantName": "Pastel Turquoise",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5554-earth-pastel",
+                "title": "Soft Play 8 Foam Block Set - Pastel Turquoise Adventurer",
+                "variantName": "Earth Pastel",
+                "price": 190,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 212,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5574",
+        "title": "Soft Play Ball Pit Balls 500pc - Multicolor",
+        "category": "accessory",
+        "price": 112,
+        "description": "<p>Soft and durable plastic balls in light pastel colors, perfect for filling your child's ball pit or creating a sensory play space!</p><p>Create a calming and inviting play environment with these soothing pastel tones. These gentle colors are perfect for younger babies and promote sensory exploration.</p><p><strong>Features:</strong></p><ul><li><p><strong>Safe and Gentle:</strong>&nbsp;Made with high-quality, non-toxic materials, ensuring safe playtime for your little one. Hypoallergenic and odorless.</p></li><li><p><strong>Perfect Size:</strong> 7cm diameter. Designed to be the ideal size for little hands to grasp and throw, promoting motor skill development.</p></li><li><p><strong>High Quality:</strong>&nbsp;These balls stand up to endless bouncing and rolling, providing long-lasting entertainment. They resist abrasion, shock, and cracking, guaranteeing longevity. When compressed, they quickly regain their original shape.</p></li></ul><p><strong>Turn playtime into an adventure!</strong> Choose the IGLU Soft Play balls that best suit your child's personality and play space.</p><p><strong>Size:</strong> Large, 7cm</p><p><strong>Quantity:</strong> 500 pcs, perfect for 1 ball pit</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ball-pit-balls-500pc-multicolor-c8682951.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 56.29,
+        "markup_multiplier": 1.8,
+        "retail_price": 112,
+        "shipping_cost": 33,
+        "retail_price_override": 112,
+        "variants": [
+            {
+                "id": "5574-pastel-fries",
+                "title": "Soft Play Ball Pit Balls 500pc - Multicolor",
+                "variantName": "Pastel Fries",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5574-pastel-sea",
+                "title": "Soft Play Ball Pit Balls 500pc - Multicolor",
+                "variantName": "Pastel Sea",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5574-pastel-pink",
+                "title": "Soft Play Ball Pit Balls 500pc - Multicolor",
+                "variantName": "Pastel Pink",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5574-pastel-turquoise",
+                "title": "Soft Play Ball Pit Balls 500pc - Multicolor",
+                "variantName": "Pastel Turquoise",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5574-earth-pastel",
+                "title": "Soft Play Ball Pit Balls 500pc - Multicolor",
+                "variantName": "Earth Pastel",
+                "price": 112,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5570",
+        "title": "Soft Play Ball Pit - White",
+        "category": "module",
+        "price": 243,
+        "description": "<p>Transform playtime into a joyful, imaginative, sensory-filled experience with our vibrant and interactive playset. This 120 x 120 cm foam ball pit engages your child's sense of touch, sight, and proprioception, fostering sensory development. The low-profile entrance makes it easy for little ones to climb in and out independently.</p><p>This ball pit for toddlers is made of soft foam with a vinyl cover, ensuring a safe play environment for your little ones. Rigid non-toxic foam will hold the shape and make the playtime safe.</p><p>Designed for babies and toddlers, this soft play ball pit creates a sensory wonderland for little ones to explore, climb, and play. Perfect for ages 1 and up, it provides a safe and stimulating environment that encourages imaginative play and motor skill development. Suitable both for indoor and outdoor use.<br></p><p><strong>Ball Pit balls are not included in the set (500 balls required).<br></strong><br>IGLU Soft blocks are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft &amp; super light.&nbsp; Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-white-4befd919.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 160.76,
+        "markup_multiplier": 1.45,
+        "retail_price": 243,
+        "shipping_cost": 33,
+        "retail_price_override": 243,
+        "variants": [
+            {
+                "id": "5570-pastel-fries",
+                "title": "Soft Play Ball Pit - White",
+                "variantName": "Pastel Fries",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5570-pastel-sea",
+                "title": "Soft Play Ball Pit - White",
+                "variantName": "Pastel Sea",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5570-pastel-pink",
+                "title": "Soft Play Ball Pit - White",
+                "variantName": "Pastel Pink",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5570-pastel-turquoise",
+                "title": "Soft Play Ball Pit - White",
+                "variantName": "Pastel Turquoise",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5570-earth-pastel",
+                "title": "Soft Play Ball Pit - White",
+                "variantName": "Earth Pastel",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5569",
+        "title": "Soft Play Ball Pit - Multicolor",
+        "category": "module",
+        "price": 243,
+        "description": "<p>Transform playtime into a joyful, imaginative, sensory-filled experience with our vibrant and interactive playset. This 120 x 120 cm foam ball pit engages your child's sense of touch, sight, and proprioception, fostering sensory development. The low-profile entrance makes it easy for little ones to climb in and out independently.</p><p>This ball pit for toddlers is made of soft foam with a vinyl cover, ensuring a safe play environment for your little ones. Rigid non-toxic foam will hold the shape and make the playtime safe.</p><p>Designed for babies and toddlers, this soft play ball pit creates a sensory wonderland for little ones to explore, climb, and play. Perfect for ages 1 and up, it provides a safe and stimulating environment that encourages imaginative play and motor skill development. Suitable both for indoor and outdoor use.<br></p><p><strong>Ball Pit balls are not included in the set (500 balls required).<br></strong><br>IGLU Soft blocks are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft &amp; super light.&nbsp; Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-multicolor-b35b21d0.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 160.76,
+        "markup_multiplier": 1.45,
+        "retail_price": 243,
+        "shipping_cost": 33,
+        "retail_price_override": 243,
+        "variants": [
+            {
+                "id": "5569-pastel-fries",
+                "title": "Soft Play Ball Pit - Multicolor",
+                "variantName": "Pastel Fries",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5569-pastel-sea",
+                "title": "Soft Play Ball Pit - Multicolor",
+                "variantName": "Pastel Sea",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5569-pastel-pink",
+                "title": "Soft Play Ball Pit - Multicolor",
+                "variantName": "Pastel Pink",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5569-pastel-turquoise",
+                "title": "Soft Play Ball Pit - Multicolor",
+                "variantName": "Pastel Turquoise",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5569-earth-pastel",
+                "title": "Soft Play Ball Pit - Multicolor",
+                "variantName": "Earth Pastel",
+                "price": 243,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5518",
+        "title": "Soft Play 7 Foam Block Set - Pastel Turquoise",
+        "category": "set",
+        "price": 176,
+        "description": "<p><strong>IGLU&nbsp;Discoverer 7-piece</strong> playset is designed to spark curiosity, stimulate creativity, and encourage active learning. Built to withstand the rigors of play, the Discoverer set is durable and designed for long-lasting fun and exploration. But beyond the adventure, this playset also offers educational value. It encourages problem-solving, spatial awareness, and language development through collaborative play.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 107.59,
+        "markup_multiplier": 1.45,
+        "retail_price": 176,
+        "shipping_cost": 33,
+        "retail_price_override": 176,
+        "variants": [
+            {
+                "id": "5518-pastel-fries",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise",
+                "variantName": "Pastel Fries",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5518-pastel-sea",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise",
+                "variantName": "Pastel Sea",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5518-pastel-pink",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise",
+                "variantName": "Pastel Pink",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5518-pastel-turquoise",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise",
+                "variantName": "Pastel Turquoise",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5518-earth-pastel",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise",
+                "variantName": "Earth Pastel",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 685,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5517",
+        "title": "Soft Play 7 Foam Block Set - Pastel Turquoise Discoverer",
+        "category": "set",
+        "price": 176,
+        "description": "<p><strong>IGLU&nbsp;Discoverer 7-piece</strong> playset is designed to spark curiosity, stimulate creativity, and encourage active learning. Built to withstand the rigors of play, the Discoverer set is durable and designed for long-lasting fun and exploration. But beyond the adventure, this playset also offers educational value. It encourages problem-solving, spatial awareness, and language development through collaborative play.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-discoverer-set-turquoise-b5231327.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 107.59,
+        "markup_multiplier": 1.45,
+        "retail_price": 176,
+        "shipping_cost": 33,
+        "retail_price_override": 176,
+        "variants": [
+            {
+                "id": "5517-pastel-fries",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise Discoverer",
+                "variantName": "Pastel Fries",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5517-pastel-sea",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise Discoverer",
+                "variantName": "Pastel Sea",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5517-pastel-pink",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise Discoverer",
+                "variantName": "Pastel Pink",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5517-pastel-turquoise",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise Discoverer",
+                "variantName": "Pastel Turquoise",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5517-earth-pastel",
+                "title": "Soft Play 7 Foam Block Set - Pastel Turquoise Discoverer",
+                "variantName": "Earth Pastel",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 289,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5516",
+        "title": "Soft Play 7 Foam Block Set - Light Pastel Discoverer",
+        "category": "set",
+        "price": 176,
+        "description": "<p><strong>IGLU&nbsp;Discoverer 7-piece</strong> playset is designed to spark curiosity, stimulate creativity, and encourage active learning. Built to withstand the rigors of play, the Discoverer set is durable and designed for long-lasting fun and exploration. But beyond the adventure, this playset also offers educational value. It encourages problem-solving, spatial awareness, and language development through collaborative play.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-discoverer-set-pastel-9867191b.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 107.59,
+        "markup_multiplier": 1.45,
+        "retail_price": 176,
+        "shipping_cost": 33,
+        "retail_price_override": 176,
+        "variants": [
+            {
+                "id": "5516-pastel-fries",
+                "title": "Soft Play 7 Foam Block Set - Light Pastel Discoverer",
+                "variantName": "Pastel Fries",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5516-pastel-sea",
+                "title": "Soft Play 7 Foam Block Set - Light Pastel Discoverer",
+                "variantName": "Pastel Sea",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5516-pastel-pink",
+                "title": "Soft Play 7 Foam Block Set - Light Pastel Discoverer",
+                "variantName": "Pastel Pink",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5516-pastel-turquoise",
+                "title": "Soft Play 7 Foam Block Set - Light Pastel Discoverer",
+                "variantName": "Pastel Turquoise",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5516-earth-pastel",
+                "title": "Soft Play 7 Foam Block Set - Light Pastel Discoverer",
+                "variantName": "Earth Pastel",
+                "price": 176,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 121,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5508",
+        "title": "Soft Play 6 Foam Block Set - Light Pastel Explorer",
+        "category": "set",
+        "price": 165,
+        "description": "<p><strong>IGLU&nbsp;Explorer 6-piece</strong> set includes various soft play shapes, including ramps, and corners. Toddlers can assemble them to create exciting structures that promote motor skills and problem-solving - perfect for a Montessori toy.&nbsp;Whether it's an expedition through hidden caves, a journey through a magical forest, or simply a cozy hideaway, this playset inspires imaginative storytelling and role-play.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-pastel-ad086a14.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 87.77,
+        "markup_multiplier": 1.45,
+        "retail_price": 165,
+        "shipping_cost": 33,
+        "retail_price_override": 165,
+        "variants": [
+            {
+                "id": "5508-pastel-fries",
+                "title": "Soft Play 6 Foam Block Set - Light Pastel Explorer",
+                "variantName": "Pastel Fries",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5508-pastel-sea",
+                "title": "Soft Play 6 Foam Block Set - Light Pastel Explorer",
+                "variantName": "Pastel Sea",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5508-pastel-pink",
+                "title": "Soft Play 6 Foam Block Set - Light Pastel Explorer",
+                "variantName": "Pastel Pink",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5508-pastel-turquoise",
+                "title": "Soft Play 6 Foam Block Set - Light Pastel Explorer",
+                "variantName": "Pastel Turquoise",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5508-earth-pastel",
+                "title": "Soft Play 6 Foam Block Set - Light Pastel Explorer",
+                "variantName": "Earth Pastel",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 612,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5512",
+        "title": "Soft Play 6 Foam Block Set - Beige Explorer",
+        "category": "set",
+        "price": 165,
+        "description": "<p><strong>IGLU&nbsp;Explorer 6-piece</strong> set includes various soft play shapes, including ramps, and corners. Toddlers can assemble them to create exciting structures that promote motor skills and problem-solving - perfect for a Montessori toy.&nbsp;Whether it's an expedition through hidden caves, a journey through a magical forest, or simply a cozy hideaway, this playset inspires imaginative storytelling and role-play.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-beige-618be45a.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 87.77,
+        "markup_multiplier": 1.45,
+        "retail_price": 165,
+        "shipping_cost": 33,
+        "retail_price_override": 165,
+        "variants": [
+            {
+                "id": "5512-pastel-fries",
+                "title": "Soft Play 6 Foam Block Set - Beige Explorer",
+                "variantName": "Pastel Fries",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5512-pastel-sea",
+                "title": "Soft Play 6 Foam Block Set - Beige Explorer",
+                "variantName": "Pastel Sea",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5512-pastel-pink",
+                "title": "Soft Play 6 Foam Block Set - Beige Explorer",
+                "variantName": "Pastel Pink",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5512-pastel-turquoise",
+                "title": "Soft Play 6 Foam Block Set - Beige Explorer",
+                "variantName": "Pastel Turquoise",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5512-earth-pastel",
+                "title": "Soft Play 6 Foam Block Set - Beige Explorer",
+                "variantName": "Earth Pastel",
+                "price": 165,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 304,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5506",
+        "title": "Soft Play 5 Foam Block Set - Pastel Pink Corner Climber",
+        "category": "module",
+        "price": 132,
+        "description": "<p><strong>IGLU&nbsp;Corner Climber 5-piece corner climber</strong> set is designed to promote gross motor skills, balance, coordination, and strength development as your child explores this soft play landscape. Built to withstand enthusiastic play, the Corner Climber set is durable and designed to provide hours of active fun and exploration.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-corner-climber-pink-564ee4d7.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 71.82,
+        "markup_multiplier": 1.8,
+        "retail_price": 132,
+        "shipping_cost": 33,
+        "retail_price_override": 132,
+        "variants": [
+            {
+                "id": "5506-pastel-fries",
+                "title": "Soft Play 5 Foam Block Set - Pastel Pink Corner Climber",
+                "variantName": "Pastel Fries",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5506-pastel-sea",
+                "title": "Soft Play 5 Foam Block Set - Pastel Pink Corner Climber",
+                "variantName": "Pastel Sea",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5506-pastel-pink",
+                "title": "Soft Play 5 Foam Block Set - Pastel Pink Corner Climber",
+                "variantName": "Pastel Pink",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5506-pastel-turquoise",
+                "title": "Soft Play 5 Foam Block Set - Pastel Pink Corner Climber",
+                "variantName": "Pastel Turquoise",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5506-earth-pastel",
+                "title": "Soft Play 5 Foam Block Set - Pastel Pink Corner Climber",
+                "variantName": "Earth Pastel",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 997,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5505",
+        "title": "Soft Play 5 Foam Block Set - Pastel Turquoise Corner Climber",
+        "category": "module",
+        "price": 132,
+        "description": "<p><strong>IGLU&nbsp;Corner Climber 5-piece corner climber</strong> set is designed to promote gross motor skills, balance, coordination, and strength development as your child explores this soft play landscape. Built to withstand enthusiastic play, the Corner Climber set is durable and designed to provide hours of active fun and exploration.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-corner-climber-turquoise-784d7b0a.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 71.82,
+        "markup_multiplier": 1.8,
+        "retail_price": 132,
+        "shipping_cost": 33,
+        "retail_price_override": 132,
+        "variants": [
+            {
+                "id": "5505-pastel-fries",
+                "title": "Soft Play 5 Foam Block Set - Pastel Turquoise Corner Climber",
+                "variantName": "Pastel Fries",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5505-pastel-sea",
+                "title": "Soft Play 5 Foam Block Set - Pastel Turquoise Corner Climber",
+                "variantName": "Pastel Sea",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5505-pastel-pink",
+                "title": "Soft Play 5 Foam Block Set - Pastel Turquoise Corner Climber",
+                "variantName": "Pastel Pink",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5505-pastel-turquoise",
+                "title": "Soft Play 5 Foam Block Set - Pastel Turquoise Corner Climber",
+                "variantName": "Pastel Turquoise",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5505-earth-pastel",
+                "title": "Soft Play 5 Foam Block Set - Pastel Turquoise Corner Climber",
+                "variantName": "Earth Pastel",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 527,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5504",
+        "title": "Soft Play 5 Foam Block Set - Multi Color Corner Climber",
+        "category": "module",
+        "price": 132,
+        "description": "<p><strong>IGLU&nbsp;Corner Climber 5-piece corner climber</strong> set is designed to promote gross motor skills, balance, coordination, and strength development as your child explores this soft play landscape. Built to withstand enthusiastic play, the Corner Climber set is durable and designed to provide hours of active fun and exploration.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-corner-climber-multicolor-ea166be0.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 71.82,
+        "markup_multiplier": 1.8,
+        "retail_price": 132,
+        "shipping_cost": 33,
+        "retail_price_override": 132,
+        "variants": [
+            {
+                "id": "5504-pastel-fries",
+                "title": "Soft Play 5 Foam Block Set - Multi Color Corner Climber",
+                "variantName": "Pastel Fries",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5504-pastel-sea",
+                "title": "Soft Play 5 Foam Block Set - Multi Color Corner Climber",
+                "variantName": "Pastel Sea",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5504-pastel-pink",
+                "title": "Soft Play 5 Foam Block Set - Multi Color Corner Climber",
+                "variantName": "Pastel Pink",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5504-pastel-turquoise",
+                "title": "Soft Play 5 Foam Block Set - Multi Color Corner Climber",
+                "variantName": "Pastel Turquoise",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5504-earth-pastel",
+                "title": "Soft Play 5 Foam Block Set - Multi Color Corner Climber",
+                "variantName": "Earth Pastel",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 45,
+        "stock_status": "instock"
+    },
+    {
+        "id": "5500",
+        "title": "Soft Play 5 Foam Block Set - Light Pastel Corner Climber",
+        "category": "module",
+        "price": 132,
+        "description": "<p><strong>IGLU&nbsp;Corner Climber 5-piece corner climber</strong> set is designed to promote gross motor skills, balance, coordination, and strength development as your child explores this soft play landscape. Built to withstand enthusiastic play, the Corner Climber set is durable and designed to provide hours of active fun and exploration.</p><p></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/iglu-corner-climber-pastel-ea2dc166.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 71.82,
+        "markup_multiplier": 1.8,
+        "retail_price": 132,
+        "shipping_cost": 33,
+        "retail_price_override": 132,
+        "variants": [
+            {
+                "id": "5500-pastel-fries",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel Corner Climber",
+                "variantName": "Pastel Fries",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "5500-pastel-sea",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel Corner Climber",
+                "variantName": "Pastel Sea",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "5500-pastel-pink",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel Corner Climber",
+                "variantName": "Pastel Pink",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "5500-pastel-turquoise",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel Corner Climber",
+                "variantName": "Pastel Turquoise",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "5500-earth-pastel",
+                "title": "Soft Play 5 Foam Block Set - Light Pastel Corner Climber",
+                "variantName": "Earth Pastel",
+                "price": 132,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 945,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9861",
+        "title": "Multifunctional Soft Play Set Baby Gym - Earth Pastel",
+        "category": "set",
+        "price": 208,
+        "description": "<p><strong>Multifunctional Soft Play Set Baby Gym</strong> is a canvas for your child's creativity. With various shapes and sizes, it offers endless possibilities for imaginative play, construction, and exploration. Watch as your child transforms their ideas into tangible creations,&nbsp;actively enhancing their problem-solving, spatial reasoning, and critical thinking skills. It's a fun way to learn through play.<br></p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating</p></li><li><p>Age group: 0.5 - 5 years<br></p></li></ul><p>IGLU's gentle, huggable shapes are like buddies for developing a wide range of movement and motor skills in kids. Different shapes help kids boost their coordination and motor skills – from wiggling fingers to crawling, climbing, and exploring heights.</p><p>Sharing giggles with siblings, friends, and buddies turbocharges social skills by sparking chats and connections.</p><p>Teaming up with parents or pals leads to speedy learning and spotting cool geometric shapes and vivid colors. The endless mix of shapes is like a treasure trove for crafting imaginative worlds – castles, forts, and more.</p><p>As kids grow, these shapes morph into excellent tools. Building obstacle courses, playing games, and conquering steps to beds or chairs – the possibilities are endless. Even pets join in the fun, using shapes as toys and adults get crafty – imagine shapes as a trusty computer stand!<br></p><ul><li><p>Very durable – made from HQ foam. Dense yet light foam that holds its shape.</p></li><li><p>Easy clean-up - wipes clean with a wet wipe.</p></li><li><p>Handmade - from sewing to packaging, everything is handmade.</p></li><li><p>Certificates - the blocks get vigorously tested and have received safety certificates in EU, USA, Canada and UK.</p></li><li><p>Made in EU - everything is made from our local Northern Europe facility.<br></p></li></ul><p>IGLU Soft blocks are made of firm, <strong>100% recyclable</strong> <strong>high-quality foam</strong> with a closed cell structure – <strong>soft &amp;</strong> <strong>super light.</strong>&nbsp; Covered with a tough artificial <strong>eco-leather</strong>. Shapes are <strong>robust</strong>, <strong>pleasant to the touch</strong>, <strong>easy to care</strong> for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to <strong>EU Directive 88/378 / EEC: Toy Safety</strong>, making them absolutely safe for toddlers.</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 132.71,
+        "markup_multiplier": 1.45,
+        "retail_price": 208,
+        "shipping_cost": 33,
+        "retail_price_override": 208,
+        "variants": [
+            {
+                "id": "9861-pastel-fries",
+                "title": "Multifunctional Soft Play Set Baby Gym - Earth Pastel",
+                "variantName": "Pastel Fries",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-fries-8419863c.jpg"
+            },
+            {
+                "id": "9861-pastel-sea",
+                "title": "Multifunctional Soft Play Set Baby Gym - Earth Pastel",
+                "variantName": "Pastel Sea",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-creativity-pastel-sea-74ab6204.jpg"
+            },
+            {
+                "id": "9861-pastel-pink",
+                "title": "Multifunctional Soft Play Set Baby Gym - Earth Pastel",
+                "variantName": "Pastel Pink",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/montessori-soft-play-set-pastel-pink-1e3e832d.jpg"
+            },
+            {
+                "id": "9861-pastel-turquoise",
+                "title": "Multifunctional Soft Play Set Baby Gym - Earth Pastel",
+                "variantName": "Pastel Turquoise",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/iglu-explorer-set-turquoise-c90fc83b.jpg"
+            },
+            {
+                "id": "9861-earth-pastel",
+                "title": "Multifunctional Soft Play Set Baby Gym - Earth Pastel",
+                "variantName": "Earth Pastel",
+                "price": 208,
+                "imageUrl": "https://assets.hertwill.com/content/images/multifunctional-soft-play-set-baby-gym-earth-pastel-13b468ed.jpg"
+            }
+        ],
+        "stock": 31,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9492",
+        "title": "Aesthetic Soft Play Set for Toddlers, 4 Elements - Olive Green",
+        "category": "set",
+        "price": 126,
+        "description": "<p><strong>MeowBaby Archway add-on for 160 cm play sofa.</strong></p><p>The MeowBaby Archway adds more ways to build, climb, crawl, and play with a play sofa. Children can use it to create forts, tunnels, castle entrances, windows, and obstacle courses.</p><p>This set is compatible with the <strong>MeowBaby 160 cm wide sofas</strong>. The width of the Archway matches the 160 cm sofa.</p><ul><li><p>Adds more creative play options to the sofa</p></li><li><p>Great for forts, tunnels, castles, and obstacle courses</p></li><li><p>Helps develop balance, coordination, and motor skills</p></li><li><p>Soft, lightweight, and easy for children to move</p></li><li><p>Can be stored under the sofa cushions when not in use</p></li></ul><p>Set includes:</p><ul><li><p>2 base mattresses with openings</p></li><li><p>Arch-shaped and rectangular openings</p></li><li><p>2 filling elements</p></li></ul><p>Dimensions: 80 × 75 × 24 cm</p>",
+        "imageUrl": "https://assets.hertwill.com/content/images/aesthetic-soft-play-set-for-toddlers-4-elements-olive-green-eeffca24.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "wholesale_price": 82.68,
+        "markup_multiplier": 1.45,
+        "retail_price": 126,
+        "shipping_cost": 33,
+        "retail_price_override": 126,
+        "stock": 20,
+        "stock_status": "instock"
+    },
+    {
+        "id": "9444",
+        "title": "Soft Play Shape Wedge - Beige",
+        "category": "accessory",
+        "price": 62,
+        "description": "<p>IGLU products are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft &amp; super light.&nbsp; Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><ul><li><p>Encourages physical activity</p></li><li><p>Boosts creativity &amp; imagination</p></li><li><p>Helps release excess energy &amp; manage stress</p></li><li><p>Provides sensory stimulation</p></li><li><p>Keeps children off screens</p></li><li><p>Promotes social skills like sharing &amp; collaborating</p></li><li><p>Measurements: 40 x 40 x 20 cm</p></li><li><p>For kids ages 6-36 months</p></li><li><p>Made in Latvia</p></li><li><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p></li></ul>",
+        "imageUrl": "https://assets.hertwill.com/content/images/soft-play-shape-wedge-beige-ebc7ef43.jpg",
+        "ageRange": "6 meses - 4 años",
+        "dimensions": "Medida estándar",
+        "brand": "IGLU",
+        "brand_name": "IGLU",
+        "brand_slug": "iglu-soft",
+        "wholesale_price": 16.48,
+        "markup_multiplier": 2.5,
+        "retail_price": 62,
+        "shipping_cost": 33,
+        "stock_status": "instock",
+        "stock": 97,
+        "retail_price_override": 62
+    }
+];
+exports.DEFAULT_PRICE_OVERRIDES = {};

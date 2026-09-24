@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta de colores minimalista escandinava (KineKids) */
+  --color-brand-sand-light: #FAF8F5;    /* Fondo sereno principal */
+  --color-brand-sand-dark: #F4EFE6;     /* Color de contraste suave */
+  --color-brand-charcoal: #2C2B29;      /* Texto de alto contraste */
+  --color-brand-clay-light: #E9D5C3;    /* Acento tierra suave */
+  --color-brand-clay: #D4A373;          /* Acento principal Pikler */
+  --color-brand-clay-dark: #B58456;     /* Botones y hover de llamada a la acción */
+  --color-brand-sage-light: #E2E7E1;    /* Acento natural suave */
+  --color-brand-sage: #9EB099;          /* Acento natural secundario */
+  
+  /* Sobrescribir colores genéricos de Tailwind v4 */
+  --color-background: var(--color-brand-sand-light);
+  --color-foreground: var(--color-brand-charcoal);
+  
+  /* Fuentes de marca */
+  --font-sans: var(--font-montserrat), var(--font-geist-sans), sans-serif;
+}
+
+:root {
+  --background: #FAF8F5;
+  --foreground: #2C2B29;
+}
+
+body {
+  background-color: var(--color-brand-sand-light);
+  color: var(--color-brand-charcoal);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Transiciones globales para suavidad visual */
+a, button, input, select, textarea {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Personalización de barra de desplazamiento minimalista */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-brand-sand-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-sand-dark);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-clay-light);
+}

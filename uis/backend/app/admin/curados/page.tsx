@@ -1,192 +1,100 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Sparkles,
-  Search,
-  Trash2,
-  TrendingUp,
-  Package,
-  Layers,
-  Euro,
-  ExternalLink,
-  RefreshCw,
+import Image from "next/image";
+import { 
+  Sparkles, 
+  Search, 
+  TrendingUp, 
+  Trash2, 
+  RefreshCw, 
+  Eye, 
+  Save, 
+  Check, 
+  Layers, 
   AlertCircle,
-  Check,
-  Pencil,
-  Eye,
-  SlidersHorizontal,
+  ArrowRight
 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import AdminSubHeader from "@/components/AdminSubHeader";
 import { Product } from "@/app/api/products/route";
-import { getCuratedPrice, getCategoryTranslation, parseProductTitle } from "@/lib/variants";
-import { calculatePricing, formatCurrency, getTierLabel, calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
+import { calculatePVP, calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
 
-export default function AdminCuratedProductsPage() {
+export default function AdminCuratedPage() {
   const [curatedProducts, setCuratedProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
-  
-  // Overrides manuales de PVP editados en tiempo real
-  const [priceOverrides, setPriceOverrides] = useState<Record<string, number>>({});
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isRemoving, setIsRemoving] = useState<string | null>(null);
+  
+  // Estado de edición por tarjeta: { [productId]: { price?: number, category?: "set" | "module" | "accessory" } }
+  const [edits, setEdits] = useState<{ [id: string]: { price?: number; category?: "set" | "module" | "accessory" } }>({});
+  const [savedSuccess, setSavedSuccess] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  // Cargar productos curados desde la API y LocalStorage al montar
-  useEffect(() => {
-    async function loadCurated() {
-      setIsLoading(true);
-      try {
-        // 1. Cargar desde la API de Productos Curados (Single Source of Truth)
-        let curatedList: Product[] = [];
-        try {
-          const res = await fetch("/api/admin/curated");
-          if (res.ok) {
-            const data = await res.json();
-            if (data.products && Array.isArray(data.products) && data.products.length > 0) {
-              curatedList = data.products;
-            }
-          }
-        } catch (e) {
-          console.error("Error al cargar de /api/admin/curated:", e);
-        }
-
-        // 2. Si no hay catálogo en API curados, intentar desde /api/products o catálogo por defecto
-        if (curatedList.length === 0) {
-          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
-          curatedList = DEFAULT_CURATED_PRODUCTS;
-        }
-
-        setCuratedProducts(curatedList);
-        setFilteredProducts(curatedList);
-
-        // Actualizar localStorage para mantener sincronizadas las unidades de stock reales
-        try {
-          localStorage.setItem("kinekids_curated_products", JSON.stringify(curatedList));
-        } catch (_) {}
-
-        // Pre-cargar los overrides con los precios guardados
-        const initialOverrides: Record<string, number> = {};
-        curatedList.forEach((p: Product) => {
-          const pvp = p.retail_price_override ?? (p as any).retail_price ?? (p as any).price;
-          if (pvp) initialOverrides[p.id] = Math.round(pvp);
-        });
-        setPriceOverrides(initialOverrides);
-      } catch (err: any) {
-        console.error("Error al cargar productos curados:", err);
-        setMessage({ text: "Error al cargar la lista de productos curados.", type: "error" });
-      } finally {
-        setIsLoading(false);
+  // Cargar catálogo curado
+  const loadCurated = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/admin/curated");
+      if (res.ok) {
+        const data = await res.json();
+        const list = Array.isArray(data) ? data : data.products || [];
+        setCuratedProducts(list);
+      } else {
+        throw new Error("Error al obtener catálogo curado");
       }
+    } catch (err: any) {
+      console.error(err);
+      setMessage({ text: "Error cargando productos curados desde el servidor.", type: "error" });
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  useEffect(() => {
     loadCurated();
   }, []);
 
-  const [selectedBrand, setSelectedBrand] = useState<string>("all");
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount);
 
-  // Obtener lista dinámica de marcas disponibles en los productos curados
-  const availableBrands = useMemo(() => {
-    const brandsSet = new Set<string>();
-    curatedProducts.forEach((p) => {
-      const bName = (p as any).brand?.name || (p as any).brand || (p as any).brand_name;
-      if (bName && typeof bName === "string") {
-        brandsSet.add(bName.trim());
+  // Manejar cambio de input en la tarjeta
+  const handleFieldChange = (productId: string, field: "price" | "category", value: any) => {
+    setEdits(prev => ({
+      ...prev,
+      [productId]: {
+        ...prev[productId],
+        [field]: value
       }
-    });
-    return Array.from(brandsSet).sort();
-  }, [curatedProducts]);
+    }));
+  };
 
-  // Filtrado reactivo en memoria (Búsqueda + Categoría + Marca)
-  useEffect(() => {
-    let result = curatedProducts;
-
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          ((p as any).brand?.name || (p as any).brand || (p as any).brand_name || "").toLowerCase().includes(q) ||
-          p.id.includes(q)
-      );
-    }
-
-    if (selectedBrand !== "all") {
-      result = result.filter((p) => {
-        const bName = (p as any).brand?.name || (p as any).brand || (p as any).brand_name || "";
-        return bName.toLowerCase().trim() === selectedBrand.toLowerCase().trim();
-      });
-    }
-
-    if (selectedCategory !== "all") {
-      result = result.filter((p) => {
-        const cat = (p.category || "").toLowerCase().trim();
-        if (selectedCategory === "set") return cat === "set" || cat.includes("sets");
-        if (selectedCategory === "module") return cat === "module" || cat.includes("modulo") || cat.includes("módulo");
-        if (selectedCategory === "accessory") return cat === "accessory" || cat.includes("accesorio");
-        return true;
-      });
-    }
-
-    setFilteredProducts(result);
-  }, [searchQuery, selectedCategory, selectedBrand, curatedProducts]);
-
-  // Cálculo de Métricas Financieras
-  const totalItems = curatedProducts.length;
-  const totalRetailValue = curatedProducts.reduce((sum, p) => sum + getCuratedPrice(p), 0);
-  const totalWholesaleCost = curatedProducts.reduce((sum, p) => sum + (p.wholesale_price || p.price || 0), 0);
-  const totalGrossProfit = totalRetailValue - totalWholesaleCost;
-
-  const countSets = curatedProducts.filter((p) => (p.category || "").toLowerCase().includes("set")).length;
-  const countModules = curatedProducts.filter((p) => (p.category || "").toLowerCase().includes("modul")).length;
-  const countAccessories = curatedProducts.filter((p) => (p.category || "").toLowerCase().includes("acces")).length;
-
-  // Actualizar y guardar permanentemente el PVP de un producto en la web oficial
-  const handleUpdatePrice = async (product: Product, priceArg?: number) => {
-    const rawPrice = priceArg ?? priceOverrides[product.id];
-    if (rawPrice === undefined || isNaN(rawPrice) || rawPrice <= 0) return;
-    const newPrice = Math.round(rawPrice);
-
-    setIsUpdating(product.id);
+  // Guardar TODOS los cambios de la tarjeta (PVP + Posición/Categoría)
+  const handleSaveProductCard = async (product: Product, overridePriceValue?: number) => {
+    const pId = String(product.id);
+    setIsUpdating(pId);
     setMessage(null);
+    setSavedSuccess(null);
 
-    // Preservar inmutablemente el coste mayorista original del proveedor (Hertwill)
-    const wholesalePrice = product.wholesale_price ?? (product.price !== (product as any).retail_price_override ? product.price : (product as any).wholesale_price ?? product.price);
+    const cardEdit = edits[pId] || {};
+    const finalPrice = overridePriceValue !== undefined 
+      ? overridePriceValue 
+      : (cardEdit.price !== undefined ? cardEdit.price : ((product as any).retail_price_override ?? (product as any).retail_price ?? product.price));
+    
+    const finalCategory = cardEdit.category || product.category || "accessory";
+
+    const wholesale = (product as any).wholesale_price ?? product.price ?? 0;
+    const shipping = (product as any).shipping_cost ?? (wholesale > 80 ? 33 : wholesale > 30 ? 20 : 14.99);
 
     const updatedProduct = {
       ...product,
-      wholesale_price: wholesalePrice,
-      retail_price_override: newPrice,
-      retail_price: newPrice,
-      price: newPrice,
+      category: finalCategory,
+      retail_price_override: finalPrice,
+      retail_price: finalPrice,
+      price: finalPrice,
+      wholesale_price: wholesale,
+      shipping_cost: shipping
     };
-
-    // Actualizar estado local
-    setCuratedProducts((prev) =>
-      prev.map((p) => (p.id === product.id ? updatedProduct : p))
-    );
-    setPriceOverrides((prev) => {
-      const next = { ...prev, [product.id]: newPrice };
-      localStorage.setItem("kinekids_price_overrides", JSON.stringify(next));
-      return next;
-    });
-
-    // Guardar en LocalStorage
-    const saved = localStorage.getItem("kinekids_curated_products");
-    if (saved) {
-      try {
-        let list = JSON.parse(saved) as Product[];
-        list = list.map((p) => (p.id === product.id ? updatedProduct : p));
-        localStorage.setItem("kinekids_curated_products", JSON.stringify(list));
-      } catch (_) {}
-    }
 
     try {
       const res = await fetch("/api/admin/products/sync", {
@@ -195,64 +103,40 @@ export default function AdminCuratedProductsPage() {
         body: JSON.stringify(updatedProduct),
       });
 
-      if (!res.ok) throw new Error("Error al actualizar precio en el servidor.");
+      if (!res.ok) throw new Error("Error al guardar en el servidor.");
 
-      setMessage({ text: `PVP actualizado y guardado a ${formatCurrency(newPrice)} para "${product.title}".`, type: "success" });
+      // Actualizar estado local
+      setCuratedProducts(prev => prev.map(p => String(p.id) === pId ? updatedProduct : p));
+
+      // Limpiar cambios pendientes de esta tarjeta
+      setEdits(prev => {
+        const next = { ...prev };
+        delete next[pId];
+        return next;
+      });
+
+      setSavedSuccess(pId);
+      setTimeout(() => setSavedSuccess(null), 3000);
+
+      const catLabels: Record<string, string> = {
+        set: "Sets Completos",
+        module: "Módulos",
+        accessory: "Accesorios"
+      };
+
+      setMessage({
+        text: `✓ Guardado: "${product.title}" posicionado en [${catLabels[finalCategory] || finalCategory}] con PVP ${formatCurrency(finalPrice)}.`,
+        type: "success"
+      });
     } catch (err: any) {
-      setMessage({ text: err.message || "Error al actualizar precio en servidor.", type: "error" });
+      console.error(err);
+      setMessage({ text: err.message || "Error al guardar los cambios.", type: "error" });
     } finally {
       setIsUpdating(null);
     }
   };
 
-  // Cambiar categoría de posicionamiento del producto curado en la web oficial
-  const handleUpdateCategory = async (product: Product, newCategory: "set" | "module" | "accessory") => {
-    const updatedProduct = {
-      ...product,
-      category: newCategory,
-      retail_price_override: priceOverrides[product.id] ?? (product as any).retail_price_override ?? (product as any).retail_price,
-    };
-
-    try {
-      const res = await fetch("/api/admin/products/sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedProduct),
-      });
-
-      if (!res.ok) throw new Error("Error al actualizar la categoría en el servidor.");
-
-      // Actualizar estado local
-      setCuratedProducts((prev) =>
-        prev.map((p) => (p.id === product.id ? updatedProduct : p))
-      );
-
-      // LocalStorage update
-      const saved = localStorage.getItem("kinekids_curated_products");
-      if (saved) {
-        try {
-          let list = JSON.parse(saved) as Product[];
-          list = list.map((p) => (p.id === product.id ? updatedProduct : p));
-          localStorage.setItem("kinekids_curated_products", JSON.stringify(list));
-        } catch (_) {}
-      }
-
-      const catLabels = {
-        set: "Sets Completos (High Ticket)",
-        module: "Módulos de Psicomotricidad (Mid Ticket)",
-        accessory: "Accesorios Sensoriales (Low Ticket)",
-      };
-
-      setMessage({
-        text: `Posición actualizada: "${product.title}" ahora se mostrará en ${catLabels[newCategory]} en la tienda oficial.`,
-        type: "success",
-      });
-    } catch (err: any) {
-      setMessage({ text: err.message || "Error al actualizar la categoría.", type: "error" });
-    }
-  };
-
-  // Retirar producto curado de la web oficial
+  // Retirar producto curado
   const handleRemoveCurated = async (productId: string, productTitle: string) => {
     setIsRemoving(productId);
     setMessage(null);
@@ -262,18 +146,10 @@ export default function AdminCuratedProductsPage() {
         method: "DELETE",
       });
 
-      if (!res.ok) throw new Error("Fallo al eliminar de Supabase.");
+      if (!res.ok) throw new Error("Error al retirar el producto.");
 
-      // Eliminar del estado local y actualizar localStorage siempre
-      setCuratedProducts((prev) => {
-        const nextList = prev.filter((p) => p.id !== productId);
-        try {
-          localStorage.setItem("kinekids_curated_products", JSON.stringify(nextList));
-        } catch (_) {}
-        return nextList;
-      });
-
-      setMessage({ text: `"${productTitle}" ha sido retirado de la Web Oficial.`, type: "success" });
+      setCuratedProducts(prev => prev.filter(p => String(p.id) !== String(productId)));
+      setMessage({ text: `"${productTitle}" ha sido retirado de la tienda pública.`, type: "success" });
     } catch (err: any) {
       setMessage({ text: err.message || "Error al retirar producto.", type: "error" });
     } finally {
@@ -282,368 +158,244 @@ export default function AdminCuratedProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-sand-light flex flex-col font-sans text-brand-charcoal">
-      <Header />
+    <div className="min-h-screen bg-[#FDFBF7] text-[#2C2A29]">
       <AdminSubHeader />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
-        {/* Banner de Título */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-sand-dark pb-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Cabecera */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#E8E3D9] shadow-xs mb-8">
           <div>
-            <div className="flex items-center space-x-2 text-brand-clay font-bold text-xs uppercase tracking-widest mb-1">
-              <Sparkles className="w-4 h-4" />
-              <span>Escaparate Activo · KineKids</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 text-[#E07A5F] text-xs font-bold mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              Gestor de Productos Curados & Posicionamiento
             </div>
-            <h1 className="text-3xl font-extrabold text-brand-charcoal tracking-tight">
-              Productos Curados para la Web Oficial
+            <h1 className="text-3xl font-black font-outfit">
+              Catálogo Oficial <span className="text-[#E07A5F]">KineKids</span>
             </h1>
-            <p className="text-sm text-brand-charcoal/60 mt-1">
-              Gestiona el catálogo exclusivo que ven los clientes en la portada y categorías públicas.
+            <p className="text-sm text-[#2C2A29]/70 mt-1">
+              Edita precios (PVP), márgenes y asigna la sección exacta donde aparecerá cada producto en la tienda oficial.
             </p>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-3">
             <Link
               href="/admin/catalogo"
-              className="inline-flex items-center space-x-2 px-4 py-2.5 bg-brand-charcoal text-brand-sand-light rounded-xl font-bold text-xs hover:bg-brand-charcoal/90 transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#2C2A29] text-white text-xs font-bold hover:bg-[#E07A5F] transition-all"
             >
               <Search className="w-4 h-4" />
-              <span>Añadir Más Productos desde Hertwill</span>
+              <span>Añadir más productos (Hertwill)</span>
             </Link>
           </div>
         </div>
 
-        {/* Notificaciones */}
+        {/* Notificación de Estado */}
         {message && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between shadow-2xs ${
+          <div
+            className={`p-4 rounded-2xl mb-6 text-sm font-bold flex items-center justify-between shadow-xs transition-all ${
               message.type === "success"
-                ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-                : "bg-red-50 border-red-200 text-red-800"
+                ? "bg-emerald-50 text-emerald-900 border border-emerald-200"
+                : "bg-red-50 text-red-900 border border-red-200"
             }`}
           >
-            <div className="flex items-center space-x-2">
-              <Check className="w-4 h-4 shrink-0" />
+            <div className="flex items-center gap-2">
+              {message.type === "success" ? <Check className="w-5 h-5 text-emerald-600" /> : <AlertCircle className="w-5 h-5 text-red-600" />}
               <span>{message.text}</span>
             </div>
-            <button onClick={() => setMessage(null)} className="text-xs opacity-60 hover:opacity-100">
-              ✕
+            <button onClick={() => setMessage(null)} className="text-xs underline cursor-pointer ml-4">
+              Cerrar
             </button>
-          </motion.div>
+          </div>
         )}
 
-        {/* Dashboard de Métricas Financieras */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-brand-sand-dark/60 shadow-2xs flex flex-col justify-between">
-            <div className="flex items-center justify-between text-brand-charcoal/60 mb-2">
-              <span className="text-xs uppercase font-extrabold tracking-wider">Productos Activos</span>
-              <Package className="w-4 h-4 text-brand-clay" />
-            </div>
-            <div className="text-3xl font-black text-brand-charcoal">{totalItems}</div>
-            <span className="text-[11px] text-brand-charcoal/50 mt-1">Visibles en la tienda oficial</span>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-brand-sand-dark/60 shadow-2xs flex flex-col justify-between">
-            <div className="flex items-center justify-between text-brand-charcoal/60 mb-2">
-              <span className="text-xs uppercase font-extrabold tracking-wider">Valor del Catálogo</span>
-              <Euro className="w-4 h-4 text-emerald-600" />
-            </div>
-            <div className="text-3xl font-black text-brand-charcoal">{formatCurrency(totalRetailValue)}</div>
-            <span className="text-[11px] text-brand-charcoal/50 mt-1">Suma total de PVP público</span>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-brand-sand-dark/60 shadow-2xs flex flex-col justify-between">
-            <div className="flex items-center justify-between text-brand-charcoal/60 mb-2">
-              <span className="text-xs uppercase font-extrabold tracking-wider">Beneficio Bruto Est.</span>
-              <TrendingUp className="w-4 h-4 text-brand-sage" />
-            </div>
-            <div className="text-3xl font-black text-brand-sage">{formatCurrency(totalGrossProfit)}</div>
-            <span className="text-[11px] text-brand-charcoal/50 mt-1">Margen total (PVP - Coste)</span>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-brand-sand-dark/60 shadow-2xs flex flex-col justify-between">
-            <div className="flex items-center justify-between text-brand-charcoal/60 mb-2">
-              <span className="text-xs uppercase font-extrabold tracking-wider">Categorías</span>
-              <Layers className="w-4 h-4 text-brand-clay" />
-            </div>
-            <div className="flex items-center space-x-2 text-xs font-bold">
-              <span className="px-2 py-1 bg-brand-sand-dark/40 rounded-lg">{countSets} Sets</span>
-              <span className="px-2 py-1 bg-brand-sand-dark/40 rounded-lg">{countModules} Mód.</span>
-              <span className="px-2 py-1 bg-brand-sand-dark/40 rounded-lg">{countAccessories} Acc.</span>
-            </div>
-            <span className="text-[11px] text-brand-charcoal/50 mt-1">Distribución del catálogo</span>
-          </div>
-        </div>
-
-        {/* Buscador y Filtros */}
-        <div className="bg-white p-4 rounded-2xl border border-brand-sand-dark/60 shadow-2xs space-y-4">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative flex-1 w-full">
-              <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-brand-charcoal/40" />
-              <input
-                type="text"
-                placeholder="Buscar producto curado por título, marca o ID..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-brand-sand-light/50 border border-brand-sand-dark/60 rounded-xl text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-brand-clay/50"
-              />
-            </div>
-
-            {/* Dropdown Selector de Marca */}
-            <div className="w-full md:w-52 shrink-0">
-              <select
-                value={selectedBrand}
-                onChange={(e) => setSelectedBrand(e.target.value)}
-                className="w-full px-3 py-2.5 bg-brand-sand-light/60 border border-brand-sand-dark/60 rounded-xl text-xs font-bold text-brand-charcoal focus:outline-hidden focus:ring-2 focus:ring-brand-clay/50 cursor-pointer"
-              >
-                <option value="all">🏷️ Todas las Marcas ({availableBrands.length})</option>
-                {availableBrands.map((b) => (
-                  <option key={b} value={b}>
-                    {b}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Chips de Categorías */}
-            <div className="flex items-center space-x-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-              {[
-                { id: "all", label: "Todos los Curados" },
-                { id: "set", label: "Sets Completos" },
-                { id: "module", label: "Módulos" },
-                { id: "accessory", label: "Accesorios" },
-              ].map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-                    selectedCategory === cat.id
-                      ? "bg-brand-charcoal text-brand-sand-light"
-                      : "bg-brand-sand-dark/30 text-brand-charcoal/70 hover:bg-brand-sand-dark/60"
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Grid de Productos Curados */}
+        {/* Listado de Productos */}
         {isLoading ? (
-          <div className="py-20 text-center space-y-3">
-            <RefreshCw className="w-8 h-8 text-brand-clay animate-spin mx-auto opacity-70" />
-            <p className="text-xs font-bold text-brand-charcoal/60">Cargando productos curados para la web oficial...</p>
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-[#E8E3D9]">
+            <RefreshCw className="w-8 h-8 animate-spin text-[#E07A5F] mb-3" />
+            <p className="text-sm font-bold text-[#2C2A29]/60">Cargando productos curados...</p>
           </div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="py-20 bg-white rounded-2xl border border-brand-sand-dark/60 text-center space-y-4">
-            <Package className="w-12 h-12 text-brand-charcoal/30 mx-auto" />
-            <div>
-              <h3 className="text-base font-bold text-brand-charcoal">No hay productos curados en esta lista</h3>
-              <p className="text-xs text-brand-charcoal/60 mt-1 max-w-md mx-auto">
-                No se han encontrado productos que coincidan con la búsqueda o aún no has seleccionado ítems desde el catálogo mayorista.
-              </p>
-            </div>
+        ) : curatedProducts.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-3xl border border-[#E8E3D9] p-8">
+            <Layers className="w-12 h-12 text-[#2C2A29]/30 mx-auto mb-3" />
+            <h3 className="text-lg font-bold">No hay productos curados en la tienda</h3>
+            <p className="text-xs text-[#2C2A29]/60 mt-1 max-w-md mx-auto">
+              Ve al catálogo de Hertwill para seleccionar los productos que deseas mostrar en la tienda oficial.
+            </p>
             <Link
               href="/admin/catalogo"
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-brand-clay text-white rounded-xl text-xs font-bold hover:bg-brand-charcoal transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#E07A5F] text-white font-bold text-xs mt-5 shadow-sm"
             >
               <Search className="w-4 h-4" />
               <span>Explorar Catálogo Hertwill</span>
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => {
-              const wholesale = product.wholesale_price ?? product.price ?? 0;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {curatedProducts.map((product) => {
+              const pId = String(product.id);
+              const cardEdit = edits[pId] || {};
+
+              const wholesale = (product as any).wholesale_price ?? product.price ?? 0;
               const shipping = (product as any).shipping_cost ?? (wholesale > 80 ? 33 : wholesale > 30 ? 20 : 14.99);
-              const totalCost = wholesale + shipping;
-              const activeRetail = getCuratedPrice(product);
-              const margin = activeRetail - totalCost;
-              const isOverridden = priceOverrides[product.id] !== undefined;
+
+              const currentActiveRetail = (product as any).retail_price_override ?? (product as any).retail_price ?? product.price;
+              const inputPrice = cardEdit.price !== undefined ? cardEdit.price : currentActiveRetail;
+              const selectedCategory = cardEdit.category || product.category || "accessory";
+
+              const estimatedMargin = Math.round(inputPrice - (wholesale + shipping));
+              const target20 = calculateTarget20MarginPrice(wholesale, shipping);
+              const amazonRef = getAmazonBenchmarkPrice(product.title, wholesale, shipping);
+
+              const hasUnsavedChanges = cardEdit.price !== undefined || cardEdit.category !== undefined;
+              const isCardUpdating = isUpdating === pId;
 
               return (
                 <div
-                  key={product.id}
-                  className="bg-white rounded-2xl border border-brand-sand-dark/80 shadow-2xs overflow-hidden flex flex-col justify-between hover:border-brand-clay/40 transition-all"
+                  key={pId}
+                  className={`bg-white rounded-3xl border transition-all shadow-xs flex flex-col justify-between overflow-hidden ${
+                    hasUnsavedChanges ? "border-[#E07A5F] ring-2 ring-[#E07A5F]/20" : "border-[#E8E3D9]"
+                  }`}
                 >
-                  {/* Cabecera Tarjeta */}
-                  <div className="p-4 space-y-3">
-                    <div className="relative aspect-4/3 rounded-xl overflow-hidden bg-brand-sand-dark/20 border border-brand-sand-dark/40">
+                  {/* Imagen y Badge */}
+                  <div className="relative h-56 bg-gray-50 border-b border-[#E8E3D9]">
+                    {product.imageUrl ? (
                       <img
-                        src={product.imageUrl || (product as any).image_url || "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&q=80&w=600"}
+                        src={product.imageUrl}
                         alt={product.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain p-4"
                       />
-                      <span className="absolute top-2 left-2 px-2.5 py-1 bg-brand-charcoal/90 text-brand-sand-light text-[10px] font-bold uppercase tracking-wider rounded-lg backdrop-blur-xs">
-                        {product.category === "set" ? "Sets" : product.category === "module" ? "Módulos" : "Accesorios"}
-                      </span>
-                      {/* Badge stock de proveedor (Colores Pastel Suaves) */}
-                      {(() => {
-                        const rawStock = (product as any).stock;
-                        const stockVal = rawStock !== undefined && rawStock !== null ? Number(rawStock) : NaN;
-                        const statusVal = (product as any).stock_status || "instock";
-                        const isOutOfStock = statusVal === "outofstock" || stockVal === 0;
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                        Sin imagen
+                      </div>
+                    )}
+                    <span className="absolute top-3 right-3 px-3 py-1 rounded-full bg-[#2C2A29]/80 text-white text-[10px] font-bold backdrop-blur-xs">
+                      ID: {pId}
+                    </span>
+                  </div>
 
-                        return (
-                          <div className={`absolute bottom-2 left-2 px-2 py-0.5 rounded-lg text-[9px] font-extrabold flex items-center gap-1.5 backdrop-blur-md shadow-xs ${
-                            isOutOfStock
-                              ? "bg-[#FCE8E6] text-[#C5221F] border border-[#FAD2CF]" 
-                              : "bg-[#E6F4EA] text-[#137333] border border-[#CEEAD6]"
-                          }`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${isOutOfStock ? "bg-[#D93025] animate-pulse" : "bg-[#188038]"}`} />
-                            {isOutOfStock
-                              ? "Agotado"
-                              : !isNaN(stockVal) && stockVal > 0
-                                ? `${stockVal} uds.`
-                                : "En Stock"}
-                          </div>
-                        );
-                      })()}
-                      {((product as any).brand?.name || (product as any).brand) && (
-                        <span className="absolute top-2 right-2 px-2.5 py-1 bg-white/90 text-brand-charcoal text-[10px] font-bold rounded-lg shadow-2xs backdrop-blur-xs">
-                          {(product as any).brand?.name || (product as any).brand}
-                        </span>
-                      )}
-                    </div>
+                  {/* Contenido de la Tarjeta */}
+                  <div className="p-5 space-y-4 flex-1">
+                    <h3 className="font-bold text-sm text-[#2C2A29] line-clamp-2 leading-snug">
+                      {product.title}
+                    </h3>
 
-                    <div>
-                      <h3 className="text-sm font-bold text-brand-charcoal line-clamp-1">
-                        {(() => {
-                          const { baseName, variantName } = parseProductTitle(product.title);
-                          return variantName && variantName !== "Estándar" ? `${baseName} - ${variantName}` : baseName;
-                        })()}
-                      </h3>
-                      <span className="text-[11px] text-brand-charcoal/50">ID: {product.id}</span>
-                    </div>
-
-                    {/* Desglose Financiero Completo */}
-                    <div className="p-3 bg-brand-sand-dark/20 rounded-xl border border-brand-sand-dark/40 space-y-1.5 text-xs">
-                      <div className="flex justify-between items-center text-brand-charcoal/70">
+                    {/* Desglose de Costes y Margen */}
+                    <div className="p-3 bg-gray-50 rounded-2xl border border-gray-200 space-y-1.5 text-xs">
+                      <div className="flex justify-between text-gray-600">
                         <span>Coste Proveedor:</span>
                         <span className="font-bold">{formatCurrency(wholesale)}</span>
                       </div>
-                      <div className="flex justify-between items-center text-brand-charcoal/60 text-[11px]">
-                        <span>Envío (España):</span>
+                      <div className="flex justify-between text-gray-500 text-[11px]">
+                        <span>Envío España:</span>
                         <span>{formatCurrency(shipping)}</span>
                       </div>
-                      <div className="flex justify-between items-center text-brand-charcoal pt-1 border-t border-brand-sand-dark/40">
-                        <span className="font-bold">PVP Público Activo:</span>
-                        <span className="text-sm font-black text-brand-clay">{formatCurrency(activeRetail)}</span>
+                      <div className="flex justify-between pt-1 border-t border-gray-200">
+                        <span className="font-bold">PVP Público en Web:</span>
+                        <span className="font-black text-sm text-[#E07A5F]">{formatCurrency(inputPrice)}</span>
                       </div>
-                      <div className="flex justify-between items-center text-emerald-700 font-bold text-[11px] pt-1 border-t border-brand-sand-dark/40">
-                        <span>Beneficio Neto Est.:</span>
-                        <span>+{formatCurrency(margin)}</span>
+                      <div className="flex justify-between text-emerald-700 font-bold text-[11px] pt-1 border-t border-gray-200">
+                        <span>Margen Neto Estimado:</span>
+                        <span>+{formatCurrency(estimatedMargin)}</span>
                       </div>
                     </div>
 
-                    {/* Edición Directa de PVP Override */}
-                    <div className="space-y-1.5 pt-1">
-                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-brand-charcoal/60">
-                        Editar PVP Público (€)
-                      </label>
-                      <div className="flex space-x-2">
-                        <input
-                          type="number"
-                          step="1"
-                          placeholder={activeRetail.toString()}
-                          value={priceOverrides[product.id] ?? ""}
-                          onChange={(e) => {
-                            const val = Math.round(parseFloat(e.target.value));
-                            if (!isNaN(val) && val > 0) {
-                              setPriceOverrides((prev) => ({ ...prev, [product.id]: val }));
-                            }
-                          }}
-                          className="w-full px-3 py-1.5 bg-brand-sand-light/60 border border-brand-sand-dark/80 rounded-xl text-xs font-bold text-brand-charcoal focus:outline-hidden focus:ring-2 focus:ring-brand-clay/50"
-                        />
-                        <button
-                          onClick={() => handleUpdatePrice(product)}
-                          disabled={!isOverridden || isUpdating === product.id}
-                          className="px-3 py-1.5 bg-brand-charcoal text-brand-sand-light rounded-xl text-xs font-bold hover:bg-brand-clay transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center space-x-1 shrink-0 cursor-pointer"
-                        >
-                          {isUpdating === product.id ? (
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <Pencil className="w-3.5 h-3.5" />
-                          )}
-                          <span>Guardar</span>
-                        </button>
-                      </div>
-
-                      {/* Botón sugerido: 20% Margen de Beneficio & Referencia Amazon */}
-                      {(() => {
-                        const shipping = (product as any).shipping_cost ?? (wholesale > 80 ? 33 : wholesale > 30 ? 20 : 14.99);
-                        const target20 = calculateTarget20MarginPrice(wholesale, shipping);
-                        const amazonRef = getAmazonBenchmarkPrice(product.title, wholesale, shipping);
-                        return (
-                          <div className="pt-1 flex items-center justify-between gap-1">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                handleUpdatePrice(product, target20);
-                              }}
-                              title="Fijar y guardar automáticamente el precio estimado para ganar un 20% de margen de beneficio neto real"
-                              className="px-2 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-900 border border-amber-500/30 rounded-lg text-[9px] font-extrabold flex items-center space-x-1 transition-all cursor-pointer shadow-2xs"
-                            >
-                              <span>🎯 20% Margen:</span>
-                              <span className="font-mono underline">{formatCurrency(target20)}</span>
-                            </button>
-                            <span
-                              className="text-[9px] text-brand-charcoal/50 font-semibold"
-                              title="Precio de referencia en Amazon y tiendas especializadas"
-                            >
-                              Amazon: ~{formatCurrency(amazonRef)}
-                            </span>
-                          </div>
-                        );
-                      })()}
-                    </div>
-
-                    {/* Selector de Posición / Categoría en Tienda */}
-                    <div className="space-y-1.5 pt-1">
-                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-brand-charcoal/60">
-                        Posición en la Tienda Oficial
+                    {/* 1. SELECCIÓN DE POSICIÓN / CATEGORÍA EN TIENDA */}
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-[#2C2A29]/70 flex items-center gap-1">
+                        <span>📍 Posición en la Tienda Oficial:</span>
                       </label>
                       <select
-                        value={product.category}
-                        onChange={(e) => {
-                          const newCat = e.target.value as "set" | "module" | "accessory";
-                          handleUpdateCategory(product, newCat);
-                        }}
-                        className="w-full px-3 py-1.5 bg-brand-sand-light/60 border border-brand-sand-dark/80 rounded-xl text-xs font-bold text-brand-charcoal focus:outline-hidden focus:ring-2 focus:ring-brand-clay/50 cursor-pointer"
+                        value={selectedCategory}
+                        onChange={(e) => handleFieldChange(pId, "category", e.target.value as any)}
+                        className="w-full px-3 py-2 bg-[#FDFBF7] border border-[#E8E3D9] rounded-xl text-xs font-bold text-[#2C2A29] focus:outline-hidden focus:ring-2 focus:ring-[#E07A5F] cursor-pointer"
                       >
-                        <option value="set">🏆 Sets Completos (High Ticket)</option>
-                        <option value="module">🧩 Módulos de Psicomotricidad (Mid Ticket)</option>
-                        <option value="accessory">✦ Accesorios Sensoriales (Low Ticket)</option>
+                        <option value="set">🏆 Sets Completos (Fila Superior - High Ticket)</option>
+                        <option value="module">🧩 Módulos de Psicomotricidad (Sección Media)</option>
+                        <option value="accessory">✦ Accesorios Sensoriales (Sección Inferior)</option>
                       </select>
+                    </div>
+
+                    {/* 2. EDICIÓN DIRECTA DE PVP */}
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-[#2C2A29]/70">
+                        💶 Editar PVP Público (€):
+                      </label>
+                      <input
+                        type="number"
+                        step="1"
+                        value={inputPrice}
+                        onChange={(e) => {
+                          const val = Math.round(parseFloat(e.target.value));
+                          if (!isNaN(val) && val > 0) {
+                            handleFieldChange(pId, "price", val);
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-[#FDFBF7] border border-[#E8E3D9] rounded-xl text-xs font-bold text-[#2C2A29] focus:outline-hidden focus:ring-2 focus:ring-[#E07A5F]"
+                      />
+
+                      {/* Botón sugerido: 20% Margen */}
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          type="button"
+                          onClick={() => handleSaveProductCard(product, target20)}
+                          className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-[10px] font-extrabold transition-all cursor-pointer"
+                        >
+                          <span>🎯 Sugerir 20% Margen: {formatCurrency(target20)}</span>
+                        </button>
+                        <span className="text-[10px] text-gray-400 font-medium">
+                          Amazon: ~{formatCurrency(amazonRef)}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Acciones de la Tarjeta */}
-                  <div className="p-3 bg-brand-sand-dark/30 border-t border-brand-sand-dark/60 flex items-center justify-between">
-                    <Link
-                      href={`/products/${product.id}`}
-                      target="_blank"
-                      className="inline-flex items-center space-x-1 text-xs font-bold text-brand-charcoal/70 hover:text-brand-clay transition-colors"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>Ver Ficha Pública</span>
-                    </Link>
-
+                  {/* 3. BOTÓN DE GUARDAR TODOS LOS CAMBIOS & ACCIONES */}
+                  <div className="p-4 bg-gray-50 border-t border-gray-200 space-y-2">
                     <button
-                      onClick={() => handleRemoveCurated(product.id, product.title)}
-                      disabled={isRemoving === product.id}
-                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-600 hover:text-white rounded-xl text-xs font-bold transition-all disabled:opacity-40"
+                      type="button"
+                      onClick={() => handleSaveProductCard(product)}
+                      disabled={isCardUpdating}
+                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
+                        savedSuccess === pId
+                          ? "bg-emerald-600 text-white"
+                          : hasUnsavedChanges
+                          ? "bg-[#E07A5F] hover:bg-[#D46B4E] text-white animate-pulse"
+                          : "bg-[#2C2A29] hover:bg-[#E07A5F] text-white"
+                      }`}
                     >
-                      {isRemoving === product.id ? (
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      {isCardUpdating ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin" />
+                          <span>Guardando cambios...</span>
+                        </>
+                      ) : savedSuccess === pId ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          <span>¡Cambios Guardados con Éxito!</span>
+                        </>
                       ) : (
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <>
+                          <Save className="w-4 h-4" />
+                          <span>{hasUnsavedChanges ? "Guardar Todos los Cambios *" : "Guardar Cambios"}</span>
+                        </>
                       )}
-                      <span>Retirar de la Web</span>
                     </button>
+
+                    <div className="flex items-center justify-between pt-1 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCurated(pId, product.title)}
+                        disabled={isRemoving === pId}
+                        className="text-red-600 hover:text-red-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Retirar de la web</span>
+                      </button>
+
+                      <span className="text-[11px] text-gray-400">
+                        {selectedCategory === "set" ? "🏆 Set" : selectedCategory === "module" ? "🧩 Módulo" : "✦ Accesorio"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
@@ -651,8 +403,6 @@ export default function AdminCuratedProductsPage() {
           </div>
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }

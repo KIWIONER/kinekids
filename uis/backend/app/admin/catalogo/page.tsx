@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/app/api/products/route";
 import { calculatePricing, formatCurrency, getTierLabel, calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
 import { parseProductTitle } from "@/lib/variants";
-import Header from "@/components/Header";
 import AdminSubHeader from "@/components/AdminSubHeader";
 
 export default function AdminCatalogPage() {
@@ -564,8 +563,7 @@ export default function AdminCatalogPage() {
 
   return (
     <div className="min-h-screen bg-brand-sand-light text-brand-charcoal font-sans antialiased flex flex-col">
-      <Header />
-      <AdminSubHeader />
+            <AdminSubHeader />
 
       {/* Main Admin Area */}
       <main className="max-w-7xl mx-auto p-6 space-y-6 flex-1 w-full">

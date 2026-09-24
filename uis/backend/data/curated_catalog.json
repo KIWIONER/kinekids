@@ -1717,7 +1717,7 @@
     "id": "7500",
     "title": "Juego Blando Ride On Toy",
     "category": "module",
-    "price": 265,
+    "price": 244,
     "description": "<p>Abróchate el cinturón para disfrutar de un paseo divertido. Este juego suave equivalente a un juguete mecedor clásico es la manera perfecta de practicar el equilibrio y la imaginación de su hijo. También ayuda a desarrollar la motricidad gruesa, el equilibrio, la coordinación y el desarrollo muscular. Es una manera emocionante para que su hijo se mantenga activo y comprometido.<br></p><ul><li><p>Fomenta la actividad física</p></li><li><p>Estimula la creatividad y la imaginación</p></li><li><p>Ayuda a liberar el exceso de energía y controlar el estrés</p></li><li><p>Proporciona estimulación sensorial</p></li><li><p>Mantiene a los niños fuera de las pantallas</p></li><li><p>Promueve habilidades sociales como compartir y colaborar<br></p></li></ul><p>Las formas suaves y abrazables de IGLU son como amigos para desarrollar una amplia gama de movimientos y habilidades motoras en los niños. Las diferentes formas ayudan a los niños a mejorar su coordinación y habilidades motoras, desde mover los dedos hasta gatear, escalar y explorar alturas.</p><p>Compartir risas con hermanos, amigos y amigos potencia las habilidades sociales al generar conversaciones y conexiones.</p><p>Trabajar en equipo con padres o amigos conduce a un aprendizaje rápido y a detectar formas geométricas geniales y colores vivos. La interminable mezcla de formas es como un tesoro escondido para crear mundos imaginativos: castillos, fuertes y más.</p><p>A medida que los niños crecen, estas formas se transforman en excelentes herramientas. Construir pistas de obstáculos, jugar y conquistar escalones para llegar a la cama o a la silla: las posibilidades son infinitas. Incluso las mascotas se unen a la diversión, usando formas como juguetes y los adultos se vuelven astutos: ¡imagina las formas como un confiable soporte para computadora!<br></p><ul><li><p>Muy duradero: hecho de espuma HQ. Espuma densa pero ligera que mantiene su forma.</p></li><li><p>Fácil limpieza: se limpia con un paño húmedo.</p></li><li><p>Hecho a mano: desde la costura hasta el embalaje, todo está hecho a mano.</p></li><li><p>Certificados: los bloques se prueban rigurosamente y han recibido certificados de seguridad en la UE, EE. UU., Canadá y el Reino Unido.</p></li><li><p>Fabricado en la UE: todo está hecho en nuestra zona del norte de Europa. instalación.<br></p></li></ul><p>Los bloques blandos IGLU están hechos de espuma firme, <strong>100% reciclable</strong> <strong>de alta calidad</strong> con una estructura de células cerradas: <strong>suave y</strong> <strong>súper liviana.</strong>  Cubiertos con un resistente <strong>cuero ecológico</strong> artificial. Las formas son <strong>robustas</strong>, <strong>agradables al tacto</strong>, <strong>fáciles de cuidar</strong>, conservan bien la forma y están testadas para detectar sustancias nocivas.</p><p>Los productos IGLU tienen la marca CE según la <strong>Directiva de la UE 88/378/CEE: Seguridad de los juguetes</strong>, lo que los hace absolutamente seguros para los niños pequeños.</p>",
     "imageUrl": "https://assets.hertwill.com/content/images/soft-play-ride-on-toy-lightblue-car-24c7be54.jpg",
     "ageRange": "6 meses - 4 años",
@@ -1727,9 +1727,9 @@
     "brand_slug": "iglu-soft",
     "wholesale_price": 180,
     "markup_multiplier": 1.8,
-    "retail_price": 265,
+    "retail_price": 244,
     "shipping_cost": 33,
-    "retail_price_override": 265,
+    "retail_price_override": 244,
     "variants": [
       {
         "id": "7500",
@@ -1760,7 +1760,8 @@
       }
     ],
     "stock": 25,
-    "stock_status": "instock"
+    "stock_status": "instock",
+    "sort_order": 0
   },
   {
     "id": "7498",
@@ -2094,7 +2095,8 @@
       }
     ],
     "stock": 185,
-    "stock_status": "instock"
+    "stock_status": "instock",
+    "sort_order": 0
   },
   {
     "id": "5572",
@@ -2436,7 +2438,8 @@
       }
     ],
     "stock": 20,
-    "stock_status": "instock"
+    "stock_status": "instock",
+    "sort_order": 0
   },
   {
     "id": "5570",
@@ -3157,12 +3160,13 @@
     "shipping_cost": 33,
     "stock_status": "instock",
     "stock": 97,
-    "retail_price_override": 62
+    "retail_price_override": 62,
+    "sort_order": 0
   },
   {
     "id": "9319",
     "title": "Estrella Wicker Cat House",
-    "category": "module",
+    "category": "accessory",
     "price": 115,
     "description": "<p>Handmade in Europe from natural wicker, the Estrella cat house gives your cat two cozy spaces in one. The lower level works as a sheltered sleeping spot, while the upper platform is perfect for lounging and keeping an eye on everything.</p><p>The sturdy woven design is durable, stable, and made from renewable, biodegradable wicker. A front entrance and small slatted window bring in light and air, while two soft waterproof cushions add extra comfort on both levels.</p><p>Easy to care for and pleasant to the touch, this cat house combines natural materials, practical design, and a clean look that fits nicely into any home.</p><ul><li><p>Maximum load: 7 kg</p></li><li><p>Capacity: 7 L</p></li><li><p>Dimensions: 56x36 H:32/42 (cm)</p></li><li><p>Filling material: Polyester</p></li><li><p>Form: Rectangular</p></li><li><p>Country of origin: Poland</p></li></ul>",
     "imageUrl": "https://assets.hertwill.com/content/images/estrella-wicker-cat-house-f70ae370.jpg",
@@ -3177,7 +3181,8 @@
     "shipping_cost": 24,
     "stock_status": "instock",
     "stock": null,
-    "retail_price_override": 115
+    "retail_price_override": 115,
+    "sort_order": 0
   },
   {
     "id": "9291",
@@ -3242,7 +3247,7 @@
   {
     "id": "9259",
     "title": "Wicker Storage Basket Caros",
-    "category": "module",
+    "category": "accessory",
     "price": 130,
     "description": "<p>Large round wicker basket with wheels, handwoven in Europe from natural wicker and finished with a removable cotton lining with decorative lace. The sturdy plywood base helps the basket keep its shape and handle everyday use.</p><p>Locking casters make it easy to move and keep in place. With a 45 L capacity, it works well for storing blankets, cushions, toys, or laundry, and also as a display basket in shops or cafés.</p><ul><li><p>Material: wicker, cotton</p></li><li><p>Shape: round</p></li><li><p>Application: display, storage</p></li><li><p>Capacity: 45 L</p></li><li><p>Maximum load: 35 kg</p></li><li><p>Weight: 3.40 kg</p></li><li><p>Dimensions: Ø50 x H40/44 cm</p></li><li><p>Made in Poland</p></li></ul>",
     "imageUrl": "https://assets.hertwill.com/content/images/wicker-storage-basket-caros-411e71a7.jpg",
@@ -3257,7 +3262,8 @@
     "shipping_cost": 24,
     "stock_status": "instock",
     "stock": null,
-    "retail_price_override": 130
+    "retail_price_override": 130,
+    "sort_order": 0
   },
   {
     "id": "9243",

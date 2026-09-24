@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import AdminSubHeader from "@/components/AdminSubHeader";
 import { Product } from "@/app/api/products/route";
-import { calculatePVP, calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
+import { calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
 
 export default function AdminCuratedPage() {
   const [curatedProducts, setCuratedProducts] = useState<Product[]>([]);

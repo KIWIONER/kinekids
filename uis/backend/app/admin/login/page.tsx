@@ -29,8 +29,7 @@ export default function AdminLoginPage() {
         throw new Error(data.error || "Error al iniciar sesión.");
       }
 
-      router.push("/admin/catalogo");
-      router.refresh();
+      window.location.href = "/admin/catalogo";
     } catch (err: any) {
       setError(err.message);
     } finally {

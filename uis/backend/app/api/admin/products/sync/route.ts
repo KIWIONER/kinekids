@@ -6,37 +6,56 @@ import { Product } from "@/app/api/products/route";
 
 export const dynamic = "force-dynamic";
 
-const catalogPath = path.join(process.cwd(), "data", "curated_catalog.json");
+const catalogPaths = [
+  path.join(process.cwd(), "data", "curated_catalog.json"),
+  path.join(process.cwd(), "..", "frontend", "data", "curated_catalog.json"),
+  path.join(process.cwd(), "uis", "backend", "data", "curated_catalog.json"),
+  path.join(process.cwd(), "uis", "frontend", "data", "curated_catalog.json"),
+];
 
 function updateJsonCatalog(product: Product, isDelete: boolean = false) {
-  try {
-    let list: Product[] = [];
-    if (fs.existsSync(catalogPath)) {
-      list = JSON.parse(fs.readFileSync(catalogPath, "utf-8"));
-    }
-
-    if (isDelete) {
-      list = list.filter((p) => String(p.id) !== String(product.id));
-    } else {
-      const idx = list.findIndex((p) => String(p.id) === String(product.id));
-      if (idx >= 0) {
-        const existingWholesale = list[idx].wholesale_price;
-        const finalWholesale = product.wholesale_price || existingWholesale || product.price;
-        list[idx] = {
-          ...list[idx],
-          ...product,
-          wholesale_price: finalWholesale,
-        };
-      } else {
-        list.push(product);
+  const written = new Set<string>();
+  for (const cPath of catalogPaths) {
+    try {
+      const resolved = path.resolve(cPath);
+      if (written.has(resolved)) continue;
+      
+      const dir = path.dirname(resolved);
+      if (!fs.existsSync(dir)) {
+        try { fs.mkdirSync(dir, { recursive: true }); } catch (_) {}
       }
-    }
 
-    const dir = path.dirname(catalogPath);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(catalogPath, JSON.stringify(list, null, 2), "utf-8");
-  } catch (e) {
-    console.error("Error al actualizar data/curated_catalog.json:", e);
+      let list: Product[] = [];
+      if (fs.existsSync(resolved)) {
+        try {
+          list = JSON.parse(fs.readFileSync(resolved, "utf-8"));
+        } catch (_) {
+          list = [];
+        }
+      }
+
+      if (isDelete) {
+        list = list.filter((p) => String(p.id) !== String(product.id));
+      } else {
+        const idx = list.findIndex((p) => String(p.id) === String(product.id));
+        if (idx >= 0) {
+          const existingWholesale = list[idx].wholesale_price;
+          const finalWholesale = product.wholesale_price || existingWholesale || product.price;
+          list[idx] = {
+            ...list[idx],
+            ...product,
+            wholesale_price: finalWholesale,
+          };
+        } else {
+          list.push(product);
+        }
+      }
+
+      fs.writeFileSync(resolved, JSON.stringify(list, null, 2), "utf-8");
+      written.add(resolved);
+    } catch (e) {
+      console.warn("Aviso al actualizar JSON en", cPath, e);
+    }
   }
 }
 
@@ -48,45 +67,57 @@ export async function POST(request: Request) {
   try {
     const product = await request.json();
 
+    if (!product || !product.id) {
+      return NextResponse.json({ error: "Falta el producto o su ID" }, { status: 400 });
+    }
+
     const retailPrice: number =
       product.retail_price_override ??
       product.retail_price ??
-      product.price;
+      product.price ??
+      0;
 
-    const wholesalePrice: number = product.wholesale_price ?? product.price;
+    const wholesalePrice: number = product.wholesale_price ?? product.price ?? 0;
+
+    const validCategories = ["set", "module", "accessory"];
+    const safeCategory = validCategories.includes(product.category) ? product.category : "accessory";
 
     const updatedProduct: Product = {
       ...product,
+      category: safeCategory as any,
       retail_price_override: retailPrice,
       retail_price: retailPrice,
       wholesale_price: wholesalePrice,
       price: retailPrice,
     };
 
-    // 1. Guardar en data/curated_catalog.json (Single Source of Truth)
+    // 1. Guardar en JSON (Single Source of Truth para fallback local)
     updateJsonCatalog(updatedProduct, false);
 
-    // 2. Si Supabase está disponible, hacer upsert
+    // 2. Si Supabase está disponible, hacer upsert directo con las columnas exactas
     if (supabase) {
       try {
-        await supabase.from("products").upsert(
+        const { error } = await supabase.from("products").upsert(
           {
             id: String(product.id),
-            hertwill_sku: product.id,
-            title: product.title,
+            title: product.title || "Producto KineKids",
             wholesale_price: wholesalePrice,
             price: retailPrice,
-            description: product.description,
-            image_url: product.imageUrl,
-            category: product.category,
-            age_range: product.ageRange || "6 meses - 4 años",
+            description: product.description || "",
+            image_url: product.imageUrl || product.image_url || "",
+            category: safeCategory,
+            age_range: product.ageRange || product.age_range || "6 meses - 4 años",
             dimensions: product.dimensions || "Medida estándar",
-            markup_multiplier: product.markup_multiplier ?? null,
           },
           { onConflict: "id" }
         );
-      } catch (err) {
-        console.warn("Supabase upsert warning:", err);
+        if (error) {
+          console.error("[Supabase Sync] Error en upsert:", error);
+          throw new Error(`Error en Supabase: ${error.message}`);
+        }
+      } catch (err: any) {
+        console.error("[Supabase Sync] Excepción en upsert:", err);
+        throw err;
       }
     }
 
@@ -95,6 +126,7 @@ export async function POST(request: Request) {
       message: "Producto sincronizado con éxito.",
       wholesale_price: wholesalePrice,
       retail_price: retailPrice,
+      product: updatedProduct,
     });
   } catch (error: any) {
     console.error("Error al sincronizar producto:", error);
@@ -117,30 +149,36 @@ export async function DELETE(request: Request) {
     } catch (_) {}
 
     if (!id) {
-      return NextResponse.json({ success: true, message: "Operación completada." });
+      return NextResponse.json({ success: true, message: "Operación completada (sin ID)." });
     }
 
-    // 1. Eliminar de data/curated_catalog.json (Single Source of Truth)
+    // 1. Eliminar de JSON
     updateJsonCatalog({ id } as any, true);
 
     // 2. Si Supabase está disponible, eliminar
     if (supabase) {
       try {
-        await supabase.from("products").delete().eq("id", id);
-      } catch (err) {
-        console.warn("Supabase delete warning:", err);
+        const { error } = await supabase.from("products").delete().eq("id", String(id));
+        if (error) {
+          console.error("[Supabase Sync] Error en delete:", error);
+          throw new Error(`Error en Supabase: ${error.message}`);
+        }
+      } catch (err: any) {
+        console.error("[Supabase Sync] Excepción en delete:", err);
+        throw err;
       }
     }
 
     return NextResponse.json({
       success: true,
-      message: "Producto eliminado con éxito.",
+      id,
+      message: "Producto eliminado con éxito de KineKids.",
     });
   } catch (error: any) {
     console.error("Error al eliminar producto:", error);
     return NextResponse.json({
-      success: true,
-      message: "Eliminado localmente.",
-    });
+      success: false,
+      error: error.message,
+    }, { status: 500 });
   }
 }

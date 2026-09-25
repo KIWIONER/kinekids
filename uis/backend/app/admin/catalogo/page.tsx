@@ -177,71 +177,45 @@ export default function AdminCatalogPage() {
     }
   }, [currentPage]);
 
-  // Cargar IDs ya curados/sincronizados y overrides de precios desde LocalStorage al montar
+    const [curatedServerProducts, setCuratedServerProducts] = useState<Product[]>([]);
+
+  // 1. Cargar catálogo curado REAL desde la API/Supabase al montar
+  const loadCuratedData = async () => {
+    try {
+      const res = await fetch("/api/admin/curated");
+      if (res.ok) {
+        const data = await res.json();
+        const list: Product[] = Array.isArray(data) ? data : data.products || [];
+        setCuratedServerProducts(list);
+        setSyncedIds(new Set(list.map((p) => String(p.id))));
+
+        const overrides: Record<string, number> = {};
+        list.forEach((p) => {
+          const pvp = p.retail_price_override ?? (p as any).retail_price ?? (p as any).price;
+          if (pvp) {
+            overrides[String(p.id)] = Math.round(pvp);
+          }
+        });
+        setPriceOverrides((prev) => ({ ...overrides, ...prev }));
+      }
+    } catch (e) {
+      console.warn("No se pudo cargar /api/admin/curated:", e);
+    }
+  };
+
   useEffect(() => {
-    const initialOverrides: Record<string, number> = {};
-
-    // 1. Cargar overrides guardados en localStorage
-    const savedOverrides = localStorage.getItem("kinekids_price_overrides");
-    if (savedOverrides) {
-      try {
-        Object.assign(initialOverrides, JSON.parse(savedOverrides));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    // 2. Cargar productos curados y sus precios fijados
-    const saved = localStorage.getItem("kinekids_curated_products");
-    let curatedList: Product[] = [];
-    if (saved) {
-      try {
-        curatedList = JSON.parse(saved) as Product[];
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    // Si localStorage está vacío, leer de DEFAULT_CURATED_PRODUCTS pero NO sobrescribir localStorage
-    if (curatedList.length === 0) {
-      import("@/lib/default_catalog").then(({ DEFAULT_CURATED_PRODUCTS, DEFAULT_PRICE_OVERRIDES }) => {
-        setSyncedIds(new Set(DEFAULT_CURATED_PRODUCTS.map((p) => p.id)));
-        setPriceOverrides({ ...DEFAULT_PRICE_OVERRIDES, ...initialOverrides });
-      });
-      return;
-    }
-
-    setSyncedIds(new Set(curatedList.map((p) => p.id)));
-    curatedList.forEach((p) => {
-      const pvp = p.retail_price_override ?? (p as any).retail_price ?? (p as any).price;
-      if (pvp && !initialOverrides[p.id]) {
-        initialOverrides[p.id] = Math.round(pvp);
-      }
-    });
-
-    setPriceOverrides(initialOverrides);
+    loadCuratedData();
   }, []);
 
   // 2. Filtrar productos en memoria de forma reactiva (aplica sobre los cargados en la página actual o curados)
   useEffect(() => {
     let result = products;
 
-    // Si el modo "Mostrar solo curados" está activo, cargar y fusionar todos los productos curados
+    // Si el modo "Mostrar solo curados" está activo, cargar y fusionar todos los productos curados reales
     if (showOnlyCurated) {
-      let localCurated: Product[] = [];
-      const saved = localStorage.getItem("kinekids_curated_products");
-      if (saved) {
-        try {
-          localCurated = JSON.parse(saved) as Product[];
-        } catch (_) {}
-      }
-
       const map = new Map<string, Product>();
-      // Agregar primero los productos cargados actualmente que coincidan con syncedIds
-      products.filter((p) => syncedIds.has(p.id)).forEach((p) => map.set(p.id, p));
-      // Agregar luego todos los ítems guardados en localStorage
-      localCurated.forEach((p) => map.set(p.id, p));
-
+      curatedServerProducts.forEach((p) => map.set(String(p.id), p));
+      products.filter((p) => syncedIds.has(String(p.id))).forEach((p) => map.set(String(p.id), p));
       result = Array.from(map.values());
     }
 
@@ -348,7 +322,6 @@ export default function AdminCatalogPage() {
   const handleSyncProduct = async (product: Product, targetCategory?: "set" | "module" | "accessory") => {
     const productToSync = {
       ...(targetCategory ? { ...product, category: targetCategory } : product),
-      // Si el admin editó el PVP manualmente, lo incluimos como override
       retail_price_override: priceOverrides[product.id] ?? undefined,
     };
 
@@ -363,33 +336,18 @@ export default function AdminCatalogPage() {
       });
 
       const data = await res.json();
-
       if (!res.ok) {
         throw new Error(data.error || "Fallo en la comunicación con el servidor.");
       }
 
-      setSyncedIds((prev) => {
-        const next = new Set(prev);
-        next.add(product.id);
-        return next;
+      setSyncedIds((prev) => new Set(prev).add(String(product.id)));
+      setCuratedServerProducts((prev) => {
+        const next = prev.filter((item) => String(item.id) !== String(product.id));
+        return [...next, productToSync];
       });
 
-      // LocalStorage Sync
-      const saved = localStorage.getItem("kinekids_curated_products");
-      let currentList: Product[] = [];
-      if (saved) {
-        try {
-          currentList = JSON.parse(saved) as Product[];
-        } catch (_) {}
-      }
-      currentList = currentList.filter((item) => item.id !== product.id);
-      currentList.push(productToSync);
-      localStorage.setItem("kinekids_curated_products", JSON.stringify(currentList));
-
       setMessage({
-        text: data.localFallback
-          ? `Sincronizado localmente: "${product.title}" añadido al catálogo local.`
-          : `Éxito: "${product.title}" subido correctamente a Supabase.`,
+        text: `Éxito: "${product.title}" subido correctamente a la tienda KineKids.`,
         type: "success",
       });
 
@@ -413,8 +371,8 @@ export default function AdminCatalogPage() {
       prev.map((item) => (item.id === product.id ? updatedProduct : item))
     );
 
-    // 2. Si el producto ya está en la web oficial (curado), persistir en Supabase y LocalStorage
-    if (syncedIds.has(product.id)) {
+    // 2. Si el producto ya está en la web oficial (curado), persistir en Supabase
+    if (syncedIds.has(String(product.id))) {
       try {
         await fetch("/api/admin/products/sync", {
           method: "POST",
@@ -425,16 +383,9 @@ export default function AdminCatalogPage() {
           }),
         });
 
-        const saved = localStorage.getItem("kinekids_curated_products");
-        if (saved) {
-          try {
-            let currentList = JSON.parse(saved) as Product[];
-            currentList = currentList.map((item) =>
-              item.id === product.id ? { ...item, category: newCategory } : item
-            );
-            localStorage.setItem("kinekids_curated_products", JSON.stringify(currentList));
-          } catch (_) {}
-        }
+        setCuratedServerProducts((prev) =>
+          prev.map((item) => (String(item.id) === String(product.id) ? updatedProduct : item))
+        );
 
         const catNames = {
           set: "Sets Completos (High Ticket)",
@@ -457,15 +408,9 @@ export default function AdminCatalogPage() {
     const cleanPrice = Math.round(newPrice);
     if (isNaN(cleanPrice) || cleanPrice <= 0) return;
 
-    // 1. Actualizar estado y LocalStorage de overrides de precios
-    setPriceOverrides((prev) => {
-      const next = { ...prev, [product.id]: cleanPrice };
-      localStorage.setItem("kinekids_price_overrides", JSON.stringify(next));
-      return next;
-    });
+    setPriceOverrides((prev) => ({ ...prev, [product.id]: cleanPrice }));
 
-    // 2. Si el producto ya está en la web oficial (curado), persistir en LocalStorage de curados y Supabase
-    if (syncedIds.has(product.id)) {
+    if (syncedIds.has(String(product.id))) {
       const productToSync = {
         ...product,
         retail_price_override: cleanPrice,
@@ -473,69 +418,52 @@ export default function AdminCatalogPage() {
         price: cleanPrice,
       };
 
-      // Guardar en LocalStorage de catálogo curado oficial
-      const saved = localStorage.getItem("kinekids_curated_products");
-      if (saved) {
-        try {
-          let list = JSON.parse(saved) as Product[];
-          list = list.map((item) =>
-            item.id === product.id
-              ? { ...item, retail_price_override: cleanPrice, retail_price: cleanPrice, price: cleanPrice }
-              : item
-          );
-          localStorage.setItem("kinekids_curated_products", JSON.stringify(list));
-        } catch (_) {}
-      }
-
-      // Sincronizar en vivo con Supabase
       try {
         await fetch("/api/admin/products/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(productToSync),
         });
+
+        setCuratedServerProducts((prev) =>
+          prev.map((item) => (String(item.id) === String(product.id) ? productToSync : item))
+        );
       } catch (err) {
         console.error("Error al sincronizar nuevo precio:", err);
       }
     }
   };
 
-  // Sacar/Eliminar producto curado de Supabase y LocalStorage
+  // Sacar/Eliminar producto curado de Supabase
   const handleRemoveProduct = async (productId: string) => {
     if (!productId) return;
     setIsRemoving(productId);
     setMessage(null);
 
-    // 1. Eliminar localmente de forma inmediata e incondicional
     setSyncedIds((prev) => {
       const next = new Set(prev);
       next.delete(String(productId));
       return next;
     });
 
-    try {
-      const saved = localStorage.getItem("kinekids_curated_products");
-      if (saved) {
-        let currentList = JSON.parse(saved) as Product[];
-        currentList = currentList.filter((item) => String(item.id) !== String(productId));
-        localStorage.setItem("kinekids_curated_products", JSON.stringify(currentList));
-      }
-    } catch (_) {}
+    setCuratedServerProducts((prev) => prev.filter((item) => String(item.id) !== String(productId)));
 
-    // 2. Intentar notificar al backend en segundo plano
     try {
-      await fetch(`/api/admin/products/sync?id=${productId}`, {
+      const res = await fetch(`/api/admin/products/sync?id=${productId}`, {
         method: "DELETE",
       });
-    } catch (err) {
+      if (!res.ok) throw new Error("Error al eliminar del servidor");
+      
+      setMessage({
+        text: `Eliminado: El producto ha sido retirado de KineKids correctamente.`,
+        type: "success",
+      });
+    } catch (err: any) {
       console.warn("Aviso: No se pudo sync con servidor remoto:", err);
+      setMessage({ text: err.message || "Error al retirar el producto.", type: "error" });
+    } finally {
+      setIsRemoving(null);
     }
-
-    setMessage({
-      text: `Eliminado: El producto ha sido retirado de KineKids correctamente.`,
-      type: "success",
-    });
-    setIsRemoving(null);
   };
 
   // Limpiar filtros y regresar a estado por defecto
@@ -553,12 +481,9 @@ export default function AdminCatalogPage() {
     setMessage({ text: "Filtros y búsquedas restablecidas a los valores de fábrica.", type: "success" });
   };
 
-  const handleClearLocalCatalog = () => {
-    if (window.confirm("¿Seguro que deseas vaciar el catálogo curado local? Esto reiniciará el estado de las tarjetas.")) {
-      localStorage.removeItem("kinekids_curated_products");
-      setSyncedIds(new Set());
-      setMessage({ text: "Catálogo local vaciado.", type: "success" });
-    }
+  const handleClearLocalCatalog = async () => {
+    await loadCuratedData();
+    setMessage({ text: "Catálogo sincronizado con la base de datos.", type: "success" });
   };
 
   return (

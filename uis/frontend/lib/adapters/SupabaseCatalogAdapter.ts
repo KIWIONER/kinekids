@@ -14,7 +14,7 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
     }
 
     try {
-      // Ordenamos explícitamente por el nuevo campo sort_order
+      // Ordenamos explícitamente por el campo sort_order
       const { data, error } = await supabase
         .from("products")
         .select("*")
@@ -26,7 +26,6 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
       }
 
       if (data && data.length > 0) {
-        // Mapeo seguro desde el esquema de la DB hacia nuestro Dominio (Product)
         return data.map((p: any) => ({
           id: String(p.id),
           title: p.title || "Producto sin título",
@@ -37,7 +36,6 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
           ageRange: p.age_range || "",
           dimensions: p.dimensions || "",
           wholesale_price: p.wholesale_price !== null ? parseFloat(p.wholesale_price) : undefined,
-          // Mapeos inversos para campos dinámicos
           retail_price_override: p.price !== null ? parseFloat(p.price) : undefined,
           retail_price: p.price !== null ? parseFloat(p.price) : undefined,
           sort_order: p.sort_order !== null ? parseInt(p.sort_order, 10) : 0,
@@ -57,35 +55,50 @@ export class SupabaseCatalogAdapter implements CatalogRepository {
     }
 
     try {
-      // Mapeo inverso y sanitización de datos antes de enviar a DB
-      // Asignamos el índice del array como 'sort_order' para preservar el orden visual del admin
+      const validCategories = ["set", "module", "accessory"];
       const dbPayload = products.map((p, index) => {
-        // Asegurar que la categoría es una de las permitidas por el CHECK constraint
-        const validCategories = ["set", "module", "accessory"];
         const safeCategory = validCategories.includes(p.category) ? p.category : "accessory";
 
         return {
-          id: p.id,
-          title: p.title,
+          id: String(p.id),
+          title: p.title || "Producto KineKids",
           category: safeCategory,
-          price: p.retail_price_override ?? p.retail_price ?? p.price,
-          description: p.description,
-          image_url: p.imageUrl,
-          age_range: p.ageRange,
-          dimensions: p.dimensions,
-          wholesale_price: p.wholesale_price,
-          sort_order: index, // <--- Aquí guardamos la posición
+          price: p.retail_price_override ?? p.retail_price ?? p.price ?? 0,
+          description: p.description || "",
+          image_url: p.imageUrl || (p as any).image_url || "",
+          age_range: p.ageRange || (p as any).age_range || "6 meses - 4 años",
+          dimensions: p.dimensions || (p as any).dimensions || "Medida estándar",
+          wholesale_price: p.wholesale_price ?? (p as any).wholesalePrice ?? p.price ?? 0,
+          sort_order: index,
         };
       });
 
-      // Realizamos un UPSERT
-      const { error } = await supabase
-        .from("products")
-        .upsert(dbPayload, { onConflict: "id" });
+      if (dbPayload.length > 0) {
+        // 1. Upsert de los productos activos
+        const { error: upsertError } = await supabase
+          .from("products")
+          .upsert(dbPayload, { onConflict: "id" });
 
-      if (error) {
-        console.error("[SupabaseAdapter] Error al realizar UPSERT en Supabase. Detalles del error DB:", JSON.stringify(error));
-        throw error;
+        if (upsertError) {
+          console.error("[SupabaseAdapter] Error en UPSERT:", upsertError);
+          throw upsertError;
+        }
+
+        // 2. Eliminar de Supabase los productos que fueron retirados
+        const activeIds = products.map((p) => String(p.id));
+        const { data: existingRows } = await supabase.from("products").select("id");
+        if (existingRows && existingRows.length > 0) {
+          const idsToDelete = existingRows
+            .map((r: any) => String(r.id))
+            .filter((id: string) => !activeIds.includes(id));
+
+          if (idsToDelete.length > 0) {
+            await supabase.from("products").delete().in("id", idsToDelete);
+            console.log(`[SupabaseAdapter] ${idsToDelete.length} productos retirados eliminados de Supabase.`);
+          }
+        }
+      } else {
+        await supabase.from("products").delete().neq("id", "0");
       }
 
       console.log(`[SupabaseAdapter] ${products.length} productos sincronizados exitosamente con Supabase.`);

@@ -6,10 +6,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password } = body;
 
-    const expectedEmail = (process.env.ADMIN_EMAIL || "admin@kinekids.com").trim();
+    const envEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+    const inputEmail = (email || "").trim().toLowerCase();
+    const validEmails = ["admin@kinekids.com", "matiasidiartviera@gmail.com"];
+    if (envEmail) validEmails.push(envEmail);
+    const isEmailValid = validEmails.includes(inputEmail);
     const expectedPassword = (process.env.ADMIN_PASSWORD || "KineKids2026!AdminKey").trim();
 
-    if (!email || !password || email !== expectedEmail || password !== expectedPassword) {
+    if (!email || !password || !isEmailValid || password !== expectedPassword) {
       return NextResponse.json(
         { error: "Credenciales de administración inválidas." },
         { status: 401 }

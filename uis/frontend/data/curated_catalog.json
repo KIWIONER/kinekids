@@ -2499,7 +2499,7 @@
     "id": "5569",
     "title": "Soft Play Ball Pit - Multicolor",
     "category": "module",
-    "price": 243,
+    "price": 220,
     "description": "<p>Transform playtime into a joyful, imaginative, sensory-filled experience with our vibrant and interactive playset. This 120 x 120 cm foam ball pit engages your child's sense of touch, sight, and proprioception, fostering sensory development. The low-profile entrance makes it easy for little ones to climb in and out independently.</p><p>This ball pit for toddlers is made of soft foam with a vinyl cover, ensuring a safe play environment for your little ones. Rigid non-toxic foam will hold the shape and make the playtime safe.</p><p>Designed for babies and toddlers, this soft play ball pit creates a sensory wonderland for little ones to explore, climb, and play. Perfect for ages 1 and up, it provides a safe and stimulating environment that encourages imaginative play and motor skill development. Suitable both for indoor and outdoor use.<br></p><p><strong>Ball Pit balls are not included in the set (500 balls required).<br></strong><br>IGLU Soft blocks are made of firm, 100% recyclable high-quality foam with a closed cell structure – soft &amp; super light.&nbsp; Covered with a tough artificial eco-leather. Shapes are robust, pleasant to the touch, easy to care for, retain shape well, and tested for harmful substances.</p><p>IGLU products are CE marked according to EU Directive 88/378 / EEC: Toy Safety, making them absolutely safe for toddlers.</p>",
     "imageUrl": "https://assets.hertwill.com/content/images/iglu-ballpit-multicolor-b35b21d0.jpg",
     "ageRange": "6 meses - 4 años",
@@ -2509,9 +2509,9 @@
     "brand_slug": "iglu-soft",
     "wholesale_price": 160.76,
     "markup_multiplier": 1.45,
-    "retail_price": 243,
+    "retail_price": 220,
     "shipping_cost": 33,
-    "retail_price_override": 243,
+    "retail_price_override": 220,
     "variants": [
       {
         "id": "5569-pastel-fries",
@@ -2550,7 +2550,8 @@
       }
     ],
     "stock": 20,
-    "stock_status": "instock"
+    "stock_status": "instock",
+    "sort_order": 0
   },
   {
     "id": "5518",

@@ -15,6 +15,7 @@
     "dev:backend": "npm run --prefix uis/backend dev",
     "build:frontend": "npm run --prefix uis/frontend build",
     "build:backend": "npm run --prefix uis/backend build",
-    "lint": "npm run --prefix uis/frontend lint && npm run --prefix uis/backend lint"
+    "lint": "npm run --prefix uis/frontend lint && npm run --prefix uis/backend lint",
+    "test": "node --test tests/suite.test.mjs"
   }
 }

@@ -186,16 +186,8 @@ export async function GET(request: Request) {
 
     // Si no tiene parámetros, es una consulta de la tienda para el catálogo curado
     let curated = await getCuratedProducts();
-
-    // Fallback en vivo a la API de Hertwill si Supabase no tiene datos
-    if (!curated || curated.length === 0) {
-      const [res1, res2, res3, res4] = await Promise.all([
-        getHertwillProducts(1, 50),
-        getHertwillProducts(2, 50),
-        getHertwillProducts(3, 50),
-        getHertwillProducts(4, 50),
-      ]);
-      curated = [...res1.products, ...res2.products, ...res3.products, ...res4.products];
+    if (!curated) {
+      curated = [];
     }
 
     const { translateDescription } = await import("@/lib/translator");

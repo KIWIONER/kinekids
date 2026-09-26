@@ -342,7 +342,7 @@ export default function AdminCatalogPage() {
     setMessage(null);
 
     try {
-      const res = await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
+      const res = await fetch("/api/admin/products/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productToSync),
@@ -353,6 +353,7 @@ export default function AdminCatalogPage() {
         throw new Error(data.error || "Fallo en la comunicación con el servidor.");
       }
 
+      notifyFrontendDirectly();
       setSyncedIds((prev) => new Set(prev).add(String(product.id)));
       setCuratedServerProducts((prev) => {
         const next = prev.filter((item) => String(item.id) !== String(product.id));
@@ -387,7 +388,7 @@ export default function AdminCatalogPage() {
     // 2. Si el producto ya está en la web oficial (curado), persistir en Supabase
     if (syncedIds.has(String(product.id))) {
       try {
-        await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
+        await fetch("/api/admin/products/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -432,7 +433,7 @@ export default function AdminCatalogPage() {
       };
 
       try {
-        await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
+        await fetch("/api/admin/products/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(productToSync),
@@ -462,7 +463,7 @@ export default function AdminCatalogPage() {
     setCuratedServerProducts((prev) => prev.filter((item) => String(item.id) !== String(productId)));
 
     try {
-      const res = await notifyFrontendDirectly(); fetch(`/api/admin/products/sync?id=${productId}`, {
+      const res = await fetch(`/api/admin/products/sync?id=${productId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Error al eliminar del servidor");

@@ -158,23 +158,39 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    let id: string | null = null;
+    let ids: string[] = [];
     try {
       const { searchParams } = new URL(request.url);
-      id = searchParams.get("id");
+      const idParam = searchParams.get("id");
+      if (idParam) {
+        ids = idParam.split(",").map(s => s.trim()).filter(Boolean);
+      }
     } catch (_) {}
 
-    if (!id) {
-      return NextResponse.json({ success: true, message: "Operación completada (sin ID)." });
+    if (ids.length === 0) {
+      try {
+        const body = await request.json();
+        if (body.ids && Array.isArray(body.ids)) {
+          ids = body.ids.map((id: any) => String(id));
+        } else if (body.id) {
+          ids = [String(body.id)];
+        }
+      } catch (_) {}
+    }
+
+    if (ids.length === 0) {
+      return NextResponse.json({ success: true, message: "Operación completada (sin IDs)." });
     }
 
     // 1. Eliminar de JSON
-    updateJsonCatalog({ id } as any, true);
+    for (const id of ids) {
+      updateJsonCatalog({ id } as any, true);
+    }
 
-    // 2. Si Supabase está disponible, eliminar
+    // 2. Si Supabase está disponible, eliminar en lote
     if (supabase) {
       try {
-        const { error } = await supabase.from("products").delete().eq("id", String(id));
+        const { error } = await supabase.from("products").delete().in("id", ids);
         if (error) {
           console.error("[Supabase Sync] Error en delete:", error);
           throw new Error(`Error en Supabase: ${error.message}`);
@@ -190,8 +206,8 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({
       success: true,
-      id,
-      message: "Producto eliminado con éxito de KineKids.",
+      ids,
+      message: `${ids.length} producto(s) eliminado(s) con éxito de KineKids.`,
     });
   } catch (error: any) {
     console.error("Error al eliminar producto:", error);

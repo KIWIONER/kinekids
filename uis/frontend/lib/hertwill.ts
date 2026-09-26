@@ -406,7 +406,7 @@ export async function getCuratedProducts(): Promise<Product[]> {
     const repository = getCatalogRepository();
     const products = await repository.getCuratedProducts();
 
-    if (products && products.length > 0) {
+    if (products !== null && products !== undefined) {
       console.log(`[Hertwill API] Cargados ${products.length} productos curados desde el Repositorio.`);
       return products;
     }
@@ -414,7 +414,5 @@ export async function getCuratedProducts(): Promise<Product[]> {
     console.error("[Hertwill API] Error al cargar productos del Repositorio:", err);
   }
 
-  console.warn("[Hertwill API] Repositorio vacío o error. Cayendo al catálogo por defecto.");
-  const { DEFAULT_CURATED_PRODUCTS } = await import("./default_catalog");
-  return DEFAULT_CURATED_PRODUCTS as Product[];
+  return [];
 }

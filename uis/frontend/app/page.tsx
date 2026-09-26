@@ -18,14 +18,19 @@ export default function Home() {
 
   // Carga garantizada desde la API del servidor (Single Source of Truth)
   useEffect(() => {
-    async function loadCatalog() {
+    async function loadCatalog(isBackground = false) {
       try {
-        setIsLoading(true);
+        if (!isBackground) {
+          setIsLoading(true);
+        }
 
-        // 1. Cargar productos directamente de la API
+        // 1. Cargar productos directamente de la API con no-cache
         let dbItems: Product[] = [];
         try {
-          const res = await fetch(`/api/products?t=${Date.now()}`, { cache: "no-store", headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" } });
+          const res = await fetch(`/api/products?t=${Date.now()}`, {
+            cache: "no-store",
+            headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" },
+          });
           if (res.ok) {
             dbItems = await res.json();
           }
@@ -33,20 +38,14 @@ export default function Home() {
           console.error("Error al conectar con API de productos:", e);
         }
 
-        // 2. Fallback de seguridad si no hay productos
-        if (!dbItems || dbItems.length === 0) {
-          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
-          dbItems = DEFAULT_CURATED_PRODUCTS;
-        }
-
-        // 3. Normalizar productos y variantes
-        const flatList: Product[] = [];
+        // 2. Normalizar productos y variantes
         if (Array.isArray(dbItems)) {
+          const flatList: Product[] = [];
           dbItems.forEach((item: any) => {
             if (item.variants && item.variants.length > 0) {
               item.variants.forEach((v: any) => {
                 flatList.push({
-                  id: v.id,
+                  id: String(v.id),
                   title: v.title,
                   category: item.category || "accessory",
                   price: v.wholesale_price || item.price,
@@ -59,24 +58,30 @@ export default function Home() {
                 } as any);
               });
             } else {
-              flatList.push(item);
+              flatList.push({
+                ...item,
+                id: String(item.id),
+              });
             }
           });
-        }
 
-        const { groupCuratedProducts } = await import("@/lib/variants");
-        const groupedList = groupCuratedProducts(flatList);
-        setProducts(groupedList as any);
+          const { groupCuratedProducts } = await import("@/lib/variants");
+          const groupedList = groupCuratedProducts(flatList);
+          setProducts(groupedList as any);
+        }
       } catch (err) {
         console.error("Error en la carga del catálogo curado:", err);
       } finally {
-        setIsLoading(false);
+        if (!isBackground) {
+          setIsLoading(false);
+        }
       }
     }
 
-    loadCatalog();
+    // Primera carga inicial con indicador visual
+    loadCatalog(false);
 
-    // Suscripción en Tiempo Real con Supabase Realtime Channels
+    // Suscripción en Tiempo Real con Supabase Realtime Channels (Silenciosa en segundo plano)
     let channel: any = null;
     if (supabase) {
       channel = supabase
@@ -86,12 +91,12 @@ export default function Home() {
           { event: "*", schema: "public", table: "products" },
           (payload) => {
             console.log("[Supabase Realtime] Cambio en base de datos detectado:", payload.eventType);
-            loadCatalog();
+            loadCatalog(true);
           }
         )
         .on("broadcast", { event: "catalog-sync-refresh" }, (payload) => {
           console.log("[Supabase Realtime] Señal de refresco manual recibida desde Admin:", payload);
-          loadCatalog();
+          loadCatalog(true);
         })
         .subscribe();
     }
@@ -102,17 +107,17 @@ export default function Home() {
       broadcast = new BroadcastChannel("kinekids_catalog_sync");
       broadcast.onmessage = () => {
         console.log("[BroadcastChannel] Señal de sincronización de catálogo recibida.");
-        loadCatalog();
+        loadCatalog(true);
       };
     }
 
     const handleFocus = () => {
-      loadCatalog();
+      loadCatalog(true);
     };
 
     const handleStorage = (e: StorageEvent) => {
       if (e.key === "kinekids_last_sync") {
-        loadCatalog();
+        loadCatalog(true);
       }
     };
 
@@ -121,12 +126,12 @@ export default function Home() {
       window.addEventListener("storage", handleStorage);
     }
 
-    // Polling Ligero de Respaldo para Producción (Coolify / Cross-Domain)
+    // Polling ligero y silencioso en segundo plano cada 20 segundos sólo si la pestaña está activa
     const intervalId = setInterval(() => {
       if (typeof document !== "undefined" && document.visibilityState === "visible") {
-        loadCatalog();
+        loadCatalog(true);
       }
-    }, 8000);
+    }, 20000);
 
     return () => {
       clearInterval(intervalId);
@@ -143,52 +148,42 @@ export default function Home() {
     };
   }, []);
 
-  // Normalización estricta de categorías asignadas por el Admin
-  const getNormalizedCategory = (category: string): "set" | "module" | "accessory" => {
-    if (!category) return "accessory";
-    const cat = category.toLowerCase().trim();
-    if (cat === "set" || cat === "high_ticket" || cat === "high-ticket" || cat === "sets") {
-      return "set";
-    }
-    if (cat === "module" || cat === "mid_ticket" || cat === "mid-ticket" || cat === "modules" || cat === "modulo" || cat === "módulo") {
-      return "module";
-    }
-    return "accessory";
-  };
-
-  const sets = products.filter((p) => getNormalizedCategory(p.category) === "set");
-  const modules = products.filter((p) => getNormalizedCategory(p.category) === "module");
-  const accessories = products.filter((p) => getNormalizedCategory(p.category) === "accessory");
+  // Segmentación por peldaños pedagógicos
+  const sets = products.filter((p) => p.category === "set");
+  const modules = products.filter((p) => p.category === "module");
+  const accessories = products.filter((p) => p.category === "accessory");
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-sand-light selection:bg-brand-clay/30">
-      <Header />
-      
-      {/* 1. Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center pt-24 pb-16 bg-[#faf7f2] overflow-hidden">
-        <HeroToyPattern />
-        <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-clay-light/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/10 w-96 h-96 bg-brand-sage/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-brand-sand font-sans text-brand-charcoal selection:bg-brand-clay selection:text-white flex flex-col justify-between">
+      {/* Dynamic Background Pattern */}
+      <HeroToyPattern />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-brand-sand-dark/60 border border-brand-sand-dark text-brand-charcoal text-xs font-semibold tracking-wider uppercase mb-8 backdrop-blur-xs">
-            <Sparkles className="w-3.5 h-3.5 text-brand-clay animate-pulse" />
-            <span>Pedagogía Pikler & Montessori</span>
+      {/* Header */}
+      <Header />
+
+      {/* 1. Hero Section */}
+      <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-32 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-brand-sand-dark/60 backdrop-blur-sm border border-brand-sand-dark text-brand-clay text-xs font-semibold uppercase tracking-wider mb-8 animate-fade-in">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Desarrollo Motor Respetuoso</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-brand-charcoal max-w-4xl mx-auto leading-[1.08]">
-            El arte de crecer <br />
-            <span className="font-serif italic font-normal text-brand-clay">en movimiento</span>
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-brand-charcoal max-w-4xl mx-auto leading-[1.1]">
+            Mobiliario y módulos para el{" "}
+            <span className="text-brand-clay underline decoration-brand-clay/30 decoration-wavy underline-offset-8">
+              movimiento libre
+            </span>
           </h1>
 
-          <p className="mt-8 text-base sm:text-lg md:text-xl text-brand-charcoal/70 max-w-2xl mx-auto font-light leading-relaxed">
-            Mobiliario y módulos de juego blando diseñados por especialistas en psicomotricidad infantil. Belleza escandinava, seguridad europea.
+          <p className="mt-6 text-lg sm:text-xl text-brand-charcoal/70 max-w-2xl mx-auto font-light leading-relaxed">
+            Inspirados en la pedagogía Pikler y Montessori. Espacios de psicomotricidad seguros, modulares y sostenibles para crecer jugando.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="#sets"
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-clay text-brand-sand-light font-medium text-sm hover:bg-brand-charcoal hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-clay text-white font-medium text-sm shadow-md hover:bg-brand-clay/90 hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2"
             >
               Explorar Colección
             </a>

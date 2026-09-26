@@ -110,7 +110,7 @@ export default function AdminCuratedPage() {
     };
 
     try {
-      const res = await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
+      const res = await fetch("/api/admin/products/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedProduct),
@@ -155,7 +155,12 @@ export default function AdminCuratedPage() {
     setMessage(null);
 
     try {
-      const res = await notifyFrontendDirectly(); fetch(`/api/admin/products/sync?id=${productId}`, {
+      const target = curatedProducts.find((p) => String(p.id) === String(productId));
+      const idsToDelete = [String(productId)];
+      if (target && target.variants && Array.isArray(target.variants)) {
+        target.variants.forEach((v) => idsToDelete.push(String(v.id)));
+      }
+      const res = await fetch(`/api/admin/products/sync?id=${idsToDelete.join(",")}`, {
         method: "DELETE",
       });
 

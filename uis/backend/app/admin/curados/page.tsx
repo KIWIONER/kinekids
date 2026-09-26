@@ -1,3 +1,5 @@
+"use client";
+
 function notifyFrontendDirectly() {
   if (typeof window !== "undefined") {
     try {
@@ -10,7 +12,6 @@ function notifyFrontendDirectly() {
     } catch (_) {}
   }
 }
-"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";

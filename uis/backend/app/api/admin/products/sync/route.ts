@@ -59,6 +59,19 @@ function updateJsonCatalog(product: Product, isDelete: boolean = false) {
   }
 }
 
+async function triggerFrontendRevalidation(targetPath: string = "/") {
+  try {
+    const frontendUrl = process.env.NEXT_PUBLIC_STORE_FRONTEND_URL || "http://localhost:3000";
+    await fetch(`${frontendUrl}/api/revalidate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: targetPath }),
+    });
+  } catch (e) {
+    // Revalidación asíncrona silenciosa
+  }
+}
+
 export async function GET() {
   return NextResponse.json({ status: "ok" });
 }
@@ -121,6 +134,9 @@ export async function POST(request: Request) {
       }
     }
 
+    // 3. Notificar purga de caché al frontend (On-Demand ISR)
+    triggerFrontendRevalidation("/");
+
     return NextResponse.json({
       success: true,
       message: "Producto sincronizado con éxito.",
@@ -168,6 +184,9 @@ export async function DELETE(request: Request) {
         throw err;
       }
     }
+
+    // 3. Notificar purga de caché al frontend (On-Demand ISR)
+    triggerFrontendRevalidation("/");
 
     return NextResponse.json({
       success: true,

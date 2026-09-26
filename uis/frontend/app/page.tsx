@@ -10,6 +10,7 @@ import ChatWidget from "@/components/ChatWidget";
 import ChatCTAButton from "@/components/ChatCTAButton";
 import HeroToyPattern from "@/components/HeroToyPattern";
 import { Product } from "@/app/api/products/route";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -74,6 +75,28 @@ export default function Home() {
     }
 
     loadCatalog();
+
+    // Suscripción en Tiempo Real con Supabase Realtime Channels
+    let channel: any = null;
+    if (supabase) {
+      channel = supabase
+        .channel("products-realtime-storefront")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "products" },
+          (payload) => {
+            console.log("[Supabase Realtime] Evento detectado en catálogo público:", payload.eventType);
+            loadCatalog();
+          }
+        )
+        .subscribe();
+    }
+
+    return () => {
+      if (channel && supabase) {
+        supabase.removeChannel(channel);
+      }
+    };
   }, []);
 
   // Normalización estricta de categorías asignadas por el Admin

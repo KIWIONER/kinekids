@@ -99,3 +99,17 @@ Para evitar la fricción de usuario donde al inspeccionar un producto y presiona
 Modelos complejos con múltiples atributos (e.g. tipo de estantería Arco/Esquinera/Recta, 2/3/4 baldas y acabados de color) generaban productos con más de 18 variantes mezcladas en la ficha de producto. Se actualizó el motor de análisis `parseProductTitle` en `lib/variants.ts` para:
 1. Crear productos independientes por estructura y número de baldas (ej. *Estantería Modular Montessori Arco (2 Baldas)*, *3 Baldas*, *4 Baldas*).
 2. Asignar de manera exclusiva y limpia las variantes de color/acabado (*Blanco / Madera Tostada*, *Gris Claro / Madera Natural*, *Gris Claro / Madera Tostada*).
+
+### Hito 8: Motor de Automatizaciones n8n Validado al 100% de Extremo a Extremo
+- **Fecha:** 2026-09-26
+- **Resultados:**
+  1. **Catalog Sync (Gemini 2.5 Pro + Supabase):**
+     - Sincronización de productos con enriquecimiento y traducción por Gemini 2.5.
+     - Cálculo de margen comercial PVP automático (x1.75).
+     - Almacenamiento validado en Supabase (`one-little-pine-montessori-bookcase-2026`, `one-little-pine-3-shelves-natural`).
+  2. **Order Fulfillment (WooCommerce Proxy + Hertwill):**
+     - Inyección de pedidos con payload completo (artículos, cliente, facturación y entrega) en `https://proxy-kinekids.agencialquimia.com/wp-json/wc/v3/orders`.
+     - Validado con pedidos reales (#19, #20, #21).
+  3. **Notificaciones WhatsApp Business Cloud API:**
+     - Número oficial verificado y activado (`+34 614 68 97 19`, ID: `1088468141008668`).
+     - Entrega de mensajes en tiempo real y arquitectura lista para atención al cliente con IA integrada.

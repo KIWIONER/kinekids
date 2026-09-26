@@ -45,7 +45,7 @@ export default function AdminSubHeader() {
     }
     setSyncStatus(null);
     try {
-      const res = await fetch("/api/admin/sync-frontend", { method: "POST" });
+      const res = await fetch("/api/admin/sync-frontend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ frontendUrl }) });
       const data = await res.json();
       if (res.ok) {
         setSyncStatus({

@@ -6,22 +6,38 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
+    let body: any = {};
+    try {
+      body = await request.json();
+    } catch (_) {}
+
     const repository = getCatalogRepository();
     const curatedProducts = await repository.getCuratedProducts();
 
-    const frontendUrl = process.env.NEXT_PUBLIC_STORE_FRONTEND_URL || "http://localhost:3000";
+    const frontendUrl =
+      body.frontendUrl ||
+      process.env.STORE_FRONTEND_URL ||
+      process.env.NEXT_PUBLIC_STORE_FRONTEND_URL ||
+      process.env.FRONTEND_URL ||
+      "http://localhost:3000";
 
     // 1. Notificar al Frontend para purgar caché ISR de Next.js
     let frontendRevalidated = false;
+    let revalidateError: string | null = null;
     try {
-      const revalRes = await fetch(`${frontendUrl}/api/revalidate`, {
+      const cleanUrl = frontendUrl.replace(/\/$/, "");
+      const revalRes = await fetch(`${cleanUrl}/api/revalidate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ path: "/" }),
       });
       frontendRevalidated = revalRes.ok;
-    } catch (err) {
+      if (!revalRes.ok) {
+        revalidateError = `HTTP ${revalRes.status}`;
+      }
+    } catch (err: any) {
       console.warn("[Sync Frontend] No se pudo conectar con endpoint de revalidación:", err);
+      revalidateError = err.message;
     }
 
     // 2. Emitir ping de Realtime en Supabase si está disponible
@@ -40,9 +56,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `Frontend sincronizado con éxito. ${curatedProducts.length} productos curados activos.`,
+      message: `Catálogo sincronizado. ${curatedProducts.length} productos curados activos en base de datos.`,
       totalProducts: curatedProducts.length,
       frontendRevalidated,
+      frontendUrl,
+      revalidateError,
       timestamp: Date.now(),
     });
   } catch (error: any) {

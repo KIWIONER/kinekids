@@ -121,7 +121,15 @@ export default function Home() {
       window.addEventListener("storage", handleStorage);
     }
 
+    // Polling Ligero de Respaldo para Producción (Coolify / Cross-Domain)
+    const intervalId = setInterval(() => {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        loadCatalog();
+      }
+    }, 8000);
+
     return () => {
+      clearInterval(intervalId);
       if (channel && supabase) {
         supabase.removeChannel(channel);
       }

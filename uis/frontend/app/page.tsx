@@ -25,7 +25,7 @@ export default function Home() {
         // 1. Cargar productos directamente de la API
         let dbItems: Product[] = [];
         try {
-          const res = await fetch("/api/products", { cache: "no-store" });
+          const res = await fetch(`/api/products?t=${Date.now()}`, { cache: "no-store", headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" } });
           if (res.ok) {
             dbItems = await res.json();
           }
@@ -96,9 +96,41 @@ export default function Home() {
         .subscribe();
     }
 
+    // Comunicación Directa entre Pestañas del Navegador (BroadcastChannel & Storage)
+    let broadcast: any = null;
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      broadcast = new BroadcastChannel("kinekids_catalog_sync");
+      broadcast.onmessage = () => {
+        console.log("[BroadcastChannel] Señal de sincronización de catálogo recibida.");
+        loadCatalog();
+      };
+    }
+
+    const handleFocus = () => {
+      loadCatalog();
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "kinekids_last_sync") {
+        loadCatalog();
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("focus", handleFocus);
+      window.addEventListener("storage", handleStorage);
+    }
+
     return () => {
       if (channel && supabase) {
         supabase.removeChannel(channel);
+      }
+      if (broadcast) {
+        broadcast.close();
+      }
+      if (typeof window !== "undefined") {
+        window.removeEventListener("focus", handleFocus);
+        window.removeEventListener("storage", handleStorage);
       }
     };
   }, []);

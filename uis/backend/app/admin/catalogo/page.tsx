@@ -1,3 +1,15 @@
+function notifyFrontendDirectly() {
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem("kinekids_last_sync", String(Date.now()));
+      if ("BroadcastChannel" in window) {
+        const bc = new BroadcastChannel("kinekids_catalog_sync");
+        bc.postMessage({ type: "SYNC", timestamp: Date.now() });
+        bc.close();
+      }
+    } catch (_) {}
+  }
+}
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -329,7 +341,7 @@ export default function AdminCatalogPage() {
     setMessage(null);
 
     try {
-      const res = await fetch("/api/admin/products/sync", {
+      const res = await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productToSync),
@@ -374,7 +386,7 @@ export default function AdminCatalogPage() {
     // 2. Si el producto ya está en la web oficial (curado), persistir en Supabase
     if (syncedIds.has(String(product.id))) {
       try {
-        await fetch("/api/admin/products/sync", {
+        await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -419,7 +431,7 @@ export default function AdminCatalogPage() {
       };
 
       try {
-        await fetch("/api/admin/products/sync", {
+        await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(productToSync),
@@ -449,7 +461,7 @@ export default function AdminCatalogPage() {
     setCuratedServerProducts((prev) => prev.filter((item) => String(item.id) !== String(productId)));
 
     try {
-      const res = await fetch(`/api/admin/products/sync?id=${productId}`, {
+      const res = await notifyFrontendDirectly(); fetch(`/api/admin/products/sync?id=${productId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Error al eliminar del servidor");

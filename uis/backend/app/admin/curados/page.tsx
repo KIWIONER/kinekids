@@ -1,3 +1,15 @@
+function notifyFrontendDirectly() {
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem("kinekids_last_sync", String(Date.now()));
+      if ("BroadcastChannel" in window) {
+        const bc = new BroadcastChannel("kinekids_catalog_sync");
+        bc.postMessage({ type: "SYNC", timestamp: Date.now() });
+        bc.close();
+      }
+    } catch (_) {}
+  }
+}
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -97,7 +109,7 @@ export default function AdminCuratedPage() {
     };
 
     try {
-      const res = await fetch("/api/admin/products/sync", {
+      const res = await notifyFrontendDirectly(); fetch("/api/admin/products/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedProduct),
@@ -142,7 +154,7 @@ export default function AdminCuratedPage() {
     setMessage(null);
 
     try {
-      const res = await fetch(`/api/admin/products/sync?id=${productId}`, {
+      const res = await notifyFrontendDirectly(); fetch(`/api/admin/products/sync?id=${productId}`, {
         method: "DELETE",
       });
 

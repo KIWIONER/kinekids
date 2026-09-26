@@ -33,6 +33,16 @@ export default function AdminSubHeader() {
 
   const handleSyncFrontend = async () => {
     setIsSyncingFrontend(true);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("kinekids_last_sync", String(Date.now()));
+        if ("BroadcastChannel" in window) {
+          const bc = new BroadcastChannel("kinekids_catalog_sync");
+          bc.postMessage({ type: "SYNC_FORCE", timestamp: Date.now() });
+          bc.close();
+        }
+      } catch (_) {}
+    }
     setSyncStatus(null);
     try {
       const res = await fetch("/api/admin/sync-frontend", { method: "POST" });

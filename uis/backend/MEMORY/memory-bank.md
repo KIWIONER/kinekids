@@ -71,6 +71,12 @@ El proyecto está construido como un **BFF (Backend for Frontend) desacoplado en
 | **Septiembre 2026** | **Implementación de Proxy WooCommerce:** Módulo `lib/woocommerce.ts`, endpoints `/api/orders/woocommerce` y webhook listener `/api/webhooks/woocommerce`. | ✅ Validado |
 | **Septiembre 2026** | **Suite de Testing Integrada:** Implementación de `tests/suite.test.mjs` validando pricing ladder, JWT, payload WooCommerce y categorías (5/5 pass). | ✅ 100% Tests Pass |
 | **Septiembre 2026** | **Resolución de Incidencia de Sincronización:** Corrección de error PGRST204 de Supabase, eliminación de `localStorage` en `/admin/catalogo` y soporte de `DELETE` físico en `SupabaseCatalogAdapter`. Documentado en `docs/resolucion_incidencia_sincronizacion_catalogo.md`. | ✅ Resuelto y en Git |
+| **Septiembre 2026** | **Despliegue de Supabase Self-Hosted en Coolify:** Estabilización de los 14 contenedores de Supabase, corrección de imagen Docker `minio/mc` -> `ghcr.io/coollabsio/minio` y verificación de salud de servicios. | ✅ 14/14 Containers Activos |
+| **Septiembre 2026** | **Plan de Integración n8n (AgenciAlquimia):** Documento de arquitectura `docs/plan_integracion_n8n_kinekids.md` con 4 flujos automatizados de sincronización, fulfillment y alertas. | ✅ Plan Documentado |
+| **Septiembre 2026** | **Optimización de Paginación API Hertwill:** Eliminación de ráfagas paralelas de 50 peticiones por página que disparaban HTTP 429 tras la página 6. Paginación directa 1 a 1 en `lib/hertwill.ts`. | ✅ Paginación Fluida |
+| **Septiembre 2026** | **Detalle de Producto On-Demand (/products/[id]):** Configuración de `force-dynamic` y `dynamicParams = true` para permitir carga instantánea de cualquier ID del catálogo. | ✅ Validado en Producción |
+| **Septiembre 2026** | **Restauración de Posición de Scroll en Catálogo:** Guardado de scroll en `sessionStorage` y hook reactivo en `app/page.tsx` para no perder la posición al regresar del detalle. | ✅ Experiencia UX Fluida |
+| **Septiembre 2026** | **Segmentación de Estanterías y Variantes de Color:** División de estanterías Montessori en productos independientes por número de baldas (2, 3, 4 baldas) y asignación limpia de acabados de color. | ✅ Implementado en Frontend y Backend |
 
 ---
 
@@ -81,3 +87,15 @@ Se resolvió la incompatibilidad donde `hertwill_sku` y `markup_multiplier` prov
 
 ### 6.2. Fuente de Verdad para el Panel Administrativo
 Se desestimó el almacenamiento en `localStorage` como fuente de estado para `/admin/catalogo`. Ahora todas las pantallas administrativas consumen reactivamente `/api/admin/curated` como única fuente de verdad compartida.
+
+
+### 6.3. Paginación y Mitigación de Rate Limiting en Hertwill
+Anteriormente, la búsqueda de catálogo intentaba enriquecer cada ítem en la lista ejecutando peticiones individuales simultáneas a `/v1/products/[id]`. Al avanzar a las páginas 6 y 7, la API de Hertwill respondía con `429 Too Many Requests`. Se rediseñó el flujo en `lib/hertwill.ts` para paginar de forma directa 1 a 1 aprovechando el campo `stock_status` nativo y aplicando backoff exponencial con reintentos controlados.
+
+### 6.4. Navegación y Persistencia de Scroll (UX Catálogo)
+Para evitar la fricción de usuario donde al inspeccionar un producto y presionar "Volver" la tienda regresaba al inicio de la página (`scrollY = 0`), se implementó un sistema de persistencia en `sessionStorage` (`kinekids_catalog_scroll_pos` y `kinekids_last_viewed_product`). Al completarse la carga de los productos en la página principal, un `useEffect` restaura automáticamente la posición exacta del usuario.
+
+### 6.5. Normalización de Variantes y Segmentación por Baldas (One Little Pine)
+Modelos complejos con múltiples atributos (e.g. tipo de estantería Arco/Esquinera/Recta, 2/3/4 baldas y acabados de color) generaban productos con más de 18 variantes mezcladas en la ficha de producto. Se actualizó el motor de análisis `parseProductTitle` en `lib/variants.ts` para:
+1. Crear productos independientes por estructura y número de baldas (ej. *Estantería Modular Montessori Arco (2 Baldas)*, *3 Baldas*, *4 Baldas*).
+2. Asignar de manera exclusiva y limpia las variantes de color/acabado (*Blanco / Madera Tostada*, *Gris Claro / Madera Natural*, *Gris Claro / Madera Tostada*).

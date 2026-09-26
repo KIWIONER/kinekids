@@ -85,10 +85,14 @@ export default function Home() {
           "postgres_changes",
           { event: "*", schema: "public", table: "products" },
           (payload) => {
-            console.log("[Supabase Realtime] Evento detectado en catálogo público:", payload.eventType);
+            console.log("[Supabase Realtime] Cambio en base de datos detectado:", payload.eventType);
             loadCatalog();
           }
         )
+        .on("broadcast", { event: "catalog-sync-refresh" }, (payload) => {
+          console.log("[Supabase Realtime] Señal de refresco manual recibida desde Admin:", payload);
+          loadCatalog();
+        })
         .subscribe();
     }
 

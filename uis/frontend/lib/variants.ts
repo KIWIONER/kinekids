@@ -32,6 +32,7 @@ export function translateVariantColor(rawVariant: string): string {
   v = v.replace(/Natural\/White/gi, "Natural / Blanco");
   v = v.replace(/White\/brownish oil/gi, "Blanco / Madera Tostada");
   v = v.replace(/Light grey\/clear oil/gi, "Gris Claro / Madera Natural");
+  v = v.replace(/Light grey\/brownish oil/gi, "Gris Claro / Madera Tostada");
   v = v.replace(/Clear oil/gi, "Madera Natural");
   v = v.replace(/Brownish oil/gi, "Madera Tostada");
   v = v.replace(/Patent Leather/gi, "Charol");
@@ -142,7 +143,7 @@ function translateBaseTitle(rawBase: string): string {
 export function parseProductTitle(title: string): { baseName: string; variantName: string } {
   if (!title) return { baseName: "", variantName: "" };
 
-  const cleanTitle = title.trim();
+  const cleanTitle = title.replace(/[\u00a0]+/g, " ").trim();
 
   // 1. Caso especial: Teepee Tent (con el estilo al inicio del título)
   if (cleanTitle.toLowerCase().includes("teepee tent")) {
@@ -164,6 +165,64 @@ export function parseProductTitle(title: string): { baseName: string; variantNam
       variantName: translateVariantColor(colorPart) || "Tonos Tierra Pastel",
     };
   }
+
+  // 1.3 Caso especial: Estanterías Modulares Montessori (One Little Pine)
+  // Dividir en productos separados según baldas/shelves (2, 3, 4 baldas) y asignar color como variante
+  if (/Modular Montessori Shelf/i.test(cleanTitle)) {
+    const shelfMatch = cleanTitle.match(/(\d+)\s*Shelves/i);
+    const shelfNum = shelfMatch ? shelfMatch[1] : "";
+
+    let shape = "";
+    if (/Arch/i.test(cleanTitle)) shape = "Arco";
+    else if (/Corner/i.test(cleanTitle)) shape = "Esquinera";
+    else if (/Straight Mini/i.test(cleanTitle)) shape = "Recta Mini";
+    else if (/Straight/i.test(cleanTitle)) shape = "Recta";
+
+    // Extraer color de la última parte tras el último guión
+    let colorPart = "";
+    const parts = cleanTitle.split(/[-–—]/);
+    if (parts.length > 1) {
+      colorPart = parts[parts.length - 1].trim();
+    }
+
+    const baseName = shape
+      ? `Estantería Modular Montessori ${shape} (${shelfNum} Baldas)`
+      : `Estantería Modular Montessori (${shelfNum} Baldas)`;
+
+    return {
+      baseName,
+      variantName: translateVariantColor(colorPart) || "Estándar",
+    };
+  }
+
+  // 1.4 Caso especial: Armarios Modulares Montessori
+  if (/Modular Montessori Wardrobe/i.test(cleanTitle)) {
+    let colorPart = "";
+    const parts = cleanTitle.split(/[-–—]/);
+    if (parts.length > 1) {
+      colorPart = parts[parts.length - 1].trim();
+    }
+    return {
+      baseName: "Armario Modular Infantil Montessori",
+      variantName: translateVariantColor(colorPart) || "Estándar",
+    };
+  }
+
+  // 1.5 Caso especial: Shelving Unit Montessori
+  if (/Montessori-Inspired Wooden Shelving Unit/i.test(cleanTitle)) {
+    const shelfMatch = cleanTitle.match(/(\d+)\s*Shelves/i);
+    const shelfNum = shelfMatch ? shelfMatch[1] : "";
+    let size = "";
+    if (/Small/i.test(cleanTitle)) size = "Pequeña";
+    else if (/Medium/i.test(cleanTitle)) size = "Mediana";
+    else if (/Large/i.test(cleanTitle)) size = "Grande";
+
+    return {
+      baseName: `Estantería Montessori ${size} (${shelfNum} Baldas)`.trim(),
+      variantName: "Madera Natural",
+    };
+  }
+
 
   // 1.2 Intercepción forzosa para Adventurer y Montessori genérico
   if (cleanTitle.toLowerCase().includes("adventurer")) {

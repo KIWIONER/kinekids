@@ -1,5 +1,5 @@
 {
-  "name": "KineKids - Master Gateway & Automation Engine",
+  "name": "KineKids - Master Gateway & Automation Engine (Gemini + WhatsApp)",
   "nodes": [
     {
       "parameters": {
@@ -79,12 +79,13 @@
     },
     {
       "parameters": {
-        "model": "gpt-4o-mini",
-        "prompt": "=Traduce y adapta la siguiente ficha de producto infantil al español neutro con enfoque pedagógico Montessori/Pikler para KineKids.\n\nTítulo Original: {{ $json.body.payload.title }}\nDescripción Original: {{ $json.body.payload.description }}\n\nDevuelve una descripción atractiva, serena y estructurada destacando el beneficio en psicomotricidad y juego autónomo."
+        "modelName": "models/gemini-1.5-flash",
+        "prompt": "=Traduce y adapta la siguiente ficha de producto infantil al español neutro con enfoque pedagógico Montessori/Pikler para KineKids.\n\nTítulo Original: {{ $json.body.payload.title }}\nDescripción Original: {{ $json.body.payload.description }}\n\nDevuelve una descripción atractiva, serena y estructurada destacando el beneficio en psicomotricidad y juego autónomo.",
+        "options": {}
       },
       "id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
       "name": "Translate-Catalog",
-      "type": "n8n-nodes-base.openAi",
+      "type": "n8n-nodes-base.googleGemini",
       "typeVersion": 1,
       "position": [
         900,
@@ -93,7 +94,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Regla de Pricing KineKids: Margen neto >= 20% con portes incluidos\nconst item = $json.body.payload || {};\nconst cost = Number(item.wholesale_price || item.price || 0);\n\nlet multiplier = 1.45;\nif (cost < 20) multiplier = 2.5;\nelse if (cost <= 80) multiplier = 1.8;\n\nconst rawRetail = cost * multiplier;\nconst retailPrice = Math.round(rawRetail / 5) * 5;\n\nreturn {\n  id: String(item.id),\n  title: item.title,\n  price: retailPrice,\n  wholesale_price: cost,\n  description: $node[\"Translate-Catalog\"].json.message?.content || item.description || \"\",\n  image_url: item.imageUrl || item.image_url || \"\",\n  category: item.category || \"module\",\n  age_range: item.ageRange || \"6 meses - 4 años\",\n  dimensions: item.dimensions || \"Medida estándar\",\n  sort_order: 100\n};"
+        "jsCode": "// Regla de Pricing KineKids: Margen neto >= 20% con portes incluidos\nconst item = $json.body.payload || {};\nconst cost = Number(item.wholesale_price || item.price || 0);\n\nlet multiplier = 1.45;\nif (cost < 20) multiplier = 2.5;\nelse if (cost <= 80) multiplier = 1.8;\n\nconst rawRetail = cost * multiplier;\nconst retailPrice = Math.round(rawRetail / 5) * 5;\n\n// Extraer texto generado por Google Gemini\nconst geminiText = $node[\"Translate-Catalog\"].json?.candidates?.[0]?.content?.parts?.[0]?.text \n  || $node[\"Translate-Catalog\"].json?.text \n  || item.description \n  || \"\";\n\nreturn {\n  id: String(item.id),\n  title: item.title,\n  price: retailPrice,\n  wholesale_price: cost,\n  description: geminiText,\n  image_url: item.imageUrl || item.image_url || \"\",\n  category: item.category || \"module\",\n  age_range: item.ageRange || \"6 meses - 4 años\",\n  dimensions: item.dimensions || \"Medida estándar\",\n  sort_order: 100\n};"
       },
       "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
       "name": "Calculate-Margin",
@@ -152,16 +153,15 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_ADMIN_CHAT_ID || \"-1001234567890\" }}",
-        "text": "=📦 *Nuevo Pedido KineKids Tramitado en Hertwill*\n\n• *ID Pedido:* {{ $json.body.payload.order?.order_id || \"N/A\" }}\n• *Cliente:* {{ $json.body.payload.order?.shipping_address?.name || \"Cliente KineKids\" }}\n• *Estado Hertwill:* {{ $json.status || 200 }}\n• *Tracking Ref:* {{ $json.data?.id || \"Generando...\" }}",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "operation": "sendText",
+        "recipientPhoneNumber": "={{ $json.body.payload.order?.customer?.phone || $env.ADMIN_WHATSAPP_PHONE || \"+34600000000\" }}",
+        "textBody": "=📦 *¡Nuevo Pedido KineKids Tramitado!*\n\n• *ID Pedido:* {{ $json.body.payload.order?.order_id || \"N/A\" }}\n• *Cliente:* {{ $json.body.payload.order?.shipping_address?.name || \"Cliente KineKids\" }}\n• *Estado Hertwill:* {{ $json.status || 200 }}\n• *Tracking Ref:* {{ $json.data?.id || \"En preparación...\" }}",
+        "additionalFields": {}
       },
       "id": "07b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d",
-      "name": "Telegram-Alert",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
+      "name": "WhatsApp-Alert",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
       "position": [
         1140,
         460
@@ -235,7 +235,7 @@
       "main": [
         [
           {
-            "node": "Telegram-Alert",
+            "node": "WhatsApp-Alert",
             "type": "main",
             "index": 0
           }

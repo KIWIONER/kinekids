@@ -91,10 +91,20 @@ export default function ProductCard({ product }: ProductCardProps) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       whileHover={{ y: -6 }}
+      id={"product-" + product.id}
       className="bg-brand-sand-light rounded-3xl overflow-hidden border border-brand-sand-dark shadow-sm hover:shadow-xl transition-shadow flex flex-col h-full"
     >
       {/* Product Image Panel */}
-      <Link href={`/products/${product.id}`} className="block">
+      <Link
+        href={`/products/${product.id}`}
+        onClick={() => {
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("kinekids_catalog_scroll_pos", String(window.scrollY));
+            sessionStorage.setItem("kinekids_last_viewed_product", String(product.id));
+          }
+        }}
+        className="block"
+      >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-brand-sand-dark group cursor-pointer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -140,7 +150,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Title */}
-        <Link href={`/products/${product.id}`}>
+        <Link
+          href={`/products/${product.id}`}
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem("kinekids_catalog_scroll_pos", String(window.scrollY));
+              sessionStorage.setItem("kinekids_last_viewed_product", String(product.id));
+            }
+          }}
+        >
           <h3 className="text-lg font-bold text-brand-charcoal mb-2 line-clamp-1 hover:text-brand-clay transition-colors cursor-pointer">
             {displayTitle}
           </h3>

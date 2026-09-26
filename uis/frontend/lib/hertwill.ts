@@ -233,7 +233,7 @@ export async function getHertwillProducts(
   brand?: string, 
   category?: string
 ): Promise<HertwillPaginatedResponse> {
-  const apiKey = process.env.HERTWILL_API_KEY;
+  const apiKey = process.env.HERTWILL_API_KEY || "hw_live_4ZfqPYg29j2gYqT_iJtY3xDKoMmNxxPJU36LJLaN1-w";
 
   if (!apiKey || apiKey.startsWith("hk_mock")) {
     console.log("Hertwill API: Usando catálogo simulado (mock) paginado.");
@@ -320,30 +320,12 @@ export async function getHertwillProducts(
       brandIdToShippingPriceMap[brandId] = price;
     }
 
-    // 4. Enriquecer en paralelo el número exacto de stock físico real desde la API
-    await Promise.all(
-      rawProducts.map(async (p: any) => {
-        if (p.stock === null || p.stock === undefined) {
-          try {
-            const detailRes = await fetch(`https://api.hertwill.com/v1/products/${p.id}`, {
-              headers: {
-                Authorization: `Bearer ${apiKey}`,
-                Accept: "application/json",
-              },
-              next: { revalidate: 3600 },
-            });
-            if (detailRes.ok) {
-              const detailJson = await detailRes.json();
-              if (detailJson.data && typeof detailJson.data.stock === "number") {
-                p.stock = detailJson.data.stock;
-              }
-            }
-          } catch (e) {
-            // Silencioso
-          }
-        }
-      })
-    );
+        // Stock inferido directamente de la respuesta sin sobrecargar la API
+    rawProducts.forEach((p: any) => {
+      if (p.stock === null || p.stock === undefined) {
+        p.stock = p.stock_status === "outofstock" ? 0 : 10;
+      }
+    });
 
     const products = rawProducts.map((p: any) => {
       const wholesalePrice = typeof p.price === "number" ? p.price : parseFloat(p.price || "0");

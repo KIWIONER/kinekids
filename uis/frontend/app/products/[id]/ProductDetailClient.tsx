@@ -326,7 +326,7 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
           {error || "Este producto no está disponible en este momento."}
         </p>
         <button
-          onClick={() => router.push("/")}
+          onClick={() => { if (typeof window !== "undefined" && window.history.length > 1) { router.back(); } else { router.push("/"); } }}
           className="px-6 py-3 bg-brand-charcoal text-brand-sand-light rounded-2xl font-bold text-sm hover:bg-brand-clay transition-all cursor-pointer"
         >
           Volver a la tienda
@@ -407,11 +407,17 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
           {/* Breadcrumb Bar */}
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4 border-b border-brand-sand-dark/60">
             <button
-              onClick={() => router.push(product.category?.slug === "set" ? "/#sets" : product.category?.slug === "module" ? "/#modulos" : "/#accesorios")}
-              className="flex items-center space-x-2 text-brand-charcoal/50 hover:text-brand-charcoal transition-colors text-sm font-medium group shrink-0 cursor-pointer"
+              onClick={() => {
+                if (typeof window !== "undefined" && window.history.length > 1) {
+                  router.back();
+                } else {
+                  router.push(product ? "/#product-" + product.id : "/");
+                }
+              }}
+              className="flex items-center space-x-2 text-brand-charcoal/60 hover:text-brand-charcoal transition-colors text-sm font-semibold group shrink-0 cursor-pointer bg-brand-sand-dark/40 px-3.5 py-1.5 rounded-full"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span>Volver</span>
+              <span>Volver al catálogo</span>
             </button>
             
             {/* Breadcrumbs */}

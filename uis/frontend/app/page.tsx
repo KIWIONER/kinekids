@@ -149,6 +149,35 @@ export default function Home() {
   }, []);
 
   // Segmentación por peldaños pedagógicos
+  
+  // Restaurar posicion de scroll exacta al regresar de la ficha de un producto
+  useEffect(() => {
+    if (!isLoading && products.length > 0 && typeof window !== "undefined") {
+      const savedScroll = sessionStorage.getItem("kinekids_catalog_scroll_pos");
+      const lastProduct = sessionStorage.getItem("kinekids_last_viewed_product");
+
+      if (savedScroll) {
+        const top = parseInt(savedScroll, 10);
+        sessionStorage.removeItem("kinekids_catalog_scroll_pos");
+        sessionStorage.removeItem("kinekids_last_viewed_product");
+        setTimeout(() => {
+          window.scrollTo({
+            top,
+            behavior: "instant" as any,
+          });
+        }, 40);
+      } else if (lastProduct) {
+        sessionStorage.removeItem("kinekids_last_viewed_product");
+        setTimeout(() => {
+          const el = document.getElementById("product-" + lastProduct);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 60);
+      }
+    }
+  }, [isLoading, products.length]);
+
   const sets = products.filter((p) => p.category === "set");
   const modules = products.filter((p) => p.category === "module");
   const accessories = products.filter((p) => p.category === "accessory");

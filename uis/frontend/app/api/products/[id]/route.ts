@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCuratedProducts } from "@/lib/hertwill";
-import { supabase } from "@/lib/supabase";
+import { classifyProduct } from "@/lib/classifier";
+import { getCategoryTranslation, getCollectionTranslation, parseProductTitle } from "@/lib/variants";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,6 @@ export async function GET(
   const apiKey = process.env.HERTWILL_API_KEY || DEFAULT_HERTWILL_API_KEY;
 
   try {
-    const { parseProductTitle, getCollectionTranslation, getCategoryTranslation } = await import("@/lib/variants");
     const { translateDescription } = await import("@/lib/translator");
     const { normalizeToSpanish } = await import("@/lib/description_parser");
     const curated = await getCuratedProducts();
@@ -81,6 +81,10 @@ export async function GET(
             name: getCollectionTranslation(col.name),
           }));
 
+          // Clasificar dinámicamente en las 5 familias oficiales
+          const categorySlug = classifyProduct(p.name, p.description, p.category?.name || "");
+          const categoryName = getCategoryTranslation(categorySlug);
+
           return NextResponse.json({
             id: String(p.id),
             slug: p.slug,
@@ -92,8 +96,8 @@ export async function GET(
             stock_status: p.stock_status,
             brand: p.brand,
             category: {
-              ...p.category,
-              name: getCategoryTranslation(p.category?.name || ""),
+              slug: categorySlug,
+              name: categoryName,
             },
             collections: translatedCollections,
             images: allImages,
@@ -130,6 +134,9 @@ export async function GET(
         return baseName.toLowerCase() === searchBaseName.toLowerCase();
       });
 
+      const categorySlug = dbItem.category || classifyProduct(dbItem.title, dbItem.description, "");
+      const categoryName = getCategoryTranslation(categorySlug);
+
       return NextResponse.json({
         id: String(dbItem.id),
         slug: String(dbItem.id),
@@ -139,8 +146,8 @@ export async function GET(
         price: dbItem.wholesale_price || dbItem.price,
         sale_price: null,
         stock_status: "instock",
-        brand: { name: "KineKids", slug: "kinekids" },
-        category: { name: dbItem.category, slug: dbItem.category },
+        brand: { name: dbItem.brand || "KineKids", slug: "kinekids" },
+        category: { slug: categorySlug, name: categoryName },
         collections: [{ name: "Infantil & Bebé", slug: "for-kids-baby" }],
         images: dbItem.imageUrl ? [dbItem.imageUrl] : [],
         created_at: new Date().toISOString(),

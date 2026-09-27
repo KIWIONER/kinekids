@@ -1,7 +1,67 @@
+export type ProductCategory = "set" | "module" | "furniture" | "nursery" | "accessory";
+
+export interface CategoryMeta {
+  id: ProductCategory;
+  name: string;
+  shortName: string;
+  icon: string;
+  anchor: string;
+  badge: string;
+  description: string;
+}
+
+export const DEFAULT_CATEGORIES: CategoryMeta[] = [
+  {
+    id: "set",
+    name: "Sets de Psicomotricidad",
+    shortName: "Sets Completos",
+    icon: "🏆",
+    anchor: "sets",
+    badge: "Colección Principal",
+    description: "Conjuntos completos de bloques de espuma, castillos y piscinas de bolas diseñados para estimular el equilibrio, gateo y desarrollo motor.",
+  },
+  {
+    id: "module",
+    name: "Módulos & Pikler",
+    shortName: "Módulos & Pikler",
+    icon: "🪜",
+    anchor: "modulos",
+    badge: "Módulos de Escalada",
+    description: "Módulos individuales de gateo/trepa, triángulos Pikler con rampa, olas y balancines combinables para crear circuitos en tu hogar.",
+  },
+  {
+    id: "furniture",
+    name: "Mobiliario & Estanterías",
+    shortName: "Mobiliario Montessori",
+    icon: "📚",
+    anchor: "mobiliario",
+    badge: "Mobiliario & Autonomía",
+    description: "Estanterías Montessori, armarios accesibles, torres de aprendizaje transformables y mesas diseñadas para fomentar la autonomía.",
+  },
+  {
+    id: "nursery",
+    name: "Cunas & Carritos",
+    shortName: "Cunas & Carritos",
+    icon: "🛏️",
+    anchor: "cunas-carritos",
+    badge: "Descanso & Paseo",
+    description: "Cunas evolutivas seguras, cómodas cambiador a juego y carritos de bebé diseñados para el máximo confort y bienestar familiar.",
+  },
+  {
+    id: "accessory",
+    name: "Sensorial & Accesorios",
+    shortName: "Sensorial & Accesorios",
+    icon: "🎨",
+    anchor: "accesorios",
+    badge: "Estimulación & Textil",
+    description: "Play Boxes por etapas, alfombras de suelo, colchonetas, pufs y complementos sensoriales para acompañar cada momento de juego.",
+  },
+];
+
 export interface Product {
   id: string;
   title: string;
-  category: "set" | "module" | "accessory";
+  category: ProductCategory;
   price: number;           // Precio mayorista o precio base
   description: string;
   imageUrl: string;
@@ -18,6 +78,15 @@ export interface Product {
   stock_status?: "instock" | "outofstock" | string;
   stock?: number | null;
   sort_order?: number;           // Posición en la tienda oficial
+  variants?: {
+    id: string;
+    title: string;
+    variantName: string;
+    price: number;
+    imageUrl: string;
+    wholesale_price?: number;
+    shipping_cost?: number;
+  }[];
 }
 
 /**

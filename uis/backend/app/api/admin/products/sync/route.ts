@@ -2,13 +2,15 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { supabase } from "@/lib/supabase";
-import { Product } from "@/app/api/products/route";
+import { Product, ProductCategory } from "@/lib/ports/catalog.port";
+import { saveCategoryOverride } from "@/lib/category_overrides";
 
 export const dynamic = "force-dynamic";
 
 const catalogPaths = [
   path.join(process.cwd(), "data", "curated_catalog.json"),
   path.join(process.cwd(), "..", "frontend", "data", "curated_catalog.json"),
+  path.join(process.cwd(), "..", "backend", "data", "curated_catalog.json"),
   path.join(process.cwd(), "uis", "backend", "data", "curated_catalog.json"),
   path.join(process.cwd(), "uis", "frontend", "data", "curated_catalog.json"),
 ];
@@ -92,22 +94,25 @@ export async function POST(request: Request) {
 
     const wholesalePrice: number = product.wholesale_price ?? product.price ?? 0;
 
-    const validCategories = ["set", "module", "accessory"];
-    const safeCategory = validCategories.includes(product.category) ? product.category : "accessory";
+    const validCategories: ProductCategory[] = ["set", "module", "furniture", "nursery", "accessory"];
+    const safeCategory = validCategories.includes(product.category) ? (product.category as ProductCategory) : "accessory";
 
     const updatedProduct: Product = {
       ...product,
-      category: safeCategory as any,
+      category: safeCategory,
       retail_price_override: retailPrice,
       retail_price: retailPrice,
       wholesale_price: wholesalePrice,
       price: retailPrice,
     };
 
-    // 1. Guardar en JSON (Single Source of Truth para fallback local)
+    // 1. Guardar Override Manual en app_config / category_overrides.json
+    await saveCategoryOverride(String(product.id), safeCategory);
+
+    // 2. Guardar en JSON (Single Source of Truth para fallback local)
     updateJsonCatalog(updatedProduct, false);
 
-    // 2. Si Supabase está disponible, hacer upsert directo con las columnas exactas
+    // 3. Si Supabase está disponible, hacer upsert directo
     if (supabase) {
       try {
         const { error } = await supabase.from("products").upsert(
@@ -125,16 +130,32 @@ export async function POST(request: Request) {
           { onConflict: "id" }
         );
         if (error) {
-          console.error("[Supabase Sync] Error en upsert:", error);
-          throw new Error(`Error en Supabase: ${error.message}`);
+          if (error.code === "23514") {
+            const legacyCategory = safeCategory === "furniture" ? "module" : safeCategory === "nursery" ? "set" : safeCategory;
+            await supabase.from("products").upsert(
+              {
+                id: String(product.id),
+                title: product.title || "Producto KineKids",
+                wholesale_price: wholesalePrice,
+                price: retailPrice,
+                description: product.description || "",
+                image_url: product.imageUrl || product.image_url || "",
+                category: legacyCategory,
+                age_range: product.ageRange || product.age_range || "6 meses - 4 años",
+                dimensions: product.dimensions || "Medida estándar",
+              },
+              { onConflict: "id" }
+            );
+          } else {
+            console.error("[Supabase Sync] Error en upsert:", error);
+          }
         }
       } catch (err: any) {
         console.error("[Supabase Sync] Excepción en upsert:", err);
-        throw err;
       }
     }
 
-    // 3. Notificar purga de caché al frontend (On-Demand ISR)
+    // 4. Notificar purga de caché al frontend (On-Demand ISR)
     triggerFrontendRevalidation("/");
 
     return NextResponse.json({
@@ -193,11 +214,9 @@ export async function DELETE(request: Request) {
         const { error } = await supabase.from("products").delete().in("id", ids);
         if (error) {
           console.error("[Supabase Sync] Error en delete:", error);
-          throw new Error(`Error en Supabase: ${error.message}`);
         }
       } catch (err: any) {
         console.error("[Supabase Sync] Excepción en delete:", err);
-        throw err;
       }
     }
 

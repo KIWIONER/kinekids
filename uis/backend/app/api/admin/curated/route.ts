@@ -40,6 +40,36 @@ export async function POST(request: Request) {
   }
 }
 
+// PUT: Reordenación masiva de productos (sort_order)
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const products = Array.isArray(body) ? body : body.products;
+
+    if (!Array.isArray(products)) {
+      return NextResponse.json({ error: "Se esperaba una lista de productos ordenada" }, { status: 400 });
+    }
+
+    const repository = getCatalogRepository();
+    await repository.saveCuratedProducts(products);
+
+    // Revalidación frontend
+    try {
+      const frontendUrl = process.env.NEXT_PUBLIC_STORE_FRONTEND_URL || "http://localhost:3000";
+      await fetch(`${frontendUrl}/api/revalidate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: "/" }),
+      });
+    } catch (_) {}
+
+    return NextResponse.json({ success: true, total: products.length, message: "Catálogo y posiciones guardadas exitosamente." });
+  } catch (error: any) {
+    console.error("Error en PUT /api/admin/curated:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

@@ -27,391 +27,759 @@ import {
   Check, 
   Layers, 
   AlertCircle,
-  ArrowRight
+  ArrowLeft,
+  ArrowRight,
+  GripVertical,
+  SlidersHorizontal,
+  Package,
+  Boxes,
+  Shapes,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  BookOpen,
+  Bed,
+  Palette,
+  LayoutGrid
 } from "lucide-react";
 import AdminSubHeader from "@/components/AdminSubHeader";
-import { Product } from "@/app/api/products/route";
+import { Product } from "@/lib/ports/catalog.port";
+import { ProductCategory, CategoryMeta, DEFAULT_CATEGORIES } from "@/lib/ports/catalog.port";
 import { calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
+
+type CategoryTab = ProductCategory;
 
 export default function AdminCuratedPage() {
   const [curatedProducts, setCuratedProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryMeta[]>(DEFAULT_CATEGORIES);
+  const [activeTab, setActiveTab] = useState<CategoryTab>("module");
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
+  const [isSavingCatOrder, setIsSavingCatOrder] = useState(false);
   const [isRemoving, setIsRemoving] = useState<string | null>(null);
   
-  // Estado de edición por tarjeta: { [productId]: { price?: number, category?: "set" | "module" | "accessory" } }
-  const [edits, setEdits] = useState<{ [id: string]: { price?: number; category?: "set" | "module" | "accessory" } }>({});
+  // Drag & Drop State
+  const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
+  const [dragOverItemId, setDragOverItemId] = useState<string | null>(null);
+
+  // Estado de edición por tarjeta: { [productId]: { price?: number, category?: ProductCategory } }
+  const [edits, setEdits] = useState<{ [id: string]: { price?: number; category?: ProductCategory } }>({});
   const [savedSuccess, setSavedSuccess] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  // Cargar catálogo curado
-  const loadCurated = async () => {
+  // Cargar catálogo curado y orden de categorías
+  const loadData = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/admin/curated");
-      if (res.ok) {
-        const data = await res.json();
+      const [curatedRes, catRes] = await Promise.all([
+        fetch("/api/admin/curated"),
+        fetch("/api/admin/categories/order")
+      ]);
+
+      if (curatedRes.ok) {
+        const data = await curatedRes.json();
         const list = Array.isArray(data) ? data : data.products || [];
         setCuratedProducts(list);
       } else {
         throw new Error("Error al obtener catálogo curado");
       }
+
+      if (catRes.ok) {
+        const catData = await catRes.json();
+        if (catData.categories && Array.isArray(catData.categories)) {
+          setCategories(catData.categories);
+        }
+      }
     } catch (err: any) {
       console.error(err);
-      setMessage({ text: "Error cargando productos curados desde el servidor.", type: "error" });
+      setMessage({ text: "Error cargando productos y categorías desde el servidor.", type: "error" });
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadCurated();
+    loadData();
   }, []);
 
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount);
 
-  // Manejar cambio de input en la tarjeta
-  const handleFieldChange = (productId: string, field: "price" | "category", value: any) => {
-    setEdits(prev => ({
+  // Filtrar productos por categoría activa
+  const displayedProducts = curatedProducts.filter((p) => (p.category || "accessory") === activeTab);
+
+  // Contadores por categoría
+  const countSets = curatedProducts.filter((p) => p.category === "set").length;
+  const countModules = curatedProducts.filter((p) => p.category === "module").length;
+  const countFurniture = curatedProducts.filter((p) => p.category === "furniture").length;
+  const countNursery = curatedProducts.filter((p) => p.category === "nursery").length;
+  const countAccessories = curatedProducts.filter((p) => (p.category || "accessory") === "accessory").length;
+
+  const getCategoryCount = (id: ProductCategory) => {
+    switch (id) {
+      case "set": return countSets;
+      case "module": return countModules;
+      case "furniture": return countFurniture;
+      case "nursery": return countNursery;
+      case "accessory": return countAccessories;
+      default: return 0;
+    }
+  };
+
+  // Mover bloque de categoría a la izquierda o derecha en la jerarquía
+  const handleMoveCategory = async (index: number, direction: "left" | "right") => {
+    const targetIndex = direction === "left" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= categories.length) return;
+
+    const newCategories = [...categories];
+    const [moved] = newCategories.splice(index, 1);
+    newCategories.splice(targetIndex, 0, moved);
+
+    setCategories(newCategories);
+    setIsSavingCatOrder(true);
+
+    try {
+      const orderIds = newCategories.map(c => c.id);
+      const res = await fetch("/api/admin/categories/order", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order: orderIds }),
+      });
+
+      if (!res.ok) throw new Error("Error al guardar el nuevo orden de bloques");
+
+      notifyFrontendDirectly();
+      setMessage({ 
+        text: `✓ Categoría "${moved.name}" movida a la posición #${targetIndex + 1} en la tienda oficial.`, 
+        type: "success" 
+      });
+      setTimeout(() => setMessage(null), 3500);
+    } catch (err: any) {
+      console.error(err);
+      setMessage({ text: "Error al actualizar la posición del bloque de categoría.", type: "error" });
+    } finally {
+      setIsSavingCatOrder(false);
+    }
+  };
+
+  // Persistir orden completo de productos en el backend
+  const saveFullCatalogOrder = async (newFullCatalog: Product[], feedbackMsg?: string) => {
+    setIsSavingOrder(true);
+    try {
+      const res = await fetch("/api/admin/curated", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newFullCatalog),
+      });
+
+      if (!res.ok) throw new Error("Error al sincronizar el orden con el servidor.");
+      
+      notifyFrontendDirectly();
+      setMessage({ 
+        text: feedbackMsg || "✓ Posición actualizada y sincronizada con la tienda oficial.", 
+        type: "success" 
+      });
+      setTimeout(() => setMessage(null), 3500);
+    } catch (err: any) {
+      console.error(err);
+      setMessage({ text: "Error al guardar el orden de los productos.", type: "error" });
+    } finally {
+      setIsSavingOrder(false);
+    }
+  };
+
+  // Mover producto dentro de su categoría o en la lista general
+  const handleMoveProduct = (indexInDisplayed: number, direction: "left" | "right") => {
+    const targetDisplayedIndex = direction === "left" ? indexInDisplayed - 1 : indexInDisplayed + 1;
+    if (targetDisplayedIndex < 0 || targetDisplayedIndex >= displayedProducts.length) return;
+
+    const currentItem = displayedProducts[indexInDisplayed];
+    const targetItem = displayedProducts[targetDisplayedIndex];
+
+    const currentGlobalIdx = curatedProducts.findIndex((p) => String(p.id) === String(currentItem.id));
+    const targetGlobalIdx = curatedProducts.findIndex((p) => String(p.id) === String(targetItem.id));
+
+    if (currentGlobalIdx === -1 || targetGlobalIdx === -1) return;
+
+    const newFull = [...curatedProducts];
+    newFull.splice(currentGlobalIdx, 1);
+    newFull.splice(targetGlobalIdx, 0, currentItem);
+
+    setCuratedProducts(newFull);
+    saveFullCatalogOrder(newFull, `✓ "${currentItem.title}" movido a la posición #${targetDisplayedIndex + 1}`);
+  };
+
+  // Drag & Drop handlers
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedItemId(id);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    if (draggedItemId && draggedItemId !== id) {
+      setDragOverItemId(id);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverItemId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    setDragOverItemId(null);
+
+    if (!draggedItemId || draggedItemId === targetId) {
+      setDraggedItemId(null);
+      return;
+    }
+
+    const draggedGlobalIdx = curatedProducts.findIndex((p) => String(p.id) === String(draggedItemId));
+    const targetGlobalIdx = curatedProducts.findIndex((p) => String(p.id) === String(targetId));
+
+    if (draggedGlobalIdx === -1 || targetGlobalIdx === -1) {
+      setDraggedItemId(null);
+      return;
+    }
+
+    const newFull = [...curatedProducts];
+    const [draggedItem] = newFull.splice(draggedGlobalIdx, 1);
+    newFull.splice(targetGlobalIdx, 0, draggedItem);
+
+    setCuratedProducts(newFull);
+    setDraggedItemId(null);
+    saveFullCatalogOrder(newFull, "✓ Catálogo reordenado y guardado con éxito.");
+  };
+
+  // Manejar cambios locales de inputs
+  const handleFieldChange = (id: string, field: "price" | "category", value: any) => {
+    setEdits((prev) => ({
       ...prev,
-      [productId]: {
-        ...prev[productId],
-        [field]: value
-      }
+      [id]: {
+        ...prev[id],
+        [field]: value,
+      },
     }));
   };
 
-  // Guardar TODOS los cambios de la tarjeta (PVP + Posición/Categoría)
-  const handleSaveProductCard = async (product: Product, overridePriceValue?: number) => {
+  // Guardar cambios individuales de una tarjeta
+  const handleSaveProductCard = async (product: Product, overridePrice?: number, overrideCategory?: ProductCategory) => {
     const pId = String(product.id);
-    setIsUpdating(pId);
-    setMessage(null);
-    setSavedSuccess(null);
-
-    const cardEdit = edits[pId] || {};
-    const finalPrice = overridePriceValue !== undefined 
-      ? overridePriceValue 
-      : (cardEdit.price !== undefined ? cardEdit.price : ((product as any).retail_price_override ?? (product as any).retail_price ?? product.price));
+    const edit = edits[pId] || {};
     
-    const finalCategory = cardEdit.category || product.category || "accessory";
+    const finalPrice = overridePrice !== undefined 
+      ? overridePrice 
+      : edit.price !== undefined 
+        ? edit.price 
+        : product.retail_price_override ?? product.retail_price ?? product.price ?? 0;
+    
+    const finalCategory = overrideCategory || edit.category || product.category || "accessory";
 
-    const wholesale = (product as any).wholesale_price ?? product.price ?? 0;
-    const shipping = (product as any).shipping_cost ?? (wholesale > 80 ? 33 : wholesale > 30 ? 20 : 14.99);
-
-    const updatedProduct = {
-      ...product,
-      category: finalCategory,
-      retail_price_override: finalPrice,
-      retail_price: finalPrice,
-      price: finalPrice,
-      wholesale_price: wholesale,
-      shipping_cost: shipping
-    };
-
+    setIsUpdating(pId);
     try {
       const res = await fetch("/api/admin/products/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedProduct),
+        body: JSON.stringify({
+          ...product,
+          price: finalPrice,
+          retail_price_override: finalPrice,
+          retail_price: finalPrice,
+          category: finalCategory,
+        }),
       });
 
-      if (!res.ok) throw new Error("Error al guardar en el servidor.");
+      if (!res.ok) throw new Error("Error al guardar en el servidor");
 
       // Actualizar estado local
-      setCuratedProducts(prev => prev.map(p => String(p.id) === pId ? updatedProduct : p));
+      setCuratedProducts((prev) =>
+        prev.map((p) =>
+          String(p.id) === pId
+            ? {
+                ...p,
+                price: finalPrice,
+                retail_price_override: finalPrice,
+                retail_price: finalPrice,
+                category: finalCategory,
+              }
+            : p
+        )
+      );
 
-      // Limpiar cambios pendientes de esta tarjeta
-      setEdits(prev => {
+      // Limpiar ediciones pendientes
+      setEdits((prev) => {
         const next = { ...prev };
         delete next[pId];
         return next;
       });
 
       setSavedSuccess(pId);
-      setTimeout(() => setSavedSuccess(null), 3000);
-
-      const catLabels: Record<string, string> = {
-        set: "Sets Completos",
-        module: "Módulos",
-        accessory: "Accesorios"
-      };
-
-      setMessage({
-        text: `✓ Guardado: "${product.title}" posicionado en [${catLabels[finalCategory] || finalCategory}] con PVP ${formatCurrency(finalPrice)}.`,
-        type: "success"
-      });
+      setTimeout(() => setSavedSuccess(null), 2500);
+      notifyFrontendDirectly();
     } catch (err: any) {
       console.error(err);
-      setMessage({ text: err.message || "Error al guardar los cambios.", type: "error" });
+      setMessage({ text: `Error al guardar "${product.title}": ${err.message}`, type: "error" });
     } finally {
       setIsUpdating(null);
     }
   };
 
-  // Retirar producto curado
-  const handleRemoveCurated = async (productId: string, productTitle: string) => {
-    setIsRemoving(productId);
-    setMessage(null);
+  // Retirar producto del catálogo curado
+  const handleRemoveCurated = async (id: string, title: string) => {
+    if (!confirm(`¿Seguro que deseas retirar "${title}" de la tienda oficial?`)) return;
 
+    setIsRemoving(id);
     try {
-      const target = curatedProducts.find((p) => String(p.id) === String(productId));
-      const idsToDelete = [String(productId)];
-      if (target && target.variants && Array.isArray(target.variants)) {
-        target.variants.forEach((v) => idsToDelete.push(String(v.id)));
-      }
-      const res = await fetch(`/api/admin/products/sync?id=${idsToDelete.join(",")}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/admin/products/sync?id=${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Error al retirar producto");
 
-      if (!res.ok) throw new Error("Error al retirar el producto.");
-
-      setCuratedProducts(prev => prev.filter(p => String(p.id) !== String(productId)));
-      setMessage({ text: `"${productTitle}" ha sido retirado de la tienda pública.`, type: "success" });
+      setCuratedProducts((prev) => prev.filter((p) => String(p.id) !== String(id)));
+      notifyFrontendDirectly();
+      setMessage({ text: `✓ "${title}" ha sido retirado de la tienda pública.`, type: "success" });
+      setTimeout(() => setMessage(null), 3000);
     } catch (err: any) {
-      setMessage({ text: err.message || "Error al retirar producto.", type: "error" });
+      console.error(err);
+      setMessage({ text: "Error al retirar el producto.", type: "error" });
     } finally {
       setIsRemoving(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2C2A29]">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#2C2A29]">
       <AdminSubHeader />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Cabecera */}
+        {/* Cabecera Principal */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#E8E3D9] shadow-xs mb-8">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 text-[#E07A5F] text-xs font-bold mb-2">
               <Sparkles className="w-3.5 h-3.5" />
-              Gestor de Productos Curados & Posicionamiento
+              Gestión Dinámica de Escaparate & Márgenes
             </div>
-            <h1 className="text-3xl font-black font-outfit">
-              Catálogo Oficial <span className="text-[#E07A5F]">KineKids</span>
+            <h1 className="text-3xl font-extrabold tracking-tight font-outfit">
+              Catálogo Curado & <span className="text-[#E07A5F]">Estructura de 5 Categorías</span>
             </h1>
             <p className="text-sm text-[#2C2A29]/70 mt-1">
-              Edita precios (PVP), márgenes y asigna la sección exacta donde aparecerá cada producto en la tienda oficial.
+              Reordena la secuencia de las 5 categorías oficiales, organiza las tarjetas con Drag & Drop y fija los PVP óptimos con margen comercial.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
               href="/admin/catalogo"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#2C2A29] text-white text-xs font-bold hover:bg-[#E07A5F] transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-200/60 font-bold text-xs hover:bg-amber-100 transition-colors"
             >
-              <Search className="w-4 h-4" />
-              <span>Añadir más productos (Hertwill)</span>
+              <Search className="w-4 h-4 text-amber-700" />
+              <span>Añadir Más Productos</span>
             </Link>
           </div>
         </div>
 
-        {/* Notificación de Estado */}
+        {/* Mensaje de Notificación */}
         {message && (
-          <div
-            className={`p-4 rounded-2xl mb-6 text-sm font-bold flex items-center justify-between shadow-xs transition-all ${
-              message.type === "success"
-                ? "bg-emerald-50 text-emerald-900 border border-emerald-200"
-                : "bg-red-50 text-red-900 border border-red-200"
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              {message.type === "success" ? <Check className="w-5 h-5 text-emerald-600" /> : <AlertCircle className="w-5 h-5 text-red-600" />}
-              <span>{message.text}</span>
-            </div>
-            <button onClick={() => setMessage(null)} className="text-xs underline cursor-pointer ml-4">
+          <div className={`p-4 rounded-2xl mb-6 font-medium text-sm flex items-center justify-between shadow-xs ${
+            message.type === "success" 
+              ? "bg-emerald-50 text-emerald-900 border border-emerald-200" 
+              : "bg-rose-50 text-rose-900 border border-rose-200"
+          }`}>
+            <span>{message.text}</span>
+            <button onClick={() => setMessage(null)} className="text-xs font-bold underline opacity-70 hover:opacity-100 cursor-pointer">
               Cerrar
             </button>
           </div>
         )}
 
-        {/* Listado de Productos */}
+        {/* ======================================================== */}
+        {/* SECCIÓN 1: ORGANIZADOR DE LOS 5 GRANDES BLOQUES          */}
+        {/* ======================================================== */}
+        <div className="bg-white p-6 rounded-3xl border border-[#E8E3D9] shadow-xs mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#E8E3D9]">
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="w-5 h-5 text-[#E07A5F]" />
+              <h2 className="text-lg font-black tracking-tight text-[#2C2A29]">
+                Orden Jerárquico de Categorías en la Tienda Oficial
+              </h2>
+            </div>
+            <div className="text-xs text-[#2C2A29]/60 font-medium">
+              Usa las flechas <span className="font-bold text-[#E07A5F]">⬅️ ➡️</span> para alterar la posición de toda una categoría en la web.
+            </div>
+          </div>
+
+          {/* Carrusel / Fila de los 5 Bloques Reordenables */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-4">
+            {categories.map((cat, idx) => {
+              const count = getCategoryCount(cat.id);
+              const isFirst = idx === 0;
+              const isLast = idx === categories.length - 1;
+
+              return (
+                <div 
+                  key={cat.id} 
+                  className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                    activeTab === cat.id 
+                      ? "bg-[#FAF8F5] border-[#E07A5F] shadow-sm ring-2 ring-[#E07A5F]/20" 
+                      : "bg-white border-[#E8E3D9] hover:border-[#E8E3D9]/90"
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#2C2A29] text-white">
+                        Bloque #{idx + 1}
+                      </span>
+                      <span className="text-xs font-bold text-[#2C2A29]/60">
+                        {count} {count === 1 ? "artículo" : "artículos"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="text-2xl">{cat.icon}</span>
+                      <div>
+                        <h3 className="text-xs font-black text-[#2C2A29] leading-snug line-clamp-1">
+                          {cat.name}
+                        </h3>
+                        <p className="text-[10px] text-[#2C2A29]/50 font-medium line-clamp-1">
+                          {cat.badge}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Controles de Reordenación del Bloque */}
+                  <div className="flex items-center justify-between gap-1.5 mt-4 pt-3 border-t border-[#E8E3D9]/70">
+                    <button
+                      type="button"
+                      disabled={isFirst || isSavingCatOrder}
+                      onClick={() => handleMoveCategory(idx, "left")}
+                      className="flex-1 py-1.5 px-2 rounded-lg bg-[#FAF8F5] hover:bg-[#E8E3D9]/60 disabled:opacity-30 disabled:cursor-not-allowed border border-[#E8E3D9] text-[#2C2A29] text-[11px] font-bold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                      title="Mover categoría a la izquierda (subir prioridad)"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                      <span>Subir</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab(cat.id)}
+                      className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors cursor-pointer ${
+                        activeTab === cat.id 
+                          ? "bg-[#E07A5F] text-white" 
+                          : "bg-amber-50 text-amber-900 hover:bg-amber-100"
+                      }`}
+                      title="Filtrar productos de esta categoría"
+                    >
+                      Ver
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={isLast || isSavingCatOrder}
+                      onClick={() => handleMoveCategory(idx, "right")}
+                      className="flex-1 py-1.5 px-2 rounded-lg bg-[#FAF8F5] hover:bg-[#E8E3D9]/60 disabled:opacity-30 disabled:cursor-not-allowed border border-[#E8E3D9] text-[#2C2A29] text-[11px] font-bold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                      title="Mover categoría a la derecha (bajar prioridad)"
+                    >
+                      <span>Bajar</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* SECCIÓN 2: PESTAÑAS DE FILTRO Y REORDENACIÓN DE TARJETAS */}
+        {/* ======================================================== */}
+        <div className="w-full mb-6">
+          <div className="w-full bg-white p-2 rounded-2xl border border-[#E8E3D9] shadow-xs grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2">
+            {categories.map((cat) => {
+              const count = getCategoryCount(cat.id);
+              const isActive = activeTab === cat.id;
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveTab(cat.id)}
+                  className={`w-full py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    isActive
+                      ? "bg-[#E07A5F] text-white shadow-md scale-[1.01]"
+                      : "text-[#2C2A29]/70 hover:text-[#2C2A29] hover:bg-[#FAF8F5] border border-transparent hover:border-[#E8E3D9]"
+                  }`}
+                >
+                  <span className="text-base">{cat.icon}</span>
+                  <span className="font-extrabold truncate">{cat.shortName}</span>
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                    isActive ? "bg-white/20 text-white" : "bg-[#FAF8F5] text-[#2C2A29]/60 border border-[#E8E3D9]/60"
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-between mt-3 px-1 text-xs text-[#2C2A29]/60 font-medium">
+            <span>
+              Mostrando <strong className="text-[#2C2A29] font-black">{displayedProducts.length}</strong> productos en <span className="text-[#E07A5F] font-bold">{categories.find(c => c.id === activeTab)?.name || "esta categoría"}</span>
+            </span>
+            <span className="hidden sm:inline text-[11px] text-[#2C2A29]/40">
+              💡 Arrastra o usa las flechas ⬅️ ➡️ en cada tarjeta para definir el orden exacto
+            </span>
+          </div>
+        </div>
+
+        {/* Grid de Productos Curados */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-[#E8E3D9]">
-            <RefreshCw className="w-8 h-8 animate-spin text-[#E07A5F] mb-3" />
-            <p className="text-sm font-bold text-[#2C2A29]/60">Cargando productos curados...</p>
+            <RefreshCw className="w-8 h-8 text-[#E07A5F] animate-spin mb-3" />
+            <p className="text-sm font-bold text-[#2C2A29]/70">Cargando escaparate curado...</p>
           </div>
-        ) : curatedProducts.length === 0 ? (
+        ) : displayedProducts.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-[#E8E3D9] p-8">
-            <Layers className="w-12 h-12 text-[#2C2A29]/30 mx-auto mb-3" />
-            <h3 className="text-lg font-bold">No hay productos curados en la tienda</h3>
-            <p className="text-xs text-[#2C2A29]/60 mt-1 max-w-md mx-auto">
-              Ve al catálogo de Hertwill para seleccionar los productos que deseas mostrar en la tienda oficial.
+            <Boxes className="w-12 h-12 text-[#2C2A29]/30 mx-auto mb-3" />
+            <h3 className="text-base font-bold text-[#2C2A29]">No hay productos en esta categoría</h3>
+            <p className="text-xs text-[#2C2A29]/60 mt-1 max-w-sm mx-auto">
+              Explora el catálogo mayorista y añade productos para activar esta sección en la tienda oficial.
             </p>
             <Link
               href="/admin/catalogo"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#E07A5F] text-white font-bold text-xs mt-5 shadow-sm"
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#E07A5F] text-white font-bold text-xs"
             >
-              <Search className="w-4 h-4" />
-              <span>Explorar Catálogo Hertwill</span>
+              <Search className="w-3.5 h-3.5" />
+              <span>Explorar Catálogo</span>
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {curatedProducts.map((product) => {
+            {displayedProducts.map((product, idx) => {
               const pId = String(product.id);
-              const cardEdit = edits[pId] || {};
+              const edit = edits[pId] || {};
+              const selectedCategory = edit.category || product.category || "accessory";
+              const wholesale = product.wholesale_price ?? product.price ?? 0;
+              const shipping = product.shipping_cost ?? 33;
+              const totalCost = wholesale + shipping;
+              
+              const inputPrice = edit.price !== undefined 
+                ? edit.price 
+                : product.retail_price_override ?? product.retail_price ?? product.price ?? 0;
 
-              const wholesale = (product as any).wholesale_price ?? product.price ?? 0;
-              const shipping = (product as any).shipping_cost ?? (wholesale > 80 ? 33 : wholesale > 30 ? 20 : 14.99);
+              // Métricas
+              const estimatedGrossProfit = inputPrice - wholesale;
+              const estimatedNetMargin = inputPrice - totalCost;
+              const netMarginPercent = inputPrice > 0 ? (estimatedNetMargin / inputPrice) * 100 : 0;
+              const target20Price = calculateTarget20MarginPrice(wholesale, shipping);
+              const amazonBenchmark = getAmazonBenchmarkPrice(product.title, wholesale, shipping);
 
-              const currentActiveRetail = (product as any).retail_price_override ?? (product as any).retail_price ?? product.price;
-              const inputPrice = cardEdit.price !== undefined ? cardEdit.price : currentActiveRetail;
-              const selectedCategory = cardEdit.category || product.category || "accessory";
-
-              const estimatedMargin = Math.round(inputPrice - (wholesale + shipping));
-              const target20 = calculateTarget20MarginPrice(wholesale, shipping);
-              const amazonRef = getAmazonBenchmarkPrice(product.title, wholesale, shipping);
-
-              const hasUnsavedChanges = cardEdit.price !== undefined || cardEdit.category !== undefined;
-              const isCardUpdating = isUpdating === pId;
+              const isFirst = idx === 0;
+              const isLast = idx === displayedProducts.length - 1;
+              const isDragged = draggedItemId === pId;
+              const isOver = dragOverItemId === pId;
 
               return (
                 <div
                   key={pId}
-                  className={`bg-white rounded-3xl border transition-all shadow-xs flex flex-col justify-between overflow-hidden ${
-                    hasUnsavedChanges ? "border-[#E07A5F] ring-2 ring-[#E07A5F]/20" : "border-[#E8E3D9]"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, pId)}
+                  onDragOver={(e) => handleDragOver(e, pId)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, pId)}
+                  className={`bg-white rounded-3xl border transition-all flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md ${
+                    isDragged ? "opacity-30 scale-95 border-dashed border-[#E07A5F]" : ""
+                  } ${
+                    isOver ? "border-2 border-[#E07A5F] ring-4 ring-[#E07A5F]/20 scale-[1.01]" : "border-[#E8E3D9]"
                   }`}
                 >
-                  {/* Imagen y Badge */}
-                  <div className="relative h-56 bg-gray-50 border-b border-[#E8E3D9]">
-                    {product.imageUrl ? (
-                      <img
-                        src={product.imageUrl}
-                        alt={product.title}
-                        className="w-full h-full object-contain p-4"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
-                        Sin imagen
-                      </div>
-                    )}
-                    <span className="absolute top-3 right-3 px-3 py-1 rounded-full bg-[#2C2A29]/80 text-white text-[10px] font-bold backdrop-blur-xs">
-                      ID: {pId}
-                    </span>
+                  {/* Barra Superior de la Tarjeta con Controles de Posición */}
+                  <div className="p-4 pb-0 flex items-center justify-between border-b border-[#E8E3D9]/60 bg-[#FAF8F5]/80">
+                    <div className="flex items-center gap-1.5">
+                      <span className="cursor-grab active:cursor-grabbing text-[#2C2A29]/40 hover:text-[#2C2A29] p-1 rounded-md" title="Arrastra para reordenar">
+                        <GripVertical className="w-4 h-4" />
+                      </span>
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-[#2C2A29] text-white">
+                        Pos #{idx + 1}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        disabled={isFirst || isSavingOrder}
+                        onClick={() => handleMoveProduct(idx, "left")}
+                        className="p-1.5 rounded-lg bg-white hover:bg-amber-50 disabled:opacity-30 disabled:cursor-not-allowed border border-[#E8E3D9] text-[#2C2A29] transition-colors cursor-pointer"
+                        title="Mover producto a la izquierda (subir posición)"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isLast || isSavingOrder}
+                        onClick={() => handleMoveProduct(idx, "right")}
+                        className="p-1.5 rounded-lg bg-white hover:bg-amber-50 disabled:opacity-30 disabled:cursor-not-allowed border border-[#E8E3D9] text-[#2C2A29] transition-colors cursor-pointer"
+                        title="Mover producto a la derecha (bajar posición)"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Contenido de la Tarjeta */}
-                  <div className="p-5 space-y-4 flex-1">
-                    <h3 className="font-bold text-sm text-[#2C2A29] line-clamp-2 leading-snug">
+                  {/* Imagen y Datos Principales */}
+                  <div className="p-5">
+                    <div className="relative w-full h-44 bg-[#FAF8F5] rounded-2xl overflow-hidden border border-[#E8E3D9]/60 mb-4">
+                      {product.imageUrl ? (
+                        <Image
+                          src={product.imageUrl}
+                          alt={product.title}
+                          fill
+                          className="object-contain p-2"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-xs text-[#2C2A29]/40">
+                          Sin imagen
+                        </div>
+                      )}
+                    </div>
+
+                    <h3 className="font-bold text-sm text-[#2C2A29] line-clamp-2 leading-tight">
                       {product.title}
                     </h3>
+                    <p className="text-[11px] text-[#2C2A29]/50 font-medium mt-1">
+                      {product.brand_name || product.brand || "Marca Europea"} · ID #{product.id}
+                    </p>
 
-                    {/* Desglose de Costes y Margen */}
-                    <div className="p-3 bg-gray-50 rounded-2xl border border-gray-200 space-y-1.5 text-xs">
-                      <div className="flex justify-between text-gray-600">
+                    {/* Desglose Económico */}
+                    <div className="mt-4 p-3 bg-[#FAF8F5] rounded-2xl border border-[#E8E3D9]/80 space-y-1.5 text-xs">
+                      <div className="flex justify-between text-[#2C2A29]/70">
                         <span>Coste Proveedor:</span>
                         <span className="font-bold">{formatCurrency(wholesale)}</span>
                       </div>
-                      <div className="flex justify-between text-gray-500 text-[11px]">
+                      <div className="flex justify-between text-[#2C2A29]/50 text-[11px]">
                         <span>Envío España:</span>
                         <span>{formatCurrency(shipping)}</span>
                       </div>
-                      <div className="flex justify-between pt-1 border-t border-gray-200">
-                        <span className="font-bold">PVP Público en Web:</span>
-                        <span className="font-black text-sm text-[#E07A5F]">{formatCurrency(inputPrice)}</span>
+                      <div className="flex justify-between font-bold text-sm text-[#2C2A29] pt-1.5 border-t border-[#E8E3D9]">
+                        <span>PVP Público:</span>
+                        <span className="text-[#E07A5F] font-black">{formatCurrency(inputPrice)}</span>
                       </div>
-                      <div className="flex justify-between text-emerald-700 font-bold text-[11px] pt-1 border-t border-gray-200">
-                        <span>Margen Neto Estimado:</span>
-                        <span>+{formatCurrency(estimatedMargin)}</span>
+                      <div className="flex justify-between font-bold text-xs pt-1">
+                        <span className="text-emerald-700">Margen Neto Estimado:</span>
+                        <span className={`font-black ${estimatedNetMargin >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                          {estimatedNetMargin >= 0 ? "+" : ""}{formatCurrency(estimatedNetMargin)} ({netMarginPercent.toFixed(0)}%)
+                        </span>
                       </div>
                     </div>
 
-                    {/* 1. SELECCIÓN DE POSICIÓN / CATEGORÍA EN TIENDA */}
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-[#2C2A29]/70 flex items-center gap-1">
-                        <span>📍 Posición en la Tienda Oficial:</span>
+                    {/* Selector de Categoría (5 Opciones) */}
+                    <div className="mt-4">
+                      <label className="block text-[11px] font-bold text-[#2C2A29]/70 uppercase tracking-wider mb-1">
+                        📍 Categoría en Tienda Oficial:
                       </label>
                       <select
                         value={selectedCategory}
-                        onChange={(e) => handleFieldChange(pId, "category", e.target.value as any)}
-                        className="w-full px-3 py-2 bg-[#FDFBF7] border border-[#E8E3D9] rounded-xl text-xs font-bold text-[#2C2A29] focus:outline-hidden focus:ring-2 focus:ring-[#E07A5F] cursor-pointer"
+                        disabled={isUpdating === pId}
+                        onChange={async (e) => {
+                          const newCat = e.target.value as ProductCategory;
+                          handleFieldChange(pId, "category", newCat);
+                          await handleSaveProductCard(product, undefined, newCat);
+                        }}
+                        className="w-full bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl px-3 py-2 text-xs font-bold text-[#2C2A29] focus:outline-none focus:border-[#E07A5F] cursor-pointer"
                       >
-                        <option value="set">🏆 Sets Completos (Fila Superior - High Ticket)</option>
-                        <option value="module">🧩 Módulos de Psicomotricidad (Sección Media)</option>
-                        <option value="accessory">✦ Accesorios Sensoriales (Sección Inferior)</option>
+                        <option value="set">🏆 Sets de Psicomotricidad (High Ticket)</option>
+                        <option value="module">🪜 Módulos & Pikler (Escalada y Trepa)</option>
+                        <option value="furniture">📚 Mobiliario & Estanterías (Montessori)</option>
+                        <option value="nursery">🛏️ Cunas & Carritos (Descanso y Paseo)</option>
+                        <option value="accessory">🎨 Sensorial & Accesorios (Estimulación)</option>
                       </select>
                     </div>
 
-                    {/* 2. EDICIÓN DIRECTA DE PVP */}
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-[#2C2A29]/70">
+                    {/* Input de Edición de PVP */}
+                    <div className="mt-3">
+                      <label className="block text-[11px] font-bold text-[#2C2A29]/70 uppercase tracking-wider mb-1">
                         💶 Editar PVP Público (€):
                       </label>
-                      <input
-                        type="number"
-                        step="1"
-                        value={inputPrice}
-                        onChange={(e) => {
-                          const val = Math.round(parseFloat(e.target.value));
-                          if (!isNaN(val) && val > 0) {
-                            handleFieldChange(pId, "price", val);
-                          }
-                        }}
-                        className="w-full px-3 py-2 bg-[#FDFBF7] border border-[#E8E3D9] rounded-xl text-xs font-bold text-[#2C2A29] focus:outline-hidden focus:ring-2 focus:ring-[#E07A5F]"
-                      />
+                      <div className="relative">
+                        <input
+                          type="number"
+                          step="1"
+                          value={inputPrice}
+                          onChange={(e) => handleFieldChange(pId, "price", parseFloat(e.target.value) || 0)}
+                          className="w-full bg-white border border-[#E8E3D9] rounded-xl px-3 py-2 text-sm font-bold text-[#2C2A29] focus:outline-none focus:border-[#E07A5F] focus:ring-2 focus:ring-[#E07A5F]/20"
+                        />
+                      </div>
 
-                      {/* Botón sugerido: 20% Margen */}
-                      <div className="flex items-center justify-between pt-1">
+                      {/* Sugerencias de Precio Inteligente */}
+                      <div className="flex items-center justify-between gap-1.5 mt-2">
                         <button
                           type="button"
-                          onClick={() => handleSaveProductCard(product, target20)}
-                          className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-[10px] font-extrabold transition-all cursor-pointer"
+                          onClick={() => {
+                            handleFieldChange(pId, "price", target20Price);
+                            handleSaveProductCard(product, target20Price);
+                          }}
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                          title="Fijar precio para conseguir 20% de margen limpio"
                         >
-                          <span>🎯 Sugerir 20% Margen: {formatCurrency(target20)}</span>
+                          <TrendingUp className="w-3 h-3 text-amber-600" />
+                          <span>Sugerir 20% Margen: {formatCurrency(target20Price)}</span>
                         </button>
-                        <span className="text-[10px] text-gray-400 font-medium">
-                          Amazon: ~{formatCurrency(amazonRef)}
-                        </span>
+                        
+                        {amazonBenchmark > 0 && (
+                          <span className="text-[10px] text-[#2C2A29]/40 font-medium">
+                            Amazon: ~{formatCurrency(amazonBenchmark)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  {/* 3. BOTÓN DE GUARDAR TODOS LOS CAMBIOS & ACCIONES */}
-                  <div className="p-4 bg-gray-50 border-t border-gray-200 space-y-2">
+                  {/* Acciones Inferiores */}
+                  <div className="p-5 pt-0">
                     <button
                       type="button"
+                      disabled={isUpdating === pId}
                       onClick={() => handleSaveProductCard(product)}
-                      disabled={isCardUpdating}
-                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
+                      className={`w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs ${
                         savedSuccess === pId
                           ? "bg-emerald-600 text-white"
-                          : hasUnsavedChanges
-                          ? "bg-[#E07A5F] hover:bg-[#D46B4E] text-white animate-pulse"
-                          : "bg-[#2C2A29] hover:bg-[#E07A5F] text-white"
+                          : "bg-[#2C2A29] text-white hover:bg-[#E07A5F]"
                       }`}
                     >
-                      {isCardUpdating ? (
+                      {isUpdating === pId ? (
                         <>
-                          <RefreshCw className="w-4 h-4 animate-spin" />
-                          <span>Guardando cambios...</span>
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          <span>Guardando...</span>
                         </>
                       ) : savedSuccess === pId ? (
                         <>
-                          <Check className="w-4 h-4" />
-                          <span>¡Cambios Guardados con Éxito!</span>
+                          <Check className="w-3.5 h-3.5" />
+                          <span>¡Guardado con Éxito!</span>
                         </>
                       ) : (
                         <>
-                          <Save className="w-4 h-4" />
-                          <span>{hasUnsavedChanges ? "Guardar Todos los Cambios *" : "Guardar Cambios"}</span>
+                          <Save className="w-3.5 h-3.5" />
+                          <span>Guardar Cambios</span>
                         </>
                       )}
                     </button>
 
-                    <div className="flex items-center justify-between pt-1 text-xs">
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#E8E3D9]/60">
                       <button
                         type="button"
-                        onClick={() => handleRemoveCurated(pId, product.title)}
                         disabled={isRemoving === pId}
-                        className="text-red-600 hover:text-red-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                        onClick={() => handleRemoveCurated(pId, product.title)}
+                        className="text-[11px] font-bold text-red-600 hover:text-red-700 inline-flex items-center gap-1 cursor-pointer transition-colors"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>Retirar de la web</span>
+                        <Trash2 className="w-3 h-3" />
+                        <span>{isRemoving === pId ? "Retirando..." : "Retirar de la web"}</span>
                       </button>
 
-                      <span className="text-[11px] text-gray-400">
-                        {selectedCategory === "set" ? "🏆 Set" : selectedCategory === "module" ? "🧩 Módulo" : "✦ Accesorio"}
+                      <span className="text-[10px] font-bold text-[#2C2A29]/40 uppercase">
+                        {selectedCategory === "set" ? "🏆 Set" : 
+                         selectedCategory === "module" ? "🪜 Módulo" : 
+                         selectedCategory === "furniture" ? "📚 Mobiliario" : 
+                         selectedCategory === "nursery" ? "🛏️ Cuna/Carrito" : "🎨 Accesorio"}
                       </span>
                     </div>
                   </div>

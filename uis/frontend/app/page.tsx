@@ -9,11 +9,13 @@ import CartDrawer from "@/components/CartDrawer";
 import ChatWidget from "@/components/ChatWidget";
 import ChatCTAButton from "@/components/ChatCTAButton";
 import HeroToyPattern from "@/components/HeroToyPattern";
-import { Product } from "@/app/api/products/route";
+import { Product } from "@/lib/ports/catalog.port";
+import { CategoryMeta, DEFAULT_CATEGORIES } from "@/lib/ports/catalog.port";
 import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryMeta[]>(DEFAULT_CATEGORIES);
   const [isLoading, setIsLoading] = useState(true);
 
   // Carga garantizada desde la API del servidor (Single Source of Truth)
@@ -24,50 +26,30 @@ export default function Home() {
           setIsLoading(true);
         }
 
-        // 1. Cargar productos directamente de la API con no-cache
-        let dbItems: Product[] = [];
-        try {
-          const res = await fetch(`/api/products?t=${Date.now()}`, {
+        // 1. Cargar productos y categorías concurrentemente
+        const [productsRes, categoriesRes] = await Promise.all([
+          fetch(`/api/products?t=${Date.now()}`, {
             cache: "no-store",
             headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" },
-          });
-          if (res.ok) {
-            dbItems = await res.json();
+          }).catch(() => null),
+          fetch(`/api/categories?t=${Date.now()}`, {
+            cache: "no-store",
+            headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" },
+          }).catch(() => null),
+        ]);
+
+        if (productsRes && productsRes.ok) {
+          const dbItems = await productsRes.json();
+          if (Array.isArray(dbItems)) {
+            setProducts(dbItems as any);
           }
-        } catch (e) {
-          console.error("Error al conectar con API de productos:", e);
         }
 
-        // 2. Normalizar productos y variantes
-        if (Array.isArray(dbItems)) {
-          const flatList: Product[] = [];
-          dbItems.forEach((item: any) => {
-            if (item.variants && item.variants.length > 0) {
-              item.variants.forEach((v: any) => {
-                flatList.push({
-                  id: String(v.id),
-                  title: v.title,
-                  category: item.category || "accessory",
-                  price: v.wholesale_price || item.price,
-                  description: item.description,
-                  imageUrl: v.imageUrl || v.image_url || item.imageUrl || "",
-                  ageRange: item.ageRange || "",
-                  dimensions: item.dimensions || "",
-                  retail_price: v.price || item.retail_price || item.price,
-                  retail_price_override: v.retail_price_override || item.retail_price_override,
-                } as any);
-              });
-            } else {
-              flatList.push({
-                ...item,
-                id: String(item.id),
-              });
-            }
-          });
-
-          const { groupCuratedProducts } = await import("@/lib/variants");
-          const groupedList = groupCuratedProducts(flatList);
-          setProducts(groupedList as any);
+        if (categoriesRes && categoriesRes.ok) {
+          const catData = await categoriesRes.json();
+          if (catData.categories && Array.isArray(catData.categories)) {
+            setCategories(catData.categories);
+          }
         }
       } catch (err) {
         console.error("Error en la carga del catálogo curado:", err);
@@ -94,6 +76,14 @@ export default function Home() {
             loadCatalog(true);
           }
         )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "app_config" },
+          (payload) => {
+            console.log("[Supabase Realtime] Cambio en configuración detectado:", payload.eventType);
+            loadCatalog(true);
+          }
+        )
         .on("broadcast", { event: "catalog-sync-refresh" }, (payload) => {
           console.log("[Supabase Realtime] Señal de refresco manual recibida desde Admin:", payload);
           loadCatalog(true);
@@ -105,116 +95,64 @@ export default function Home() {
     let broadcast: any = null;
     if (typeof window !== "undefined" && "BroadcastChannel" in window) {
       broadcast = new BroadcastChannel("kinekids_catalog_sync");
-      broadcast.onmessage = () => {
-        console.log("[BroadcastChannel] Señal de sincronización de catálogo recibida.");
+      broadcast.onmessage = (event: any) => {
+        console.log("[BroadcastChannel] Evento recibido en Storefront:", event.data);
         loadCatalog(true);
       };
     }
 
-    const handleFocus = () => {
-      loadCatalog(true);
-    };
-
     const handleStorage = (e: StorageEvent) => {
       if (e.key === "kinekids_last_sync") {
+        console.log("[LocalStorage Sync] Detectado cambio desde el panel de control.");
         loadCatalog(true);
       }
     };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("focus", handleFocus);
-      window.addEventListener("storage", handleStorage);
-    }
-
-    // Polling ligero y silencioso en segundo plano cada 20 segundos sólo si la pestaña está activa
-    const intervalId = setInterval(() => {
-      if (typeof document !== "undefined" && document.visibilityState === "visible") {
-        loadCatalog(true);
-      }
-    }, 20000);
+    window.addEventListener("storage", handleStorage);
 
     return () => {
-      clearInterval(intervalId);
       if (channel && supabase) {
         supabase.removeChannel(channel);
       }
       if (broadcast) {
         broadcast.close();
       }
-      if (typeof window !== "undefined") {
-        window.removeEventListener("focus", handleFocus);
-        window.removeEventListener("storage", handleStorage);
-      }
+      window.removeEventListener("storage", handleStorage);
     };
   }, []);
 
-  // Segmentación por peldaños pedagógicos
-  
-  // Restaurar posicion de scroll exacta al regresar de la ficha de un producto
-  useEffect(() => {
-    if (!isLoading && products.length > 0 && typeof window !== "undefined") {
-      const savedScroll = sessionStorage.getItem("kinekids_catalog_scroll_pos");
-      const lastProduct = sessionStorage.getItem("kinekids_last_viewed_product");
-
-      if (savedScroll) {
-        const top = parseInt(savedScroll, 10);
-        sessionStorage.removeItem("kinekids_catalog_scroll_pos");
-        sessionStorage.removeItem("kinekids_last_viewed_product");
-        setTimeout(() => {
-          window.scrollTo({
-            top,
-            behavior: "instant" as any,
-          });
-        }, 40);
-      } else if (lastProduct) {
-        sessionStorage.removeItem("kinekids_last_viewed_product");
-        setTimeout(() => {
-          const el = document.getElementById("product-" + lastProduct);
-          if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        }, 60);
-      }
-    }
-  }, [isLoading, products.length]);
-
-  const sets = products.filter((p) => p.category === "set");
-  const modules = products.filter((p) => p.category === "module");
-  const accessories = products.filter((p) => p.category === "accessory");
+  const firstAnchor = categories.length > 0 ? `#${categories[0].anchor}` : "#sets";
 
   return (
-    <div className="min-h-screen bg-brand-sand font-sans text-brand-charcoal selection:bg-brand-clay selection:text-white flex flex-col justify-between">
-      {/* Dynamic Background Pattern */}
-      <HeroToyPattern />
-
-      {/* Header */}
+    <div className="min-h-screen bg-brand-sand flex flex-col selection:bg-brand-clay selection:text-white relative">
+      {/* 0. Header Minimalista y Autenticación */}
       <Header />
 
-      {/* 1. Hero Section */}
-      <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-32 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-brand-sand-dark/60 backdrop-blur-sm border border-brand-sand-dark text-brand-clay text-xs font-semibold uppercase tracking-wider mb-8 animate-fade-in">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Desarrollo Motor Respetuoso</span>
+      {/* 1. Hero Section Pedagógica con Animaciones Orgánicas */}
+      <section className="relative overflow-hidden bg-brand-sand-light py-20 lg:py-28 border-b border-brand-sand-dark">
+        {/* Juguetes y Formas Flotantes Dinámicas en Fondo con Parallax */}
+        <HeroToyPattern />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-brand-sand-dark/70 text-brand-clay text-xs font-semibold tracking-wide mb-6 border border-brand-sand-dark animate-fade-in">
+            <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+            <span>Desarrollo motor & Autonomía Infantil</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-brand-charcoal max-w-4xl mx-auto leading-[1.1]">
-            Mobiliario y módulos para el{" "}
-            <span className="text-brand-clay underline decoration-brand-clay/30 decoration-wavy underline-offset-8">
-              movimiento libre
-            </span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-brand-charcoal max-w-3xl leading-[1.15]">
+            Mobiliario y psicomotricidad para el juego libre
           </h1>
 
-          <p className="mt-6 text-lg sm:text-xl text-brand-charcoal/70 max-w-2xl mx-auto font-light leading-relaxed">
-            Inspirados en la pedagogía Pikler y Montessori. Espacios de psicomotricidad seguros, modulares y sostenibles para crecer jugando.
+          <p className="mt-6 text-base sm:text-lg text-brand-charcoal/70 max-w-2xl font-normal leading-relaxed">
+            Diseños evolutivos inspirados en la pedagogía Pikler y Montessori. Materiales nobles, seguros y duraderos para transformar tu hogar en un espacio de exploración.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
             <a
-              href="#sets"
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-clay text-white font-medium text-sm shadow-md hover:bg-brand-clay/90 hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2"
+              href={firstAnchor}
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-clay text-brand-sand-light font-medium text-sm hover:bg-brand-clay-dark transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
             >
-              Explorar Colección
+              <span>Explorar Colección</span>
+              <ArrowDown className="w-4 h-4" />
             </a>
             <a
               href="#essence"
@@ -263,7 +201,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. Main Catalog Section */}
+      {/* 3. Main Catalog Section (5 Bloques Dinámicos en Orden Personalizado) */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-24 space-y-4">
@@ -284,72 +222,32 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-24">
-            {/* SECCIÓN 1: SETS COMPLETOS */}
-            {sets.length > 0 && (
-              <div id="sets" className="space-y-10">
-                <div className="border-b border-brand-sand-dark pb-6">
-                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-sand-dark text-brand-clay text-xs font-bold uppercase tracking-wider mb-2">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Colección Principal</span>
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-brand-charcoal">
-                    Sets Completos de Psicomotricidad
-                  </h2>
-                  <p className="text-sm text-brand-charcoal/60 mt-1">
-                    Conjuntos integrales diseñados para estimular el equilibrio, gateo y desarrollo motor.
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {sets.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              </div>
-            )}
+            {categories.map((cat) => {
+              const catProducts = products.filter((p) => (p.category || "accessory") === cat.id);
+              if (catProducts.length === 0) return null;
 
-            {/* SECCIÓN 2: MÓDULOS INDIVIDUALES */}
-            {modules.length > 0 && (
-              <div id="modulos" className="space-y-10">
-                <div className="border-b border-brand-sand-dark pb-6">
-                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-sand-dark text-brand-clay text-xs font-bold uppercase tracking-wider mb-2">
-                    <span>Módulos de Escalada</span>
+              return (
+                <div key={cat.id} id={cat.anchor} className="space-y-10 scroll-mt-28">
+                  <div className="border-b border-brand-sand-dark pb-6">
+                    <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-sand-dark text-brand-clay text-xs font-bold uppercase tracking-wider mb-2">
+                      <span>{cat.icon}</span>
+                      <span>{cat.badge}</span>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-brand-charcoal">
+                      {cat.name}
+                    </h2>
+                    <p className="text-sm text-brand-charcoal/60 mt-1 max-w-2xl">
+                      {cat.description}
+                    </p>
                   </div>
-                  <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-brand-charcoal">
-                    Módulos y Bloques
-                  </h2>
-                  <p className="text-sm text-brand-charcoal/60 mt-1">
-                    Piezas combinables para crear circuitos adaptados al espacio de tu hogar.
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {modules.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* SECCIÓN 3: ACCESORIOS SENSORIALES */}
-            {accessories.length > 0 && (
-              <div id="accesorios" className="space-y-10">
-                <div className="border-b border-brand-sand-dark pb-6">
-                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-sand-dark text-brand-clay text-xs font-bold uppercase tracking-wider mb-2">
-                    <span>Complementos</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {catProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
                   </div>
-                  <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-brand-charcoal">
-                    Accesorios Sensoriales
-                  </h2>
-                  <p className="text-sm text-brand-charcoal/60 mt-1">
-                    Herramientas de estimulación y seguridad para acompañar cada juego.
-                  </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {accessories.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              </div>
-            )}
+              );
+            })}
           </div>
         )}
       </main>

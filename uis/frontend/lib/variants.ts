@@ -363,13 +363,16 @@ export function groupCuratedProducts(products: any[]): GroupedProduct[] {
       };
     });
 
+    const repImage = rep.image_url || rep.imageUrl || "";
+    const variantFallbackImage = variants.find((v) => v.imageUrl && v.imageUrl.trim() !== "")?.imageUrl || "";
+
     grouped.push({
       id: rep.id,
       title: baseName,
       category: rep.category,
       price: getCuratedPrice(rep),
       description: rep.description || "",
-      imageUrl: rep.image_url || rep.imageUrl || "",
+      imageUrl: repImage || variantFallbackImage,
       ageRange: rep.ageRange || rep.age_range || "6 meses - 4 años",
       dimensions: rep.dimensions || "Medida estándar",
       variants,
@@ -383,16 +386,25 @@ export function groupCuratedProducts(products: any[]): GroupedProduct[] {
  * Traduce el nombre o identificador de una categoría del inglés al español.
  */
 export function getCategoryTranslation(name: string): string {
-  if (!name) return "";
+  if (!name) return "Catálogo";
   const n = name.toLowerCase().trim();
-  if (n === "set" || n === "sets" || n === "soft play & ball pits" || n === "soft play") {
-    return "Sets de Juego Blando";
+  if (n === "set" || n === "sets" || n === "sets completos" || n.includes("juego blando") || n.includes("ball pit")) {
+    return "Sets de Psicomotricidad";
   }
-  if (n === "module" || n === "modules" || n === "furniture & nursery" || n === "modulo" || n === "módulo" || n === "kids & baby") {
-    return "Módulos de Psicomotricidad";
+  if (n === "module" || n === "modules" || n.includes("modulo") || n.includes("módulo") || n.includes("pikler") || n.includes("escalada")) {
+    return "Módulos & Pikler";
   }
-  if (n === "accessory" || n === "accessories" || n === "clothing" || n === "accesorio" || n === "shoes") {
-    return "Accesorios y Ropa Sensorial";
+  if (n === "furniture" || n.includes("mobiliario") || n.includes("estanter") || n.includes("armario") || n.includes("torre")) {
+    return "Mobiliario Montessori";
+  }
+  if (n === "nursery" || n.includes("cuna") || n.includes("carrit") || n.includes("stroller") || n.includes("crib") || n.includes("pram") || n.includes("cunas & carritos")) {
+    return "Cunas & Carritos";
+  }
+  if (n === "accessory" || n === "accessories" || n.includes("accesorio") || n.includes("sensorial") || n.includes("ropa") || n.includes("shoes") || n.includes("clothing")) {
+    return "Sensorial & Accesorios";
+  }
+  if (n.includes("furniture") || n.includes("nursery")) {
+    return "Mobiliario & Cunas";
   }
   return name;
 }

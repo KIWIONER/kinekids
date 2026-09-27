@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useCart } from "@/store/useCart";
-import { Product } from "@/app/api/products/route";
+import { Product } from "@/lib/ports/catalog.port";
 import { parseProductTitle, getCategoryTranslation, getCollectionTranslation } from "@/lib/variants";
+import { classifyProduct } from "@/lib/classifier";
 import Header from "@/components/Header";
 import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
@@ -26,6 +28,17 @@ import {
 
 const FALLBACK_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400' fill='none'><rect width='400' height='400' fill='%23EBE5DB'/><circle cx='200' cy='180' r='60' fill='%23C4A482' opacity='0.4'/><path d='M140 260C140 226.863 166.863 200 200 200C233.137 200 260 226.863 260 260H140Z' fill='%23C4A482' opacity='0.4'/><text x='50%' y='85%' text-anchor='middle' fill='%235A4D41' font-family='sans-serif' font-size='14' font-weight='bold' opacity='0.6'>KineKids Studio</text></svg>";
 
+const getCategoryLink = (slug?: string, name?: string) => {
+  const s = (slug || "").toLowerCase();
+  const n = (name || "").toLowerCase();
+  if (s === "set" || n.includes("set")) return "/#sets";
+  if (s === "module" || n.includes("módul") || n.includes("modul") || n.includes("pikler") || n.includes("escalada")) return "/#modulos";
+  if (s === "furniture" || n.includes("mobiliario") || n.includes("estanter") || n.includes("armario") || n.includes("torre")) return "/#mobiliario";
+  if (s === "nursery" || n.includes("cuna") || n.includes("carrit") || n.includes("stroller") || n.includes("crib") || n.includes("pram")) return "/#cunas-carritos";
+  if (s === "accessory" || n.includes("sensorial") || n.includes("accesorio")) return "/#accesorios";
+  return "/#catalogo";
+};
+
 interface ProductDetail {
   id: string;
   slug: string;
@@ -36,7 +49,7 @@ interface ProductDetail {
   sale_price: number | null;
   stock_status: string;
   brand: { name: string; slug: string };
-  category: { name: string; slug: string };
+  category: { name: string; slug: string } | string;
   collections: { name: string; slug: string }[];
   images: string[];
   created_at: string;
@@ -85,7 +98,7 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
       try {
         let data: ProductDetail | null = null;
 
-        // 1. Intentar cargar desde la API
+        // 1. Intentar cargar desde la API del producto
         try {
           const res = await fetch(`/api/products/${id}`);
           if (res.ok) {
@@ -93,108 +106,64 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
           }
         } catch (_) {}
 
-        // 2. Cargar variantes curadas localmente en sandbox para dar soporte Offline/LocalStorage
-        if (typeof window !== "undefined") {
+        // 2. Si no se obtuvo, intentar buscar en la lista general de /api/products
+        if (!data) {
+          try {
+            const listRes = await fetch(`/api/products`);
+            if (listRes.ok) {
+              const allProducts = await listRes.json();
+              const found = allProducts.find((p: any) => String(p.id) === String(id));
+              if (found) {
+                const categorySlug = classifyProduct(found.title || found.name, found.description || "", found.category || "");
+                data = {
+                  id: String(found.id),
+                  slug: String(found.id),
+                  name: found.title || found.name,
+                  description: found.description || "",
+                  sku: String(found.id),
+                  price: found.price || found.retail_price || 0,
+                  sale_price: null,
+                  stock_status: "instock",
+                  brand: { name: found.brand_name || found.brand || "KineKids Studio", slug: "kinekids" },
+                  category: { name: getCategoryTranslation(categorySlug), slug: categorySlug },
+                  collections: [{ name: "Infantil & Bebé", slug: "for-kids-baby" }, { name: "Fabricado en Europa", slug: "made-in-europe" }],
+                  images: found.imageUrl ? [found.imageUrl] : [],
+                  created_at: new Date().toISOString(),
+                  variants: found.variants || [],
+                };
+              }
+            }
+          } catch (_) {}
+        }
+
+        // 3. Fallback adicional desde localStorage
+        if (!data && typeof window !== "undefined") {
           const localSaved = localStorage.getItem("kinekids_curated_products");
-          let localVariants: any[] = [];
           if (localSaved) {
             try {
               const localItems = JSON.parse(localSaved) as any[];
-              if (!data) {
-                const found = localItems.find((it) => String(it.id) === String(id));
-                if (found) {
-                  data = {
-                    id: String(found.id),
-                    slug: String(found.id),
-                    name: found.title,
-                    description: found.description || "",
-                    sku: found.id,
-                    price: found.price || found.retail_price || 0,
-                    sale_price: null,
-                    stock_status: "instock",
-                    brand: { name: "IGLU", slug: "iglu" },
-                    category: { name: found.category || "Sets", slug: found.category || "set" },
-                    collections: [{ name: "Colección Montessori", slug: "montessori" }],
-                    images: [found.imageUrl || found.image_url || ""],
-                    created_at: new Date().toISOString(),
-                    variants: [],
-                  };
-                }
-              }
-
-              if (data) {
-                const { baseName: searchBase } = parseProductTitle(data.name);
-                const matching = localItems.filter((it) => {
-                  const { baseName } = parseProductTitle(it.title);
-                  return baseName.toLowerCase() === searchBase.toLowerCase();
-                });
-
-                if (matching.length > 0) {
-                  localVariants = matching.map((m) => {
-                    const { variantName } = parseProductTitle(m.title);
-                    return {
-                      id: m.id,
-                      title: m.title,
-                      variantName: variantName || "Estándar",
-                      price: m.retail_price_override || m.retail_price || m.price,
-                      imageUrl: m.imageUrl || m.image_url || "",
-                      wholesale_price: m.wholesale_price,
-                      shipping_cost: m.shipping_cost,
-                    };
-                  });
-                }
+              const found = localItems.find((it) => String(it.id) === String(id));
+              if (found) {
+                const categorySlug = classifyProduct(found.title, found.description || "", found.category || "");
+                data = {
+                  id: String(found.id),
+                  slug: String(found.id),
+                  name: found.title,
+                  description: found.description || "",
+                  sku: String(found.id),
+                  price: found.price || found.retail_price || 0,
+                  sale_price: null,
+                  stock_status: "instock",
+                  brand: { name: "KineKids Studio", slug: "kinekids" },
+                  category: { name: getCategoryTranslation(categorySlug), slug: categorySlug },
+                  collections: [{ name: "Colección Montessori", slug: "montessori" }],
+                  images: [found.imageUrl || found.image_url || ""],
+                  created_at: new Date().toISOString(),
+                  variants: [],
+                };
               }
             } catch (e) {
               console.error("Error al leer variantes locales:", e);
-            }
-          }
-
-          if (data && localVariants.length > 0) {
-            data.variants = localVariants;
-          }
-        }
-
-        // 3. Fallback garantizado: si no se encontró en API ni en localStorage, buscar en catálogo por defecto
-        if (!data) {
-          const { DEFAULT_CURATED_PRODUCTS } = await import("@/lib/default_catalog");
-          const found = DEFAULT_CURATED_PRODUCTS.find((it) => String(it.id) === String(id));
-          if (found) {
-            data = {
-              id: String(found.id),
-              slug: String(found.id),
-              name: found.title,
-              description: found.description || "",
-              sku: found.id,
-              price: found.price || found.retail_price || 0,
-              sale_price: null,
-              stock_status: "instock",
-              brand: { name: "IGLU", slug: "iglu" },
-              category: { name: found.category || "Sets", slug: found.category || "set" },
-              collections: [{ name: "Colección Montessori", slug: "montessori" }],
-              images: [found.imageUrl || ""],
-              created_at: new Date().toISOString(),
-              variants: [],
-            };
-
-            const { baseName: searchBase } = parseProductTitle(data.name);
-            const matching = DEFAULT_CURATED_PRODUCTS.filter((it) => {
-              const { baseName } = parseProductTitle(it.title);
-              return baseName.toLowerCase() === searchBase.toLowerCase();
-            });
-
-            if (matching.length > 0) {
-              data.variants = matching.map((m) => {
-                const { variantName } = parseProductTitle(m.title);
-                return {
-                  id: m.id,
-                  title: m.title,
-                  variantName: variantName || "Estándar",
-                  price: m.retail_price_override || m.retail_price || m.price,
-                  imageUrl: m.imageUrl || "",
-                  wholesale_price: m.wholesale_price,
-                  shipping_cost: m.shipping_cost,
-                };
-              });
             }
           }
         }
@@ -249,10 +218,13 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
     if (!product) return;
     const retailPrice = getActivePrice();
 
+    const rawCat = typeof product.category === "object" ? product.category?.slug || product.category?.name : product.category;
+    const resolvedCat = classifyProduct(product.name, product.description, rawCat || "");
+
     const productToCart: Product = {
       id: product.id,
       title: product.name,
-      category: (product.category?.slug as any) || "accessory",
+      category: resolvedCat,
       price: retailPrice,
       description: product.description || "",
       imageUrl: product.images[0] || "",
@@ -343,6 +315,12 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
       ? Math.round(((product.price - product.sale_price) / product.price) * 100)
       : null;
 
+  // Clasificación canónica 100% infalible en 5 categorías
+  const rawCategoryString = typeof product.category === "object" ? product.category?.slug || product.category?.name : product.category;
+  const canonicalCategorySlug = classifyProduct(product.name, product.description, rawCategoryString || "");
+  const canonicalCategoryLabel = getCategoryTranslation(canonicalCategorySlug);
+  const categoryLinkHref = getCategoryLink(canonicalCategorySlug, canonicalCategoryLabel);
+
   return (
     <>
       <Header />
@@ -406,30 +384,24 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
         <div>
           {/* Breadcrumb Bar */}
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4 border-b border-brand-sand-dark/60">
-            <button
-              onClick={() => {
-                if (typeof window !== "undefined" && window.history.length > 1) {
-                  router.back();
-                } else {
-                  router.push(product ? "/#product-" + product.id : "/");
-                }
-              }}
-              className="flex items-center space-x-2 text-brand-charcoal/60 hover:text-brand-charcoal transition-colors text-sm font-semibold group shrink-0 cursor-pointer bg-brand-sand-dark/40 px-3.5 py-1.5 rounded-full"
+            <Link
+              href={categoryLinkHref}
+              className="flex items-center space-x-2 text-brand-charcoal/60 hover:text-brand-charcoal transition-colors text-sm font-semibold group shrink-0 cursor-pointer bg-brand-sand-dark/40 px-3.5 py-1.5 rounded-full hover:bg-brand-clay hover:text-white"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Volver al catálogo</span>
-            </button>
+            </Link>
             
             {/* Breadcrumbs */}
             <div className="flex items-center flex-wrap gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-brand-charcoal/40">
-              <a href="/" className="hover:text-brand-clay transition-all">Inicio</a>
+              <Link href="/" className="hover:text-brand-clay transition-all">Inicio</Link>
               <span>/</span>
-              <a 
-                href={product.category?.slug === "set" ? "/#sets" : product.category?.slug === "module" ? "/#modulos" : "/#accesorios"} 
-                className="hover:text-brand-clay transition-all"
+              <Link 
+                href={categoryLinkHref} 
+                className="hover:text-brand-clay transition-all text-brand-clay font-bold"
               >
-                {getCategoryTranslation(product.category?.name || "Catálogo")}
-              </a>
+                {canonicalCategoryLabel}
+              </Link>
               <span>/</span>
               <span className="text-brand-charcoal/70 truncate max-w-[200px] sm:max-w-none">
                 {(() => {
@@ -447,56 +419,55 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
             <div className="space-y-4 lg:sticky lg:top-8">
               {/* Main image */}
               <div
-                className="relative aspect-square bg-brand-sand-dark rounded-[40px] overflow-hidden group cursor-zoom-in shadow-lg border border-brand-sand-dark/60"
+                className="relative aspect-square bg-white rounded-[40px] overflow-hidden group cursor-zoom-in shadow-lg border border-brand-sand-dark/60"
                 onClick={() => openLightbox(activeIndex)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  key={images[activeIndex]}
                   src={images[activeIndex]}
-                  alt={`${product.name} - imagen principal`}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  alt={product.name}
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 p-4"
                 />
-                <div className="absolute inset-0 bg-brand-charcoal/0 group-hover:bg-brand-charcoal/10 transition-colors flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-xs p-3 rounded-2xl shadow-lg transform translate-y-2 group-hover:translate-y-0 duration-300">
-                    <ZoomIn className="w-5 h-5 text-brand-charcoal" />
-                  </div>
-                </div>
 
+                {/* Badge Descuento si aplica */}
                 {discount && (
-                  <div className="absolute top-4 left-4 px-3 py-1.5 bg-brand-clay text-white rounded-xl text-xs font-bold shadow">
-                    −{discount}%
-                  </div>
+                  <span className="absolute top-4 left-4 px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+                    -{discount}%
+                  </span>
                 )}
+
+                {/* Overlay Zoom Hint */}
+                <div className="absolute bottom-4 right-4 p-2 bg-brand-charcoal/60 backdrop-blur-sm text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ZoomIn className="w-4 h-4" />
+                </div>
               </div>
 
-              {/* Thumbnails de galería */}
+              {/* Thumbnail Strip */}
               {hasMultipleImages && (
-                <div className="grid grid-cols-5 gap-2.5">
-                  {images.map((img: string, i: number) => (
+                <div className="flex space-x-3 overflow-x-auto pb-2 pt-1 scrollbar-none">
+                  {images.map((img, i) => (
                     <button
                       key={i}
                       onClick={() => setActiveIndex(i)}
-                      className={`aspect-square rounded-2xl overflow-hidden border-2 transition-all focus:outline-none cursor-pointer ${
+                      className={`relative w-16 h-16 rounded-2xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer bg-white ${
                         activeIndex === i
-                          ? "border-brand-charcoal shadow-md scale-105 ring-2 ring-brand-charcoal/20"
-                          : "border-transparent opacity-60 hover:opacity-100"
+                          ? "border-brand-clay shadow-md scale-105"
+                          : "border-brand-sand-dark/60 hover:border-brand-charcoal/40 opacity-70 hover:opacity-100"
                       }`}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={img}
                         alt={`${product.name} miniatura ${i + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain p-1"
                       />
                     </button>
                   ))}
                 </div>
               )}
 
-              {/* Indicador de más imágenes */}
-              {images.length > 5 && (
-                <p className="text-center text-[11px] text-brand-charcoal/40 font-medium">
+              {hasMultipleImages && (
+                <p className="text-center text-[11px] text-brand-charcoal/40">
                   {images.length} imágenes · Haz clic en la imagen principal para ampliar
                 </p>
               )}
@@ -506,9 +477,12 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
             <div className="space-y-8 pt-2">
               {/* Breadcrumb / badges de colecciones */}
               <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-brand-sand-dark border border-brand-sand-dark/80 rounded-full text-[10px] font-bold uppercase tracking-wider text-brand-charcoal/60">
-                  {getCategoryTranslation(product.category.name)}
-                </span>
+                <a
+                  href={categoryLinkHref}
+                  className="px-3 py-1 bg-brand-clay/15 border border-brand-clay/30 rounded-full text-[10px] font-bold uppercase tracking-wider text-brand-clay hover:bg-brand-clay hover:text-white transition-all cursor-pointer shadow-xs"
+                >
+                  {canonicalCategoryLabel}
+                </a>
                 {product.collections.slice(0, 3).map((col) => (
                   <span
                     key={col.slug}
@@ -528,28 +502,27 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
                   })()}
                 </h1>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-brand-charcoal/50">por</span>
-                  <span className="text-sm font-bold text-brand-charcoal">{product.brand.name}</span>
+                  <span className="text-xs text-brand-charcoal/50 font-medium">por</span>
+                  <span className="text-xs font-bold text-brand-charcoal tracking-wide uppercase">
+                    {product.brand?.name || "KineKids Studio"}
+                  </span>
                 </div>
               </div>
 
-              {/* Precios (PVP Curado) y Botón de Añadir a la Cesta */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 bg-brand-sand-dark/30 rounded-3xl border border-brand-sand-dark/60">
-                <div className="flex flex-col shrink-0">
-                  <span className="text-[10px] uppercase font-bold text-brand-charcoal/40 tracking-wider">PVP Oficial</span>
-                  <span className="text-3xl sm:text-4xl font-black text-brand-charcoal tracking-tight">
+              {/* Precio y Añadir al Carrito */}
+              <div className="p-6 bg-brand-sand-dark/40 rounded-3xl space-y-4 border border-brand-sand-dark/80">
+                <div className="flex items-baseline space-x-3">
+                  <span className="text-3xl font-black text-brand-charcoal">
                     {formatPrice(getActivePrice())}
                   </span>
+                  <span className="text-xs text-brand-charcoal/50 font-medium">PVP Oficial</span>
                 </div>
 
                 <button
                   onClick={handleAddToCart}
-                  disabled={product.stock_status !== "instock"}
-                  className={`flex-1 sm:max-w-xs py-3.5 px-6 rounded-2xl font-bold text-sm transition-all duration-300 flex items-center justify-center space-x-2.5 shadow-md cursor-pointer ${
+                  className={`w-full py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 transition-all duration-300 cursor-pointer ${
                     addedToCart
-                      ? "bg-brand-sage text-white shadow-brand-sage/20"
-                      : product.stock_status !== "instock"
-                      ? "bg-brand-charcoal/20 text-brand-charcoal/40 cursor-not-allowed"
+                      ? "bg-emerald-600 text-white shadow-md"
                       : "bg-brand-charcoal hover:bg-brand-clay text-brand-sand-light hover:shadow-lg hover:-translate-y-0.5"
                   }`}
                 >
@@ -640,7 +613,12 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
                     <Layers className="w-3.5 h-3.5" />
                     <span className="text-[10px] uppercase font-bold tracking-wider">Categoría</span>
                   </div>
-                  <p className="text-xs font-bold text-brand-charcoal">{getCategoryTranslation(product.category.name)}</p>
+                  <a
+                    href={categoryLinkHref}
+                    className="text-xs font-bold text-brand-charcoal hover:text-brand-clay transition-colors"
+                  >
+                    {canonicalCategoryLabel}
+                  </a>
                 </div>
 
                 {product.collections.length > 0 && (
@@ -697,13 +675,13 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
                   <button
                     key={i}
                     onClick={() => openLightbox(i)}
-                    className="group aspect-square rounded-3xl overflow-hidden border-2 border-transparent hover:border-brand-charcoal/30 transition-all focus:outline-none focus:border-brand-clay shadow-sm hover:shadow-md cursor-pointer"
+                    className="group aspect-square rounded-3xl overflow-hidden border-2 border-transparent hover:border-brand-charcoal/30 transition-all focus:outline-none focus:border-brand-clay shadow-sm hover:shadow-md cursor-pointer bg-white"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={img}
                       alt={`${product.name} vista ${i + 1}`}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 p-2"
                     />
                   </button>
                 ))}

@@ -1035,14 +1035,16 @@ export default function AdminCatalogPage() {
                             <select
                               value={product.category}
                               onChange={(e) => {
-                                const newCat = e.target.value as "set" | "module" | "accessory";
+                                const newCat = e.target.value as any;
                                 handleUpdateCategory(product, newCat);
                               }}
                               className="w-full bg-brand-sand-dark/30 border border-brand-sand-dark text-brand-charcoal text-[10px] rounded-xl px-2 py-1.5 focus:outline-none focus:border-brand-clay font-semibold cursor-pointer"
                             >
-                              <option value="set">🏆 Set Completo (High Ticket)</option>
-                              <option value="module">🧩 Módulo (Mid Ticket)</option>
-                              <option value="accessory">✦ Accesorio (Low Ticket)</option>
+                              <option value="set">🏆 Sets de Psicomotricidad (High Ticket)</option>
+                              <option value="module">🪜 Módulos & Pikler (Escalada y Trepa)</option>
+                              <option value="furniture">📚 Mobiliario & Estanterías (Montessori)</option>
+                              <option value="nursery">🛏️ Cunas & Carritos (Descanso y Paseo)</option>
+                              <option value="accessory">🎨 Sensorial & Accesorios (Estimulación)</option>
                             </select>
 
                             {/* CTA */}

@@ -1,101 +1,99 @@
 # 🧪 Documentación de Pruebas Unitarias — KineKids Web
 
-**Fecha de Creación:** 2026-09-25  
-**Estado:** ✅ 100% de Pruebas Pasadas (5/5 tests exitosos)  
+**Fecha de Actualización:** 2026-09-27  
+**Estado:** ✅ 100% de Pruebas Pasadas (11/11 tests exitosos)  
 **Entorno de Ejecución:** Node.js Native Test Runner (`node:test`, `node:assert/strict`)  
-**Comando de Ejecución:** `npm test`  
+**Comando de Ejecución:** `npm test` o `node --test unit-test/suite.test.mjs`
 
 ---
 
-## �� 1. Resumen Ejecutivo
+## 📊 1. Resumen Ejecutivo
 
-Este documento detalla la suite de pruebas unitarias implementada para garantizar la fiabilidad, seguridad e integridad del ecosistema **KineKids** (Frontend, Panel Administrativo, Motor de Precios y Proxy de Fulfillment WooCommerce con Hertwill).
+Este documento detalla la suite de pruebas unitarias implementada para garantizar la fiabilidad, seguridad, integridad del catálogo y resiliencia de la plataforma **KineKids** (Frontend Next.js, Panel Administrativo, Motor de Precios, Clasificador Semántico de 5 Familias y Proxy de Fulfillment WooCommerce con Hertwill).
 
 ```
-✔ Motor de Precios: Clasificacion por Peldaños (Value Ladder) (0.69ms)
-✔ Motor de Precios: Calculo de Margen Objetivo del 20% con Envio (0.17ms)
-✔ Autenticacion: Generacion y Verificacion de Token JWT Nativo (15.68ms)
-✔ Proxy WooCommerce: Validacion de Payload de Pedidos con Pago Confirmado (0.34ms)
-✔ Catalogo: Integridad de Secciones (Sets, Modulos, Accesorios) (0.16ms)
+✔ Motor de Precios: Clasificacion por Peldaños (Value Ladder) (4.32ms)
+✔ Motor de Precios: Calculo de Margen Objetivo del 20% con Envio (0.16ms)
+✔ Motor de Precios: Respeto estricto de Retail Price Override (0.10ms)
+✔ Clasificador: Deteccion heuristica de las 5 categorias oficiales (0.27ms)
+✔ Clasificador: Prioridad absoluta de Categorias Manuales (Overrides) (0.19ms)
+✔ Variantes: Limpieza y Traduccion de Nombres Base y Variantes (0.24ms)
+✔ Variantes: Fallback resiliente si la imagen representativa esta vacia (0.18ms)
+✔ Autenticacion: Generacion y Verificacion de Token JWT Nativo (12.62ms)
+✔ Proxy WooCommerce: Validacion de Payload de Pedidos con Pago Confirmado (0.25ms)
+✔ Catalogo: Integridad de las 5 Categorias Oficiales (0.23ms)
+✔ Catalogo: Validacion de Integridad de URLs de Imagen y Archivos (2.58ms)
 
-ℹ Total Tests: 5 | Aprobados: 5 | Fallidos: 0 | Omitidos: 0
-ℹ Tiempo de Ejecución Total: ~98 ms
+ℹ Total Tests: 11 | Aprobados: 11 | Fallidos: 0 | Omitidos: 0
+ℹ Tiempo de Ejecución Total: ~82 ms
 ```
 
 ---
 
 ## 🎯 2. Especificación de Casos de Prueba
 
-### 🏷️ Prueba 1: Motor de Precios y Value Ladder
-* **Archivo Fuente:** `uis/backend/lib/pricing.ts`
-* **Propósito:** Validar que los productos se clasifiquen en el peldaño de valor adecuado y se aplique el multiplicador de margen correcto con redondeo comercial limpio a múltiplos de 5€.
-* **Criterios de Aceptación:**
-  1. **Low Ticket (Coste < 20€):** Multiplicador `x2.5` (Margen ~60%).
-  2. **Mid Ticket (Coste 20€ - 80€):** Multiplicador `x1.8` (Margen ~44%).
-  3. **High Ticket (Coste > 80€):** Multiplicador `x1.45` (Margen ~31%).
-  4. **Redondeo Comercial:** Todos los PVP deben terminar en múltiplo de 5 (ej. 32.7€ → 35€).
+### 🏷️ Módulo 1: Motor de Precios y Márgenes
+* **Archivo Fuente:** `uis/backend/lib/pricing.ts`, `uis/frontend/lib/variants.ts`
+* **Casos Cubiertos:**
+  1. **Clasificación por Peldaños (Value Ladder):** Valida multiplicadores escalonados según coste mayorista (`<20€` x2.5, `20-80€` x1.8, `>80€` x1.45) con redondeo a múltiplos de 5€.
+  2. **Cálculo de Margen Objetivo del 20% con Envío:** Garantiza que el PVP cubra coste mayorista + gastos de envío asegurando al menos un 20% de margen comercial neto.
+  3. **Respeto de Precios Manuales (Overrides):** Prevalece de forma estricta cualquier precio manual asignado por el administrador (`retail_price_override`).
 
 ---
 
-### 💰 Prueba 2: Margen Objetivo del 20% con Costes de Envío Internacional
-* **Archivo Fuente:** `uis/backend/lib/pricing.ts` (`calculateTarget20MarginPrice`)
-* **Propósito:** Comprobar que al calcular el PVP frente a los costes de envío desde los fabricantes en Europa (media 33€), se garantice un beneficio neto real de al menos el 20%.
-* **Fórmula Aplicada:**  
-  $$\text{PVP Objetivo} = \lceil \frac{\text{Coste Mayorista} + \text{Coste Envío}}{1 - 0.20} \rceil$$
-* **Criterio:** El beneficio en euros $(\text{PVP} - \text{Coste Total})$ debe ser $\ge 20\%$ del coste total.
+### 🧩 Módulo 2: Clasificador Semántico y 5 Categorías Oficiales
+* **Archivo Fuente:** `uis/frontend/lib/classifier.ts`, `uis/backend/lib/classifier.ts`
+* **Casos Cubiertos:**
+  1. **Detección Heurística Multilingüe:** Identificación por keywords en título y descripción para:
+     - `furniture` (Estanterías, armarios, torres de aprendizaje, mesas).
+     - `nursery` (Cunas, cambiadores, cochecitos, sacos).
+     - `set` (Sets de psicomotricidad, bloques, piscinas de bolas).
+     - `module` (Módulos, triángulos Pikler, rampas, balancines).
+     - `accessory` (Alfombras sensoriales, complementos, calzado).
+  2. **Prioridad de Sobrescritura Manual (`category_overrides`):** Las decisiones manuales del usuario en el panel admin tienen prioridad absoluta sobre la heurística.
 
 ---
 
-### 🔐 Prueba 3: Autenticación y Seguridad (JWT Nativo Web Crypto API)
+### 🎨 Módulo 3: Agrupación de Variantes y Fallbacks de Imagen
+* **Archivo Fuente:** `uis/frontend/lib/variants.ts`, `uis/backend/lib/variants.ts`
+* **Casos Cubiertos:**
+  1. **Parseo y Limpieza de Nombres:** Extracción del nombre base traducido al español y separación de atributos secundarios (colores, dimensiones).
+  2. **Fallback Resiliente de Imágenes:** Si el artículo representativo de un grupo carece de imagen (`""`), el sistema selecciona automáticamente la primera imagen válida de cualquiera de sus variantes hijas.
+
+---
+
+### 🔐 Módulo 4: Autenticación JWT y Seguridad
 * **Archivo Fuente:** `uis/backend/lib/auth.ts`
-* **Propósito:** Probar la emisión de tokens JWT de sesión para administradores sin dependencias externas pesadas, usando criptografía nativa (HMAC SHA-256).
-* **Escenarios Verificados:**
-  1. **Firma Válida:** Token generado con clave secreta es verificado exitosamente (`isValid === true`).
-  2. **Estructura:** Token cumple con formato estándar de 3 partes separadas por puntos (`header.payload.signature`).
-  3. **Anti-Tampering:** Cualquier alteración en el payload o firma invalida el acceso (`isTamperedValid === false`).
+* **Casos Cubiertos:**
+  1. **Generación y Firma Criptográfica:** Uso de Web Crypto API nativa con algoritmo HMAC-SHA256 y cabeceras Base64URL estándar.
+  2. **Verificación y Rechazo de Manipulaciones:** Valida firmas legítimas y rechaza tokens alterados, truncados o expirados.
 
 ---
 
-### 🔌 Prueba 4: Payload del Proxy WooCommerce (Hertwill Fulfillment)
-* **Archivo Fuente:** `uis/backend/lib/woocommerce.ts`
-* **Propósito:** Asegurar que los pedidos inyectados desde el checkout de KineKids hacia el proxy de WooCommerce contengan todos los campos obligatorios para que el plugin oficial de Hertwill procese el envío automático.
-* **Campos Críticos Validados:**
-  * `set_paid: true` (Garantiza que la orden entre directamente a estado *Procesando / Completado*).
-  * `line_items`: Debe incluir `sku`, `price` y `quantity`.
-  * `billing` y `shipping`: Debe incluir nombre, dirección completa, código postal, país (`ES`) y correo del cliente.
+### 📦 Módulo 5: Proxy de Pedidos WooCommerce
+* **Archivo Fuente:** `uis/backend/app/api/orders/woocommerce/route.ts`
+* **Casos Cubiertos:**
+  1. **Inyección de Pedido Pagado:** Valida `set_paid: true` para habilitar el fulfillment inmediato en el proveedor.
+  2. **Estructura de Datos:** Verifica presencia obligatoria de SKU, cantidades, datos de facturación, email y país de destino (`ES`).
 
 ---
 
-### 🧩 Prueba 5: Integridad y Categorización del Catálogo
-* **Archivo Fuente:** `uis/backend/lib/adapters/supabase.ts` y APIs de Curaduría
-* **Propósito:** Garantizar que los productos se particionen exclusivamente en las 3 secciones oficiales de la tienda KineKids:
-  1. `set` (Sets Completos)
-  2. `module` (Módulos de Psicomotricidad)
-  3. `accessory` (Accesorios y Bolas)
+### 📚 Módulo 6: Integridad del Catálogo Curado
+* **Archivo Fuente:** `uis/frontend/data/curated_catalog.json`, `uis/backend/data/curated_catalog.json`
+* **Casos Cubiertos:**
+  1. **Integridad de Categorías:** Verifica que los 183 productos pertenezcan a las 5 categorías oficiales.
+  2. **Integridad de Imágenes:** Comprueba que no exista ningún producto con `imageUrl` vacía en el catálogo.
 
 ---
 
-## 💻 3. Guía de Ejecución
+## 🚀 3. Instrucciones de Ejecución
 
-Para ejecutar la batería de pruebas en cualquier momento:
-
+Para ejecutar todas las pruebas unitarias:
 ```bash
-# Ejecutar desde la raíz del proyecto
 npm test
-
-# O ejecutar directamente con el runner de Node
-node --test tests/suite.test.mjs
 ```
 
----
-
-## 📁 4. Estructura de Archivos de Pruebas
-
-```text
-kinekids-web/
-├── tests/
-│   └── suite.test.mjs        # Código ejecutable de las pruebas unitarias
-├── unit-test/
-│   └── README.md             # Esta documentación técnica
-└── package.json              # Script "test" configurado
+O directamente mediante Node.js:
+```bash
+node --test unit-test/suite.test.mjs
 ```

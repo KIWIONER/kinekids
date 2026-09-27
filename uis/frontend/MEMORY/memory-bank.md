@@ -70,6 +70,8 @@ El proyecto está construido como un **BFF (Backend for Frontend) desacoplado en
 | **Septiembre 2026** | **Plan de Integración Hertwill-WooCommerce:** Creación de `docs/plan_integracion_hertwill_woocommerce.md` detallando arquitectura desacoplada y puente proxy de pedidos. | ✅ Completado |
 | **Septiembre 2026** | **Implementación de Proxy WooCommerce:** Módulo `lib/woocommerce.ts`, endpoints `/api/orders/woocommerce` y webhook listener `/api/webhooks/woocommerce`. | ✅ Validado |
 | **Septiembre 2026** | **Suite de Testing Integrada:** Implementación de `tests/suite.test.mjs` validando pricing ladder, JWT, payload WooCommerce y categorías (5/5 pass). | ✅ 100% Tests Pass |
+| **Septiembre 2026** | **Agrupación de Variantes y Selector de Imagen Principal en Curados:** Agrupación dinámica por modelo base en `/admin/curados`, selector interactivo de variantes, botones de aplicación global de precios y galería con flechas para fijar imagen principal (`imageUrl`). | ✅ Implementado en Admin |
+| **Septiembre 2026** | **Motor de Cross-Selling por Marca y Optimización de Envíos:** Módulo `lib/cross_selling.ts`, componente interactivo `BundleOfferWidget.tsx` (descuento 15% en 2º artículo de la misma marca) y suite de pruebas unitarias ampliada (12/12 pass). | ✅ 100% Tests Pass |
 | **Septiembre 2026** | **Resolución de Incidencia de Sincronización:** Corrección de error PGRST204 de Supabase, eliminación de `localStorage` en `/admin/catalogo` y soporte de `DELETE` físico en `SupabaseCatalogAdapter`. Documentado en `docs/resolucion_incidencia_sincronizacion_catalogo.md`. | ✅ Resuelto y en Git |
 
 ---

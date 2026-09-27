@@ -49,7 +49,17 @@ export default function Header() {
       {/* 1. Barra Superior Principal: Identidad de Marca y Acciones */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-4">
         {/* Logo KineKids */}
-        <Link href="/" className="flex items-center space-x-3 group flex-shrink-0">
+        <Link
+          href="/"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              sessionStorage.removeItem("kinekids_last_product_id");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+          className="flex items-center space-x-3 group flex-shrink-0 cursor-pointer"
+          title="Ir al inicio de KineKids"
+        >
           <div className="w-10 h-10 rounded-2xl bg-brand-sand-dark/60 border border-brand-sand-dark flex items-center justify-center p-1.5 shadow-2xs group-hover:border-brand-clay transition-all">
             <svg viewBox="0 0 512 512" className="w-full h-full">
               <path d="M 128 360 L 256 150 L 384 360" stroke="#D4A373" strokeWidth="42" strokeLinecap="round" strokeLinejoin="round" fill="none"/>

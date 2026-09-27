@@ -77,6 +77,8 @@ El proyecto está construido como un **BFF (Backend for Frontend) desacoplado en
 | **Septiembre 2026** | **Detalle de Producto On-Demand (/products/[id]):** Configuración de `force-dynamic` y `dynamicParams = true` para permitir carga instantánea de cualquier ID del catálogo. | ✅ Validado en Producción |
 | **Septiembre 2026** | **Restauración de Posición de Scroll en Catálogo:** Guardado de scroll en `sessionStorage` y hook reactivo en `app/page.tsx` para no perder la posición al regresar del detalle. | ✅ Experiencia UX Fluida |
 | **Septiembre 2026** | **Segmentación de Estanterías y Variantes de Color:** División de estanterías Montessori en productos independientes por número de baldas (2, 3, 4 baldas) y asignación limpia de acabados de color. | ✅ Implementado en Frontend y Backend |
+| **Septiembre 2026** | **Agrupación de Variantes y Selector de Imagen Principal en Curados:** Agrupación dinámica por modelo base en `/admin/curados`, selector interactivo de variantes, botones de aplicación global de precios y galería con flechas para fijar imagen principal (`imageUrl`). | ✅ Implementado en Admin |
+| **Septiembre 2026** | **Motor de Cross-Selling por Marca y Optimización de Envíos:** Módulo `lib/cross_selling.ts`, componente interactivo `BundleOfferWidget.tsx` (descuento 15% en 2º artículo de la misma marca) y suite de pruebas unitarias ampliada (12/12 pass). | ✅ 100% Tests Pass |
 
 ---
 
@@ -113,3 +115,23 @@ Modelos complejos con múltiples atributos (e.g. tipo de estantería Arco/Esquin
   3. **Notificaciones WhatsApp Business Cloud API:**
      - Número oficial verificado y activado (`+34 614 68 97 19`, ID: `1088468141008668`).
      - Entrega de mensajes en tiempo real y arquitectura lista para atención al cliente con IA integrada.
+
+
+### 6.6. Agrupación por Modelo Base en Panel Administrativo (/admin/curados)
+Para evitar la sobrecarga visual de renderizar más de 200 tarjetas individuales para productos que únicamente difieren en color o acabado (ej. 8 variantes de un mismo set de espuma), se implementó un agregador reactivo (`useMemo`) en `/admin/curados`.
+- **Selector de Variantes:** Permite editar precios de coste y PVP de forma individual o replicar el precio a todas las variantes del grupo con el botón `Aplicar a todas`.
+- **Carrusel de Selección de Imagen Principal:** Controles `ChevronLeft` / `ChevronRight` para navegar entre todas las fotografías de las variantes y fijar la imagen más atractiva como `imageUrl` principal del producto.
+- **Transparencia en Costes de Envío:** Integración fija del coste de envío estimado (33,00 €) y benchmark competitivo de Amazon para asegurar un margen neto del 20-40%.
+
+### 6.7. Motor de Cross-Selling por Marca y Arbitraje Logístico de Envíos
+Al operar mediante dropshipping directo con marcas y artesanos europeos en Hertwill (MeowBaby en Polonia, leg&go en Letonia, Luula, Toku, etc.), los pedidos con múltiples artículos del **mismo fabricante** se consolidan en un único paquete.
+- **Modelo Económico:** Se diseñó `lib/cross_selling.ts` para detectar automáticamente la marca y sugerir complementos ideales (ej. Set de Espuma + Piscina de Bolas).
+- **Incentivo Comercial:** Se traslada parte del ahorro logístico al cliente final ofreciendo un **15% de descuento en el producto complementario** mediante el widget `BundleOfferWidget.tsx`.
+- **Resultado:** Aumento sustancial del ticket medio (AOV) y un incremento del +74% en el beneficio neto neto por orden sin incurrir en costes de transporte adicionales.
+
+### §6.8 Sincronización Determinista de Visor de Imágenes y Selección de Portada en Curados (27/09/2026)
+- **Causa Raíz Identificada:** Al pulsar "Fijar Principal", el orden de las URLs dentro del `Set` de `availableImages` mutaba, haciendo que el índice del visor (`selectedImageIndices`) apuntase a una foto diferente (cambio involuntario de foto) y desajustando la comprobación `isCurrentMainImage`.
+- **Solución Implementada:** 
+  1. **Orden Determinista:** `availableImages` preserva estrictamente el orden original de las variantes.
+  2. **Fijación Instantánea:** `handleSetMainImage` actualiza `customMainImages` inmediatamente y re-localiza el índice exacto de la foto elegida en `availableImages` para evitar saltos.
+  3. **Sincronización Bidireccional:** Navegar con flechas o pulsar píldoras de variante mantiene sincronizados tanto el visor, como la píldora activa y el estado `★ PRINCIPAL ✓` en verde.

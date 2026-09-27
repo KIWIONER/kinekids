@@ -265,3 +265,51 @@ test("Catalogo: Validacion de Integridad de URLs de Imagen y Archivos", () => {
   const emptyImages = catalog.filter(p => !p.imageUrl || p.imageUrl.trim() === "");
   assert.equal(emptyImages.length, 0, "No debe haber ningun producto con imageUrl vacia");
 });
+
+
+test("Cross-Selling: Deteccion de afinidad de marca y calculo de oferta de pack unificado", async () => {
+  const { detectProductBrand, getBrandCompatibleAddons, calculateBundlePricing } = await import("../uis/frontend/lib/cross_selling.ts");
+
+  const meowSet = {
+    id: "1001",
+    title: "Party Soft Play Set – Light Pastel",
+    price: 148,
+    category: "set",
+    imageUrl: "https://example.com/set.jpg"
+  };
+
+  const meowPit = {
+    id: "1002",
+    title: "Foam Baby Ball Pit Without Balls - Turtle Dusty Ice Blue Boucle",
+    price: 85,
+    category: "module",
+    imageUrl: "https://example.com/pit.jpg"
+  };
+
+  const legGoBike = {
+    id: "2001",
+    title: "Tricycle Add-on for the leg&go Balance Bike 3in1",
+    price: 211,
+    category: "module",
+    imageUrl: "https://example.com/bike.jpg"
+  };
+
+  const catalog = [meowSet, meowPit, legGoBike];
+
+  // Verificación de afinidad de marca
+  assert.strictEqual(detectProductBrand(meowSet.title), "MeowBaby®");
+  assert.strictEqual(detectProductBrand(legGoBike.title), "leg&go & Active Wood");
+
+  // Verificación de sugerencia de complementos de la misma marca
+  const addons = getBrandCompatibleAddons(meowSet, catalog, 5);
+  assert.strictEqual(addons.length, 1);
+  assert.strictEqual(addons[0].id, "1002"); // MeowBaby Pit
+
+  // Verificación de cálculo de precios del paquete con 15% de ahorro en el complemento
+  const bundle = calculateBundlePricing(meowSet, meowPit, 15);
+  assert.strictEqual(bundle.mainPrice, 148);
+  assert.strictEqual(bundle.addonRegularPrice, 85);
+  assert.strictEqual(bundle.addonDiscountedPrice, 72); // 85 * 0.85 = 72.25 -> 72
+  assert.strictEqual(bundle.bundleTotalPrice, 220); // 148 + 72
+  assert.strictEqual(bundle.totalSavings, 13);
+});

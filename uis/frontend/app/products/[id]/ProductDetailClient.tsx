@@ -11,6 +11,7 @@ import { classifyProduct } from "@/lib/classifier";
 import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BundleOfferWidget from "@/components/products/BundleOfferWidget";
 
 const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 import ProductDescription from "@/components/ProductDescription";
@@ -86,6 +87,7 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
 
   // Estado del carrito
   const [addedToCart, setAddedToCart] = useState(false);
+  const [allCatalogProducts, setAllCatalogProducts] = useState<any[]>([]);
   const addItem = useCart((state) => state.addItem);
   const toggleWishlistItem = useWishlist((state) => state.toggleItem);
   const isInWishlist = useWishlist((state) => (product ? state.isInWishlist(product.id) : false));
@@ -109,6 +111,8 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
           const res = await fetch(`/api/products/${id}`);
           if (res.ok) {
             data = await res.json();
+            // Fetch catalog in background for bundle recommendations
+            fetch("/api/products").then(r => r.json()).then(cat => { if (Array.isArray(cat)) setAllCatalogProducts(cat); }).catch(() => {});
           }
         } catch (_) {}
 
@@ -118,6 +122,7 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
             const listRes = await fetch(`/api/products`);
             if (listRes.ok) {
               const allProducts = await listRes.json();
+              setAllCatalogProducts(allProducts);
               const found = allProducts.find((p: any) => String(p.id) === String(id));
               if (found) {
                 const categorySlug = classifyProduct(found.title || found.name, found.description || "", found.category || "");
@@ -706,6 +711,22 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
               </p>
             </div>
           </main>
+
+          {/* ─── Bundle Cross-Selling Offer Widget ─────────────────────────────────── */}
+          {product && (
+            <div className="max-w-6xl mx-auto px-6">
+              <BundleOfferWidget
+                currentProduct={{
+                  id: product.id,
+                  title: product.name,
+                  price: getActivePrice(),
+                  category: typeof product.category === "object" ? product.category?.slug : (product.category || "module"),
+                  imageUrl: images[0] || (product as any).imageUrl || "",
+                }}
+                allProducts={allCatalogProducts}
+              />
+            </div>
+          )}
 
           {/* ─── All Images Section ──────────────────────────────────────────────── */}
           {hasMultipleImages && (

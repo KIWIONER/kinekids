@@ -7,9 +7,11 @@ import { useCart } from "@/store/useCart";
 import { Product } from "@/lib/ports/catalog.port";
 import { parseProductTitle, getCategoryTranslation, getCollectionTranslation } from "@/lib/variants";
 import { classifyProduct } from "@/lib/classifier";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
-import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
+
+const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 import ProductDescription from "@/components/ProductDescription";
 import {
   ArrowLeft,

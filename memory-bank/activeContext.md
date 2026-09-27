@@ -26,3 +26,12 @@
 - Pruebas unitarias: 5/5 pasadas.
 - Compilación de Frontend: Exitosa (código 0).
 - Compilación de Backend: Exitosa (código 0).
+
+## 6. Nueva Fase: Optimización Lighthouse WPO (92 ➔ 98-100)
+- **Marco:** Code Refinement Suite · AgenciAlquimia (Nivel 2).
+- **Documento de Planificación:** `docs/plan-optimizacion-lighthouse-wpo.md`.
+- **Focos de Optimización:**
+  1. Eliminación de polyfills y modernización de targets a ES2022 / Browserslist moderno.
+  2. Code splitting y carga perezosa (`next/dynamic`) de `ChatWidget` y `CartDrawer` (~148 KiB de ahorro).
+  3. Inlining crítico de CSS y optimización de render-blocking (~40 ms).
+  4. Prevención de reflows forzados (*Layout Thrashing*) en componentes con animaciones y scroll.

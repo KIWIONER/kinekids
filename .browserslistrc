@@ -1,0 +1,7 @@
+defaults
+not dead
+not IE 11
+Chrome >= 109
+Safari >= 16
+Edge >= 109
+Firefox >= 109

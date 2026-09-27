@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { Sparkles, ArrowDown, ShieldCheck, Heart, Leaf, PackageOpen } from "lucide-react";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import CartDrawer from "@/components/CartDrawer";
-import ChatWidget from "@/components/ChatWidget";
 import ChatCTAButton from "@/components/ChatCTAButton";
+
+const ChatWidget = dynamic(() => import("@/components/ChatWidget"), { ssr: false });
+const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 import HeroToyPattern from "@/components/HeroToyPattern";
 import { Product } from "@/lib/ports/catalog.port";
 import { CategoryMeta, DEFAULT_CATEGORIES } from "@/lib/ports/catalog.port";

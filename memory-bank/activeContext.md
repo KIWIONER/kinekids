@@ -62,3 +62,8 @@
   - Integración del botón de corazón en el detalle de producto (`ProductDetailClient.tsx`).
   - Creación del desplegable modal `WishlistDropdown.tsx` siguiendo el diseño del mockup: cabecera con icono rosa de corazón, badge con conteo de guardados, lista de productos con viñeta, título y precio, botón de eliminación rápida y acceso al catálogo completo.
   - Inclusión del acceso a la Lista de Deseos en la barra de navegación (`Header.tsx`) a la derecha de "Nuestra Filosofía".
+
+- **Corrección de Prioridad de Categorías (Backend vs Heurísticas)**:
+  - Se identificó la causa raíz: el clasificador heurístico (`classifyProduct`) evaluaba reglas por palabras clave ("climbing", "slide", "pikler", "ladder") después de verificar categorías nuevas, reescribiendo productos marcados explícitamente como `set` a `module`.
+  - Se estableció la Regla de Oro: si un producto tiene una categoría oficial explícita asignada en el backend/catálogo (`set`, `module`, `furniture`, `nursery`, `accessory`) o un override manual por ID, se respeta SIEMPRE con prioridad absoluta sin que las heurísticas por palabras clave la sobreescriban.
+  - Se sincronizó la corrección en `uis/frontend/lib/classifier.ts`, `uis/backend/lib/classifier.ts`, `uis/frontend/lib/variants.ts` y `uis/backend/lib/variants.ts`.

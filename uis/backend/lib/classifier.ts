@@ -1,8 +1,21 @@
 import { ProductCategory } from "./ports/catalog.port";
 
+const VALID_CATEGORIES: ProductCategory[] = [
+  "set",
+  "module",
+  "furniture",
+  "nursery",
+  "accessory",
+];
+
 /**
  * Motor Inteligente de Clasificación Oficial en 5 Familias KineKids.
- * Combina overrides manuales del usuario con reglas heurísticas pedagógicas de alta precisión.
+ * 
+ * Regla de Oro / Single Source of Truth:
+ * 1. Prioridad Máxima: Override manual persistido del usuario/admin (por ID).
+ * 2. Prioridad Absoluta: Si el producto ya tiene una categoría oficial asignada en backend/catálogo
+ *    ("set", "module", "furniture", "nursery", "accessory"), se respeta SIEMPRE sin reescribirse.
+ * 3. Fallback: Si no tiene categoría o es desconocida, se aplican las reglas heurísticas pedagógicas.
  */
 export function classifyProduct(
   title: string,
@@ -13,12 +26,18 @@ export function classifyProduct(
 ): ProductCategory {
   // 1. Prioridad Máxima: Override manual persistido del usuario/admin
   if (id && overrides && overrides[String(id)]) {
-    return overrides[String(id)];
+    const overrideVal = overrides[String(id)];
+    if (VALID_CATEGORIES.includes(overrideVal)) {
+      return overrideVal;
+    }
   }
 
-  // 2. Si la categoría actual ya es explícitamente "furniture" o "nursery" (categorías nuevas), respetarla
-  if (currentCat === "furniture" || currentCat === "nursery") {
-    return currentCat;
+  // 2. Prioridad Absoluta: Si el producto ya tiene asignada una categoría oficial en el backend/catálogo, respetarla SIEMPRE
+  if (currentCat) {
+    const normalized = currentCat.toLowerCase().trim() as ProductCategory;
+    if (VALID_CATEGORIES.includes(normalized)) {
+      return normalized;
+    }
   }
 
   const t = (title || "").toLowerCase();
@@ -98,10 +117,6 @@ export function classifyProduct(
     t.includes("jumpsuit") || t.includes("mono") || t.includes("blanket") || t.includes("manta")
   ) {
     return "accessory";
-  }
-
-  if (currentCat === "set" || currentCat === "module") {
-    return currentCat;
   }
 
   return "accessory";

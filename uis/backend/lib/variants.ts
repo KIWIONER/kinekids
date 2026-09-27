@@ -366,10 +366,14 @@ export function groupCuratedProducts(products: any[]): GroupedProduct[] {
     const repImage = rep.image_url || rep.imageUrl || "";
     const variantFallbackImage = variants.find((v) => v.imageUrl && v.imageUrl.trim() !== "")?.imageUrl || "";
 
+    const resolvedCategory = items.find((i) => i.category === "set")?.category ||
+      items.find((i) => i.category && i.category !== "accessory")?.category ||
+      rep.category;
+
     grouped.push({
       id: rep.id,
       title: baseName,
-      category: rep.category,
+      category: resolvedCategory,
       price: getCuratedPrice(rep),
       description: rep.description || "",
       imageUrl: repImage || variantFallbackImage,

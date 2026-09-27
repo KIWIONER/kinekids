@@ -1,29 +1,54 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import Image from "next/image";
-import { Sparkles, Check, Plus } from "lucide-react";
-import { Product } from "@/lib/ports/catalog.port";
+import Link from "next/link";
+import { Plus, Check, Sparkles } from "lucide-react";
+import { Product } from "@/types";
 import { useCart } from "@/store/useCart";
-import { parseProductTitle } from "@/lib/variants";
 
 interface ProductCardProps {
   product: Product;
 }
 
+function parseProductTitle(rawTitle: string) {
+  const parts = rawTitle.split(" - ");
+  if (parts.length > 1) {
+    const ageOrSpec = parts.pop()?.trim() || "";
+    return {
+      baseName: parts.join(" - ").trim(),
+      subtitle: ageOrSpec,
+    };
+  }
+  return {
+    baseName: rawTitle.trim(),
+    subtitle: null,
+  };
+}
+
 export default function ProductCard({ product }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(
-    product.variants && product.variants.length > 0 ? product.variants[0].id : null
-  );
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
-
-  const addItem = useCart((state) => state.addItem);
+  const { addItem } = useCart();
 
   const activeProduct =
-    product.variants && product.variants.length > 0 && selectedVariantId
-      ? product.variants.find((v) => v.id === selectedVariantId) || product
+    product.variants && product.variants.length > 0
+      ? {
+          ...product,
+          ...product.variants[selectedVariantIndex],
+          price: product.variants[selectedVariantIndex].price ?? product.price,
+          imageUrl:
+            product.variants[selectedVariantIndex].imageUrl ||
+            (product.variants[selectedVariantIndex] as any).image_url ||
+            product.imageUrl ||
+            (product as any).image_url,
+          title: `${product.title}${
+            product.variants[selectedVariantIndex].title
+              ? ` - ${product.variants[selectedVariantIndex].title}`
+              : ""
+          }`,
+        }
       : product;
 
   const displayImageUrl =
@@ -83,6 +108,13 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const { baseName } = parseProductTitle(product.title);
 
+  const handleProductClick = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("kinekids_home_scroll", window.scrollY.toString());
+      sessionStorage.setItem("kinekids_last_product_id", product.id.toString());
+    }
+  };
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -105,7 +137,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div
-      className="group relative bg-white rounded-[28px] border border-[#f0ece6] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between overflow-hidden"
+      id={`product-${product.id}`}
+      onClick={handleProductClick}
+      className="group relative bg-white rounded-[28px] border border-[#f0ece6] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between overflow-hidden scroll-mt-28"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -150,6 +184,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Hover Overlay: VER DETALLES */}
           <Link
             href={`/products/${product.id}`}
+            onClick={handleProductClick}
             className="absolute inset-0 bg-black/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20"
           >
             <span className="bg-[#242424]/90 hover:bg-black text-white text-xs font-bold px-6 py-2.5 rounded-full uppercase tracking-wider shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
@@ -166,7 +201,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
 
           {/* Title */}
-          <Link href={`/products/${product.id}`}>
+          <Link href={`/products/${product.id}`} onClick={handleProductClick}>
             <h3 className="text-base font-bold text-neutral-900 leading-snug line-clamp-1 group-hover:text-[#c48b5f] transition-colors mb-2">
               {baseName}
             </h3>

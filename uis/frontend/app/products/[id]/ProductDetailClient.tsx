@@ -321,6 +321,13 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
   const rawCategoryString = typeof product.category === "object" ? product.category?.slug || product.category?.name : product.category;
   const canonicalCategorySlug = classifyProduct(product.name, product.description, rawCategoryString || "");
   const canonicalCategoryLabel = getCategoryTranslation(canonicalCategorySlug);
+  const handleBackToCatalog = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("kinekids_last_product_id", product.id.toString());
+    }
+    router.push(`/#product-${product.id}`);
+  };
   const categoryLinkHref = getCategoryLink(canonicalCategorySlug, canonicalCategoryLabel);
 
   return (
@@ -386,13 +393,14 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
         <div>
           {/* Breadcrumb Bar */}
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4 border-b border-brand-sand-dark/60">
-            <Link
-              href={categoryLinkHref}
+            <button
+              onClick={handleBackToCatalog}
               className="flex items-center space-x-2 text-brand-charcoal/60 hover:text-brand-charcoal transition-colors text-sm font-semibold group shrink-0 cursor-pointer bg-brand-sand-dark/40 px-3.5 py-1.5 rounded-full hover:bg-brand-clay hover:text-white"
+              aria-label="Volver al catálogo"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Volver al catálogo</span>
-            </Link>
+            </button>
             
             {/* Breadcrumbs */}
             <div className="flex items-center flex-wrap gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-brand-charcoal/40">

@@ -35,3 +35,23 @@
   2. Code splitting y carga perezosa (`next/dynamic`) de `ChatWidget` y `CartDrawer` (~148 KiB de ahorro).
   3. Inlining crítico de CSS y optimización de render-blocking (~40 ms).
   4. Prevención de reflows forzados (*Layout Thrashing*) en componentes con animaciones y scroll.
+
+## 7. Comunicación Comercial con Hertwill (Enviada)
+- **Estado:** Correo enviado a Roland (Hertwill) confirmando la arquitectura Headless (Next.js + WooCommerce Proxy).
+- **Métricas Compartidas:** Volumen inicial estimado de 30-50 pedidos/mes con escalado a 100-150 pedidos/mes.
+- **Próximo Hito:** Espera de luz verde definitiva / validación de cuenta para inicio de ventas en vivo.
+
+## 8. Corrección Crítica de Navegación y Persistencia de Scroll
+- **Causa Raíz:** En `page.tsx`, cada montaje reseteaba `products` a `[]` y activaba `isLoading: true`, desmontando todo el catálogo. La página colapsaba temporalmente de 6000px a 800px, atrapando al navegador en el fondo de la página. El botón "Volver" forzaba una nueva ruta con ancla (`/#cunas-carritos`) en lugar de usar navegación nativa de historial.
+- **Solución Implementada:**
+  1. **Caché Instantáneo de Catálogo en `sessionStorage`:** En `page.tsx`, los productos se cargan inmediatamente en el frame 0 sin spinner ni colapso de altura.
+  2. **Persistencia y Restauración Precisa de Scroll:** En `ProductCard.tsx`, se guarda `window.scrollY` antes de abrir el producto. Al volver, `page.tsx` restaura milimétricamente la posición original o el ancla solicitada.
+  3. **Botón Inteligente "Volver al Catálogo":** En `ProductDetailClient.tsx`, el botón ahora ejecuta `router.back()` priorizando el historial natural del navegador con fallback a ancla si se accede directamente.
+
+
+- **Corrección de persistencia de scroll al volver del detalle de producto**:
+  - Se identificó la causa raíz: el overlay hover "Ver Detalles" no ejecutaba `handleProductClick` y las tarjetas no tenían el ID `product-${product.id}` en el contenedor raíz. Al volver, la URL arrastraba el hash de la categoría (`#accesorios`), lo que provocaba que el navegador hiciera scroll al título de la categoría en lugar del producto exacto.
+  - Se asignó `id={`product-${product.id}`}` y la clase `scroll-mt-28` al contenedor de cada tarjeta en `ProductCard.tsx`.
+  - Se enlazó `handleProductClick` al contenedor completo, a la imagen con overlay hover y al título, almacenando `kinekids_last_product_id` y `kinekids_home_scroll` en `sessionStorage`.
+  - En `ProductDetailClient.tsx`, el botón "Volver al catálogo" redirige a `/#product-${product.id}` con guardado del ID en `sessionStorage`.
+  - En `page.tsx`, la lógica de restauración posiciona el viewport exactamente en la tarjeta del producto (`targetEl.scrollIntoView({ behavior: "instant", block: "center" })`) o en el scroll guardado, ignorando el salto al inicio de la categoría.

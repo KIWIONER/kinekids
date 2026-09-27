@@ -20,15 +20,31 @@ export default function Home() {
   const [categories, setCategories] = useState<CategoryMeta[]>(DEFAULT_CATEGORIES);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Carga garantizada desde la API del servidor (Single Source of Truth)
+  // 1. Carga inmediata desde caché local para evitar parpadeos y preservar scroll al volver
+  useEffect(() => {
+    try {
+      const cached = sessionStorage.getItem("kinekids_catalog_cache");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setProducts(parsed);
+          setIsLoading(false);
+        }
+      }
+      const cachedCats = sessionStorage.getItem("kinekids_cats_cache");
+      if (cachedCats) {
+        const parsedCats = JSON.parse(cachedCats);
+        if (Array.isArray(parsedCats) && parsedCats.length > 0) {
+          setCategories(parsedCats);
+        }
+      }
+    } catch (_) {}
+  }, []);
+
+  // 2. Carga y revalidación en segundo plano desde el servidor
   useEffect(() => {
     async function loadCatalog(isBackground = false) {
       try {
-        if (!isBackground) {
-          setIsLoading(true);
-        }
-
-        // 1. Cargar productos y categorías concurrentemente
         const [productsRes, categoriesRes] = await Promise.all([
           fetch(`/api/products?t=${Date.now()}`, {
             cache: "no-store",
@@ -42,8 +58,11 @@ export default function Home() {
 
         if (productsRes && productsRes.ok) {
           const dbItems = await productsRes.json();
-          if (Array.isArray(dbItems)) {
+          if (Array.isArray(dbItems) && dbItems.length > 0) {
             setProducts(dbItems as any);
+            try {
+              sessionStorage.setItem("kinekids_catalog_cache", JSON.stringify(dbItems));
+            } catch (_) {}
           }
         }
 
@@ -51,19 +70,19 @@ export default function Home() {
           const catData = await categoriesRes.json();
           if (catData.categories && Array.isArray(catData.categories)) {
             setCategories(catData.categories);
+            try {
+              sessionStorage.setItem("kinekids_cats_cache", JSON.stringify(catData.categories));
+            } catch (_) {}
           }
         }
       } catch (err) {
         console.error("Error en la carga del catálogo curado:", err);
       } finally {
-        if (!isBackground) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     }
 
-    // Primera carga inicial con indicador visual
-    loadCatalog(false);
+    loadCatalog(products.length > 0);
 
     // Suscripción en Tiempo Real con Supabase Realtime Channels (Silenciosa en segundo plano)
     let channel: any = null;
@@ -121,6 +140,69 @@ export default function Home() {
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
+
+  
+  // 3. Restauración precisa de scroll y soporte de anclas dinámicas
+  useEffect(() => {
+    if (products.length === 0) return;
+
+    if (typeof window !== "undefined") {
+      const lastProductId = sessionStorage.getItem("kinekids_last_product_id");
+      const savedScroll = sessionStorage.getItem("kinekids_home_scroll");
+      const hash = window.location.hash;
+
+      // Determinamos si hay un producto objetivo (desde sessionStorage o desde hash #product-xxx)
+      let targetProdId = lastProductId;
+      if (!targetProdId && hash && hash.startsWith("#product-")) {
+        targetProdId = hash.replace("#product-", "");
+      }
+
+      if (targetProdId || savedScroll) {
+        const restoreProductPosition = () => {
+          const targetEl = targetProdId ? document.getElementById(`product-${targetProdId}`) : null;
+          const scrollY = savedScroll ? parseInt(savedScroll, 10) : null;
+
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: "instant", block: "center" });
+            return true;
+          } else if (scrollY !== null && !isNaN(scrollY) && scrollY > 0) {
+            window.scrollTo({ top: scrollY, behavior: "instant" });
+            return true;
+          }
+          return false;
+        };
+
+        // Ejecución inmediata y reintentos para asegurar renderizado en el DOM
+        if (!restoreProductPosition()) {
+          const t1 = setTimeout(restoreProductPosition, 50);
+          const t2 = setTimeout(() => {
+            restoreProductPosition();
+            sessionStorage.removeItem("kinekids_last_product_id");
+            sessionStorage.removeItem("kinekids_home_scroll");
+          }, 150);
+          return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+          };
+        } else {
+          sessionStorage.removeItem("kinekids_last_product_id");
+          sessionStorage.removeItem("kinekids_home_scroll");
+        }
+        return;
+      }
+
+      // Prioridad 2: Si el usuario navegó por ancla directa de categoría (#sets, #mobiliario, etc.)
+      if (hash && hash.length > 1 && !hash.startsWith("#product-")) {
+        const targetId = hash.replace("#", "");
+        const el = document.getElementById(targetId);
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 60);
+        }
+      }
+    }
+  }, [products.length]);
 
   const firstAnchor = categories.length > 0 ? `#${categories[0].anchor}` : "#sets";
 

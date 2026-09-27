@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Plus, Check, Sparkles } from "lucide-react";
-import { Product } from "@/types";
+import { Plus, Check, Sparkles, Heart } from "lucide-react";
+import { Product } from "@/app/api/products/route";
 import { useCart } from "@/store/useCart";
+import { useWishlist } from "@/store/useWishlist";
 
 interface ProductCardProps {
   product: Product;
@@ -31,6 +32,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
   const { addItem } = useCart();
+  const toggleWishlistItem = useWishlist((state) => state.toggleItem);
+  const isInWishlist = useWishlist((state) => state.isInWishlist(product.id));
 
   const activeProduct =
     product.variants && product.variants.length > 0
@@ -113,6 +116,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       sessionStorage.setItem("kinekids_home_scroll", window.scrollY.toString());
       sessionStorage.setItem("kinekids_last_product_id", product.id.toString());
     }
+  };
+
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlistItem(activeProduct as Product);
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -215,7 +224,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Footer Card Actions & Price */}
-      <div className="px-5 pb-5 pt-3 bg-white flex items-center justify-between">
+      <div className="px-5 pb-5 pt-3 bg-white flex items-center justify-between gap-2">
         <div>
           <span className="text-[10px] text-neutral-400 block font-bold uppercase tracking-wider">
             INVERSIÓN
@@ -225,27 +234,48 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
 
-        <button
-          onClick={handleAddToCart}
-          className={`px-5 py-2.5 rounded-full font-bold text-xs flex items-center space-x-1.5 transition-all duration-300 cursor-pointer shadow-sm ${
-            isAdded
-              ? "bg-emerald-600 text-white"
-              : "bg-[#242424] hover:bg-black text-white"
-          }`}
-          aria-label="Añadir al carrito"
-        >
-          {isAdded ? (
-            <>
-              <Check className="w-3.5 h-3.5" />
-              <span>¡AÑADIDO!</span>
-            </>
-          ) : (
-            <>
-              <Plus className="w-3.5 h-3.5" />
-              <span>AÑADIR</span>
-            </>
-          )}
-        </button>
+        <div className="flex items-center space-x-2 shrink-0">
+          {/* Botón Lista de Deseos (Corazón) */}
+          <button
+            onClick={handleWishlistToggle}
+            className={`p-2.5 rounded-full transition-all duration-300 cursor-pointer border ${
+              isInWishlist
+                ? "bg-rose-50 border-rose-200 text-rose-500 shadow-xs scale-105"
+                : "bg-stone-50 hover:bg-rose-50 border-[#eee9e0] hover:border-rose-200 text-neutral-400 hover:text-rose-500 shadow-2xs hover:scale-105"
+            }`}
+            aria-label={isInWishlist ? "Quitar de la lista de deseos" : "Añadir a la lista de deseos"}
+            title={isInWishlist ? "Quitar de favoritos" : "Guardar en favoritos"}
+          >
+            <Heart
+              className={`w-4 h-4 transition-all duration-300 ${
+                isInWishlist ? "fill-rose-500 text-rose-500" : ""
+              }`}
+            />
+          </button>
+
+          {/* Botón Añadir al carrito */}
+          <button
+            onClick={handleAddToCart}
+            className={`px-4.5 py-2.5 rounded-full font-bold text-xs flex items-center space-x-1.5 transition-all duration-300 cursor-pointer shadow-sm ${
+              isAdded
+                ? "bg-emerald-600 text-white"
+                : "bg-[#242424] hover:bg-black text-white"
+            }`}
+            aria-label="Añadir al carrito"
+          >
+            {isAdded ? (
+              <>
+                <Check className="w-3.5 h-3.5" />
+                <span>¡AÑADIDO!</span>
+              </>
+            ) : (
+              <>
+                <Plus className="w-3.5 h-3.5" />
+                <span>AÑADIR</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

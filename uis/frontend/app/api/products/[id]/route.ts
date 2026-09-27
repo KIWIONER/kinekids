@@ -5,6 +5,15 @@ import { getCategoryTranslation, getCollectionTranslation, parseProductTitle } f
 
 export const dynamic = "force-dynamic";
 
+const PRODUCT_CUSTOM_IMAGES: Record<string, string[]> = {
+  "10070": [
+    "/images/products/10070/pikler-climbing-triangle-lifestyle-1.jpg",
+    "/images/products/10070/pikler-climbing-triangle-lifestyle-2.jpg",
+    "/images/products/10070/pikler-climbing-triangle-lifestyle-3.jpg",
+    "/images/products/10070/pikler-climbing-triangle-lifestyle-4.jpg",
+  ],
+};
+
 const DEFAULT_HERTWILL_API_KEY = "hw_live_4ZfqPYg29j2gYqT_iJtY3xDKoMmNxxPJU36LJLaN1-w";
 
 export interface RawHertwillProduct {
@@ -56,7 +65,9 @@ export async function GET(
           const p: RawHertwillProduct = json.data;
 
           const allImages: string[] = [];
-          if (p.images?.featured) allImages.push(p.images.featured);
+          const customImgs = PRODUCT_CUSTOM_IMAGES[String(p.id)] || [];
+          for (const ci of customImgs) { if (!allImages.includes(ci)) allImages.push(ci); }
+          if (p.images?.featured && !allImages.includes(p.images.featured)) allImages.push(p.images.featured);
           if (p.images?.gallery?.length) {
             for (const img of p.images.gallery) {
               if (!allImages.includes(img)) allImages.push(img);
@@ -149,7 +160,7 @@ export async function GET(
         brand: { name: dbItem.brand || "KineKids", slug: "kinekids" },
         category: { slug: categorySlug, name: categoryName },
         collections: [{ name: "Infantil & Bebé", slug: "for-kids-baby" }],
-        images: dbItem.imageUrl ? [dbItem.imageUrl] : [],
+        images: Array.isArray((dbItem as any).images) && (dbItem as any).images.length > 0 ? (dbItem as any).images : (PRODUCT_CUSTOM_IMAGES[String(dbItem.id)] || (dbItem.imageUrl ? [dbItem.imageUrl] : [])),
         created_at: new Date().toISOString(),
         variants: curatedVariants.map(v => {
           const { variantName } = parseProductTitle(v.title);

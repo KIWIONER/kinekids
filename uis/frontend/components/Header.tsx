@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingBag, Sparkles } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+import WishlistDropdown from "@/components/WishlistDropdown";
 import { useCart } from "@/store/useCart";
 import { CategoryMeta, DEFAULT_CATEGORIES } from "@/lib/ports/catalog.port";
 
@@ -75,6 +76,9 @@ export default function Header() {
             <Sparkles className="w-3.5 h-3.5 text-brand-clay" />
             <span>Nuestra Filosofía</span>
           </Link>
+
+          {/* Lista de Deseos */}
+          <WishlistDropdown />
 
           {/* Botón Acceso Familias (Portal de Clientes) */}
           <UserMenu />

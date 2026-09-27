@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCart } from "@/store/useCart";
+import { useWishlist } from "@/store/useWishlist";
 import { Product } from "@/lib/ports/catalog.port";
 import { parseProductTitle, getCategoryTranslation, getCollectionTranslation } from "@/lib/variants";
 import { classifyProduct } from "@/lib/classifier";
@@ -14,6 +15,7 @@ import Footer from "@/components/Footer";
 const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 import ProductDescription from "@/components/ProductDescription";
 import {
+  Heart,
   ArrowLeft,
   ShoppingCart,
   Package,
@@ -85,6 +87,8 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
   // Estado del carrito
   const [addedToCart, setAddedToCart] = useState(false);
   const addItem = useCart((state) => state.addItem);
+  const toggleWishlistItem = useWishlist((state) => state.toggleItem);
+  const isInWishlist = useWishlist((state) => (product ? state.isInWishlist(product.id) : false));
 
   useEffect(() => {
     if (!id) return;
@@ -237,6 +241,26 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
     addItem(productToCart);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2500);
+  };
+
+  const handleToggleWishlist = () => {
+    if (!product) return;
+    const retailPrice = getActivePrice();
+    const rawCat = typeof product.category === "object" ? product.category?.slug || product.category?.name : product.category;
+    const resolvedCat = classifyProduct(product.name, product.description, rawCat || "");
+
+    const productItem: Product = {
+      id: product.id,
+      title: product.name,
+      category: resolvedCat,
+      price: retailPrice,
+      description: product.description || "",
+      imageUrl: product.images?.[0] || "",
+      ageRange: "6 meses - 4 años",
+      dimensions: "Medida estándar",
+    };
+
+    toggleWishlistItem(productItem);
   };
 
   const openLightbox = (index: number) => {
@@ -528,26 +552,41 @@ export default function ProductDetailClient({ id }: ProductDetailClientProps) {
                   <span className="text-xs text-brand-charcoal/50 font-medium">PVP Oficial</span>
                 </div>
 
-                <button
-                  onClick={handleAddToCart}
-                  className={`w-full py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 transition-all duration-300 cursor-pointer ${
-                    addedToCart
-                      ? "bg-emerald-600 text-white shadow-md"
-                      : "bg-brand-charcoal hover:bg-brand-clay text-brand-sand-light hover:shadow-lg hover:-translate-y-0.5"
-                  }`}
-                >
-                  {addedToCart ? (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>¡Añadido a la cesta!</span>
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCart className="w-4 h-4" />
-                      <span>Añadir a la cesta</span>
-                    </>
-                  )}
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleAddToCart}
+                    className={`flex-1 py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 transition-all duration-300 cursor-pointer ${
+                      addedToCart
+                        ? "bg-emerald-600 text-white shadow-md"
+                        : "bg-brand-charcoal hover:bg-brand-clay text-brand-sand-light hover:shadow-lg hover:-translate-y-0.5"
+                    }`}
+                  >
+                    {addedToCart ? (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>¡Añadido a la cesta!</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-4 h-4" />
+                        <span>Añadir a la cesta</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={handleToggleWishlist}
+                    className={`p-3.5 rounded-2xl border transition-all duration-300 cursor-pointer flex items-center justify-center shrink-0 ${
+                      isInWishlist
+                        ? "bg-white border-rose-200 text-rose-500 shadow-md scale-105"
+                        : "bg-white/80 hover:bg-white border-brand-sand-dark text-brand-charcoal/60 hover:text-rose-500 hover:border-rose-200 shadow-2xs"
+                    }`}
+                    aria-label={isInWishlist ? "Quitar de la lista de deseos" : "Añadir a la lista de deseos"}
+                    title={isInWishlist ? "Quitar de favoritos" : "Guardar en favoritos"}
+                  >
+                    <Heart className={`w-5 h-5 transition-all ${isInWishlist ? "fill-rose-500 text-rose-500" : ""}`} />
+                  </button>
+                </div>
               </div>
 
               {/* Variantes de Color / Diseño */}

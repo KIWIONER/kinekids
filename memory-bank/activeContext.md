@@ -55,3 +55,10 @@
   - Se enlazó `handleProductClick` al contenedor completo, a la imagen con overlay hover y al título, almacenando `kinekids_last_product_id` y `kinekids_home_scroll` en `sessionStorage`.
   - En `ProductDetailClient.tsx`, el botón "Volver al catálogo" redirige a `/#product-${product.id}` con guardado del ID en `sessionStorage`.
   - En `page.tsx`, la lógica de restauración posiciona el viewport exactamente en la tarjeta del producto (`targetEl.scrollIntoView({ behavior: "instant", block: "center" })`) o en el scroll guardado, ignorando el salto al inicio de la categoría.
+
+- **Implementación de la Lista de Deseos (Wishlist)**:
+  - Creación del store persistente `useWishlist.ts` (Zustand + LocalStorage).
+  - Integración del botón de corazón en las tarjetas de producto (`ProductCard.tsx`), ubicado en el pie de la tarjeta al lado del botón `+ AÑADIR`.
+  - Integración del botón de corazón en el detalle de producto (`ProductDetailClient.tsx`).
+  - Creación del desplegable modal `WishlistDropdown.tsx` siguiendo el diseño del mockup: cabecera con icono rosa de corazón, badge con conteo de guardados, lista de productos con viñeta, título y precio, botón de eliminación rápida y acceso al catálogo completo.
+  - Inclusión del acceso a la Lista de Deseos en la barra de navegación (`Header.tsx`) a la derecha de "Nuestra Filosofía".

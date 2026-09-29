@@ -16,7 +16,7 @@ function notifyFrontendDirectly() {
 import React, { useState, useEffect } from "react";
 import { Search, Plus, Check, RefreshCw, Layers, SlidersHorizontal, PackageOpen, ChevronLeft, ChevronRight, TrendingUp, Pencil, Trash2, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Product } from "@/app/api/products/route";
+import { Product, ProductCategory } from "@/lib/ports/catalog.port";
 import { calculatePricing, formatCurrency, getTierLabel, calculateTarget20MarginPrice, getAmazonBenchmarkPrice } from "@/lib/pricing";
 import { parseProductTitle } from "@/lib/variants";
 import AdminSubHeader from "@/components/AdminSubHeader";
@@ -332,7 +332,7 @@ export default function AdminCatalogPage() {
   };
 
   // 4. Sincronizar / Curar producto en Supabase
-  const handleSyncProduct = async (product: Product, targetCategory?: "set" | "module" | "accessory") => {
+  const handleSyncProduct = async (product: Product, targetCategory?: ProductCategory) => {
     const productToSync = {
       ...(targetCategory ? { ...product, category: targetCategory } : product),
       retail_price_override: priceOverrides[product.id] ?? undefined,
@@ -374,7 +374,7 @@ export default function AdminCatalogPage() {
   };
 
   // Actualizar categoría de posicionamiento de un producto en memoria y persistir si ya está curado
-  const handleUpdateCategory = async (product: Product, newCategory: "set" | "module" | "accessory") => {
+  const handleUpdateCategory = async (product: Product, newCategory: ProductCategory) => {
     const updatedProduct = { ...product, category: newCategory };
     
     // 1. Actualizar estado reactivo local
@@ -401,10 +401,12 @@ export default function AdminCatalogPage() {
           prev.map((item) => (String(item.id) === String(product.id) ? updatedProduct : item))
         );
 
-        const catNames = {
-          set: "Sets Completos (High Ticket)",
-          module: "Módulos de Psicomotricidad (Mid Ticket)",
-          accessory: "Accesorios Sensoriales (Low Ticket)",
+        const catNames: Record<ProductCategory, string> = {
+          set: "Sets de Psicomotricidad (High Ticket)",
+          module: "Módulos & Pikler (Escalada y Trepa)",
+          furniture: "Mobiliario & Estanterías (Montessori)",
+          nursery: "Cunas & Carritos (Descanso y Paseo)",
+          accessory: "Sensorial & Accesorios (Estimulación)",
         };
 
         setMessage({

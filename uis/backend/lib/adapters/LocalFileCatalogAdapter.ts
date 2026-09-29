@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { CatalogRepository, Product } from "../ports/catalog.port";
+import { classifyProduct } from "../classifier";
+import { getCategoryOverrides } from "../category_overrides";
 
 const CATALOG_PATHS = [
   path.join(process.cwd(), "data", "curated_catalog.json"),
@@ -8,6 +10,8 @@ const CATALOG_PATHS = [
   path.join(process.cwd(), "..", "backend", "data", "curated_catalog.json"),
   path.join(process.cwd(), "uis", "backend", "data", "curated_catalog.json"),
   path.join(process.cwd(), "uis", "frontend", "data", "curated_catalog.json"),
+  "/root/proyectos/kinekids-web/uis/backend/data/curated_catalog.json",
+  "/root/proyectos/kinekids-web/uis/frontend/data/curated_catalog.json",
 ];
 
 /**
@@ -17,13 +21,17 @@ const CATALOG_PATHS = [
  */
 export class LocalFileCatalogAdapter implements CatalogRepository {
   async getCuratedProducts(): Promise<Product[]> {
+    const overrides = await getCategoryOverrides();
     for (const cPath of CATALOG_PATHS) {
       try {
         if (fs.existsSync(cPath)) {
           const fileContent = fs.readFileSync(cPath, "utf8");
           const parsed = JSON.parse(fileContent) as Product[];
           if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
+            return parsed.map((p) => ({
+              ...p,
+              category: classifyProduct(p.title || "", p.description || "", p.category || "", overrides, String(p.id))
+            }));
           }
         }
       } catch (_) {}

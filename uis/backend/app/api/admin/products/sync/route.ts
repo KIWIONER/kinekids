@@ -13,6 +13,8 @@ const catalogPaths = [
   path.join(process.cwd(), "..", "backend", "data", "curated_catalog.json"),
   path.join(process.cwd(), "uis", "backend", "data", "curated_catalog.json"),
   path.join(process.cwd(), "uis", "frontend", "data", "curated_catalog.json"),
+  "/root/proyectos/kinekids-web/uis/backend/data/curated_catalog.json",
+  "/root/proyectos/kinekids-web/uis/frontend/data/curated_catalog.json",
 ];
 
 function updateJsonCatalog(product: Product, isDelete: boolean = false) {

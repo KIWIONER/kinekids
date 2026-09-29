@@ -313,3 +313,40 @@ test("Cross-Selling: Deteccion de afinidad de marca y calculo de oferta de pack 
   assert.strictEqual(bundle.bundleTotalPrice, 220); // 148 + 72
   assert.strictEqual(bundle.totalSavings, 13);
 });
+
+test("Benchmark Suite: Clasificacion exacta de las 15 Camas y Muebles Montessori del Usuario", async () => {
+  const { classifyProduct } = await import("../uis/backend/lib/classifier.ts");
+  const { groupCuratedProducts } = await import("../uis/backend/lib/variants.ts");
+
+  const exampleProducts = [
+    { id: "test-1", title: "PLOTTY Single Bed with Front Safety Rail - 90 cm Wide", price: 288 },
+    { id: "test-2", title: "PLOTTY Single Bed with Front Safety Rail - 120-140 cm Wide", price: 310 },
+    { id: "test-3", title: "COTTAGE Raised House Bed with Full Roof and Storage Stairs", price: 1749 },
+    { id: "test-4", title: "MAKALU de Madera Loft Bed with Desk", price: 714 },
+    { id: "test-5", title: "ALPY House Bunk Bed with Ladder", price: 584 },
+    { id: "test-6", title: "SAFARI Jeep de Madera Children's Car Bed", price: 465 },
+    { id: "test-7", title: "LUCKY Single Bed with Open Entrance - 120-140 cm Wide", price: 251 },
+    { id: "test-8", title: "TULY Low de Madera Bed with Safety Rail - 90 cm Wide", price: 364 },
+    { id: "test-9", title: "COTTAGE Loft Bed with Half Roof and Storage Stairs", price: 1575 },
+    { id: "test-10", title: "PLOTTY Bunk Bed with Storage Stairs", price: 1080 },
+    { id: "test-11", title: "LUCKY House Bed with Front Roof and Safety Rail", price: 367 },
+    { id: "test-12", title: "ATLAS de Madera Children's Bunk Bed", price: 534 },
+    { id: "test-13", title: "LUCKY House Bed with Side Roof and Front Safety Rail", price: 370 },
+    { id: "test-14", title: "ARARAT de Madera Bunk Bed for Three", price: 418 },
+    { id: "test-15", title: "COTTAGE Bunk Bed with Half Roof and Storage Stairs", price: 1705 },
+    { id: "test-16", title: "Estantería Modular Montessori Arco (3 Baldas) - Blanco / Madera Tostada", price: 176 },
+  ];
+
+  // 1. Cada producto individual debe clasificarse semanticamente como 'furniture'
+  exampleProducts.forEach(p => {
+    const category = classifyProduct(p.title, "", "");
+    assert.strictEqual(category, "furniture", `"${p.title}" debe clasificarse como furniture`);
+  });
+
+  // 2. Al agrupar variantes, el producto resultante debe preservar la categoria 'furniture'
+  const grouped = groupCuratedProducts(exampleProducts);
+  assert.ok(grouped.length > 0, "Debe agrupar los productos");
+  grouped.forEach(g => {
+    assert.strictEqual(g.category, "furniture", `Grupo "${g.title}" debe ser furniture`);
+  });
+});

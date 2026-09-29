@@ -1,3 +1,5 @@
+import { classifyProduct } from "./classifier";
+import { getCategoryOverrides } from "./category_overrides";
 import { Product } from "./ports/catalog.port";
 import { getCatalogRepository } from "./adapters/index";
 import { calculatePricing } from "@/lib/pricing";
@@ -327,16 +329,11 @@ export async function getHertwillProducts(
       }
     });
 
+    const overrides = await getCategoryOverrides();
     const products = rawProducts.map((p: any) => {
       const wholesalePrice = typeof p.price === "number" ? p.price : parseFloat(p.price || "0");
       const pricing = calculatePricing(wholesalePrice);
-
-      let category: "set" | "module" | "accessory" = "accessory";
-      if (wholesalePrice > 80) {
-        category = "set";
-      } else if (wholesalePrice >= 20) {
-        category = "module";
-      }
+      const category = classifyProduct(p.name || "", p.description || "", "", overrides, String(p.id));
 
       const brandId = p.brand?.slug ? brandSlugToIdMap[p.brand.slug] : null;
       const shippingCost = brandId ? (brandIdToShippingPriceMap[brandId] ?? 14.99) : 14.99;

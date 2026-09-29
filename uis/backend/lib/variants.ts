@@ -1,3 +1,6 @@
+import { classifyProduct } from "./classifier.ts";
+import type { ProductCategory } from "./ports/catalog.port";
+
 export interface ProductVariantInfo {
   id: string;
   title: string;
@@ -11,7 +14,7 @@ export interface ProductVariantInfo {
 export interface GroupedProduct {
   id: string;
   title: string;
-  category: "set" | "module" | "accessory";
+  category: ProductCategory;
   price: number; // PVP / Retail price of the representative variant
   description: string;
   imageUrl: string;
@@ -167,7 +170,6 @@ export function parseProductTitle(title: string): { baseName: string; variantNam
   }
 
   // 1.3 Caso especial: Estanterías Modulares Montessori (One Little Pine)
-  // Dividir en productos separados según baldas/shelves (2, 3, 4 baldas) y asignar color como variante
   if (/Modular Montessori Shelf/i.test(cleanTitle)) {
     const shelfMatch = cleanTitle.match(/(\d+)\s*Shelves/i);
     const shelfNum = shelfMatch ? shelfMatch[1] : "";
@@ -178,7 +180,6 @@ export function parseProductTitle(title: string): { baseName: string; variantNam
     else if (/Straight Mini/i.test(cleanTitle)) shape = "Recta Mini";
     else if (/Straight/i.test(cleanTitle)) shape = "Recta";
 
-    // Extraer color de la última parte tras el último guión
     let colorPart = "";
     const parts = cleanTitle.split(/[-–—]/);
     if (parts.length > 1) {
@@ -222,7 +223,6 @@ export function parseProductTitle(title: string): { baseName: string; variantNam
       variantName: "Madera Natural",
     };
   }
-
 
   // 1.2 Intercepción forzosa para Adventurer y Montessori genérico
   if (cleanTitle.toLowerCase().includes("adventurer")) {
@@ -366,9 +366,9 @@ export function groupCuratedProducts(products: any[]): GroupedProduct[] {
     const repImage = rep.image_url || rep.imageUrl || "";
     const variantFallbackImage = variants.find((v) => v.imageUrl && v.imageUrl.trim() !== "")?.imageUrl || "";
 
-    const resolvedCategory = items.find((i) => i.category === "set")?.category ||
-      items.find((i) => i.category && i.category !== "accessory")?.category ||
-      rep.category;
+    const resolvedCategory: ProductCategory = (rep.category && rep.category !== "accessory")
+      ? rep.category
+      : (items.find((i) => i.category && i.category !== "accessory")?.category || classifyProduct(rep.title, rep.description || "", rep.category || ""));
 
     grouped.push({
       id: rep.id,
@@ -398,7 +398,7 @@ export function getCategoryTranslation(name: string): string {
   if (n === "module" || n === "modules" || n.includes("modulo") || n.includes("módulo") || n.includes("pikler") || n.includes("escalada")) {
     return "Módulos & Pikler";
   }
-  if (n === "furniture" || n.includes("mobiliario") || n.includes("estanter") || n.includes("armario") || n.includes("torre")) {
+  if (n === "furniture" || n.includes("mobiliario") || n.includes("estanter") || n.includes("armario") || n.includes("torre") || n.includes("cama") || n.includes("bed")) {
     return "Mobiliario Montessori";
   }
   if (n === "nursery" || n.includes("cuna") || n.includes("carrit") || n.includes("stroller") || n.includes("crib") || n.includes("pram") || n.includes("cunas & carritos")) {

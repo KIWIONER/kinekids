@@ -133,9 +133,9 @@ export default function AdminCuratedPage() {
 
     map.forEach((items, baseName) => {
       // Determinar categoría del grupo (priorizando asignaciones explícitas)
-      const groupCat = items.find((i) => i.category === "set")?.category ||
+      const groupCat = items[0]?.category ||
         items.find((i) => i.category && i.category !== "accessory")?.category ||
-        items[0]?.category || "accessory";
+        "accessory";
 
       // Recopilar todas las imágenes disponibles en el grupo manteniendo el orden estable
       const imagesSet = new Set<string>();

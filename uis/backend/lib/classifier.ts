@@ -1,4 +1,4 @@
-import { ProductCategory } from "./ports/catalog.port";
+import type { ProductCategory } from "./ports/catalog.port";
 
 const VALID_CATEGORIES: ProductCategory[] = [
   "set",
@@ -13,9 +13,8 @@ const VALID_CATEGORIES: ProductCategory[] = [
  * 
  * Regla de Oro / Single Source of Truth:
  * 1. Prioridad Máxima: Override manual persistido del usuario/admin (por ID).
- * 2. Prioridad Absoluta: Si el producto ya tiene una categoría oficial asignada en backend/catálogo
- *    ("set", "module", "furniture", "nursery", "accessory"), se respeta SIEMPRE sin reescribirse.
- * 3. Fallback: Si no tiene categoría o es desconocida, se aplican las reglas heurísticas pedagógicas.
+ * 2. Inferencia Semántica: Reglas heurísticas pedagógicas basadas en Título y Descripción.
+ * 3. Fallback: Si no hay match semántico pero tiene currentCat válida, se respeta; sino "accessory".
  */
 export function classifyProduct(
   title: string,
@@ -32,19 +31,15 @@ export function classifyProduct(
     }
   }
 
-  // 2. Prioridad Absoluta: Si el producto ya tiene asignada una categoría oficial en el backend/catálogo, respetarla SIEMPRE
-  if (currentCat) {
-    const normalized = currentCat.toLowerCase().trim() as ProductCategory;
-    if (VALID_CATEGORIES.includes(normalized)) {
-      return normalized;
-    }
-  }
-
   const t = (title || "").toLowerCase();
   const d = (desc || "").toLowerCase();
 
-  // 3. Furniture / Mobiliario & Estanterías (65 artículos)
+  // 2. Inferencia Semántica: Furniture / Mobiliario & Estanterías (Camas, Literas, Torres, Estanterías, Mesas, Sillas)
   if (
+    t.includes("bed") || t.includes("cama") || t.includes("bunk") || t.includes("litera") ||
+    t.includes("loft") || t.includes("plotty") || t.includes("cottage") || t.includes("makalu") ||
+    t.includes("alpy") || t.includes("safari") || t.includes("lucky") || t.includes("tuly") ||
+    t.includes("atlas") || t.includes("ararat") ||
     t.includes("tower") || t.includes("torre") || t.includes("kitchen tower") ||
     t.includes("shelf") || t.includes("estanter") || t.includes("bookcase") ||
     t.includes("wardrobe") || t.includes("armario") ||
@@ -60,7 +55,7 @@ export function classifyProduct(
     return "furniture";
   }
 
-  // 4. Nursery / Cunas & Carritos (22 artículos)
+  // 3. Inferencia Semántica: Nursery / Cunas & Carritos
   if (
     t.includes("crib") || t.includes("cuna") ||
     t.includes("dresser") || t.includes("cambiador") ||
@@ -75,7 +70,7 @@ export function classifyProduct(
     return "nursery";
   }
 
-  // 5. Sets / Sets de Psicomotricidad (22 artículos)
+  // 4. Inferencia Semántica: Sets / Sets de Psicomotricidad
   if (
     t.includes("10 foam block") || t.includes("10 bloques") ||
     t.includes("playset with ball pit") || t.includes("ball pit") || t.includes("piscina de bolas") ||
@@ -87,7 +82,7 @@ export function classifyProduct(
     return "set";
   }
 
-  // 6. Modules / Módulos & Pikler (41 artículos)
+  // 5. Inferencia Semántica: Modules / Módulos & Pikler
   if (
     t.includes("pikler") || t.includes("triangle") || t.includes("triángulo") || t.includes("triangulo") ||
     t.includes("ramp") || t.includes("rampa") ||
@@ -106,7 +101,7 @@ export function classifyProduct(
     return "module";
   }
 
-  // 7. Accessories / Sensorial & Accesorios (33 artículos)
+  // 6. Inferencia Semántica: Accessories / Sensorial & Accesorios
   if (
     t.includes("mat") || t.includes("colchoneta") || t.includes("alfombra") ||
     t.includes("pouf") || t.includes("puf") || t.includes("cushion") || t.includes("cojín") ||
@@ -117,6 +112,14 @@ export function classifyProduct(
     t.includes("jumpsuit") || t.includes("mono") || t.includes("blanket") || t.includes("manta")
   ) {
     return "accessory";
+  }
+
+  // 7. Si no hay coincidencia semántica pero el producto traía una categoría válida previa
+  if (currentCat) {
+    const normalized = currentCat.toLowerCase().trim() as ProductCategory;
+    if (VALID_CATEGORIES.includes(normalized)) {
+      return normalized;
+    }
   }
 
   return "accessory";

@@ -1,4 +1,5 @@
 import os
+import secrets
 from typing import Optional, Dict, Any
 from fastapi import FastAPI, Header, HTTPException, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,14 +25,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-INTERNAL_SECRET_TOKEN = os.getenv("KINEKIDS_INTERNAL_TOKEN", "kinekids_secure_internal_token_2026")
+INTERNAL_SECRET_TOKEN = os.getenv("KINEKIDS_INTERNAL_TOKEN")
 client = HertwillClient()
 
 def verify_internal_token(x_internal_token: Optional[str] = Header(None)):
     """
     Middleware de seguridad Red Team: Protege endpoints privados contra invocaciones no autorizadas.
     """
-    if not x_internal_token or x_internal_token != INTERNAL_SECRET_TOKEN:
+    if not INTERNAL_SECRET_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error de configuración: KINEKIDS_INTERNAL_TOKEN no está definido en las variables de entorno.",
+        )
+    if not x_internal_token or not secrets.compare_digest(x_internal_token, INTERNAL_SECRET_TOKEN):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Acceso Denegado: Cabecera X-Internal-Token inválida o ausente.",

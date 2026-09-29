@@ -9,6 +9,8 @@ const OVERRIDE_PATHS = [
   path.join(process.cwd(), "..", "backend", "data", "category_overrides.json"),
   path.join(process.cwd(), "uis", "backend", "data", "category_overrides.json"),
   path.join(process.cwd(), "uis", "frontend", "data", "category_overrides.json"),
+  "/root/proyectos/kinekids-web/uis/backend/data/category_overrides.json",
+  "/root/proyectos/kinekids-web/uis/frontend/data/category_overrides.json",
 ];
 
 export async function getCategoryOverrides(): Promise<Record<string, ProductCategory>> {

@@ -12,7 +12,7 @@ import ChatCTAButton from "@/components/ChatCTAButton";
 
 const ChatWidget = dynamic(() => import("@/components/ChatWidget"), { ssr: false });
 const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
-import HeroToyPattern from "@/components/HeroToyPattern";
+const HeroToyPattern = dynamic(() => import("@/components/HeroToyPattern"), { ssr: false });
 import { Product } from "@/lib/ports/catalog.port";
 import { CategoryMeta, DEFAULT_CATEGORIES } from "@/lib/ports/catalog.port";
 import { supabase } from "@/lib/supabase";

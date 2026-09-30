@@ -64,7 +64,7 @@ function SuccessContent() {
           </div>
           <div className="flex items-center space-x-2">
             <Truck className="w-4 h-4 text-brand-sage shrink-0" />
-            <span>Plazo estimado: <strong>3-5 días laborables</strong></span>
+            <span>Plazo estimado: <strong>5-7 días laborables</strong></span>
           </div>
           <div className="flex items-center space-x-2">
             <HeartHandshake className="w-4 h-4 text-brand-charcoal shrink-0" />

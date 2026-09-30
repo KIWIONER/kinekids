@@ -229,8 +229,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-[10px] text-neutral-400 block font-bold uppercase tracking-wider">
             INVERSIÓN
           </span>
-          <span className="text-xl font-extrabold text-neutral-900 tracking-tight">
-            {getDisplayPrice()}
+          <span className={`text-xl font-extrabold tracking-tight ${(product as any).stock_status === "outofstock" ? "text-red-500 line-through" : "text-neutral-900"}`}>
+            {(product as any).stock_status === "outofstock" ? "No Disponible" : getDisplayPrice()}
           </span>
         </div>
 
@@ -254,6 +254,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
 
           {/* Botón Añadir al carrito */}
+          {(product as any).stock_status === "outofstock" ? (
+            <button
+              disabled
+              className="px-4.5 py-2.5 rounded-full font-bold text-xs flex items-center space-x-1.5 transition-all duration-300 shadow-sm bg-red-100 text-red-600 cursor-not-allowed opacity-80"
+              aria-label="Agotado"
+            >
+              <PackageX className="w-3.5 h-3.5" />
+              <span>AGOTADO</span>
+            </button>
+          ) : (
           <button
             onClick={handleAddToCart}
             className={`px-4.5 py-2.5 rounded-full font-bold text-xs flex items-center space-x-1.5 transition-all duration-300 cursor-pointer shadow-sm ${
@@ -275,6 +285,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               </>
             )}
           </button>
+          )}
         </div>
       </div>
     </div>

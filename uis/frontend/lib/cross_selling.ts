@@ -132,6 +132,9 @@ export function getBrandCompatibleAddons(
     const itemBase = getNormalizedBase(item.title);
     if (itemBase === targetBase && itemBase.length > 5) return false;
 
+    // REQUISITO: El producto de complemento SOLO puede ser de la categoría accesorio
+    if ((item.category || "").toLowerCase() !== "accessory") return false;
+
     return true;
   });
 

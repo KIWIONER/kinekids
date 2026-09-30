@@ -36,3 +36,33 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# -----------------------------------
+# KINEKIDS DEBUG & SECRETS PREVENTION
+# -----------------------------------
+# Ignorar todos los scripts temporales de parcheo y testeo en la raíz
+*.log
+debug_*.py
+fix_*.py
+patch_*.py
+test_*.py
+check_*.py
+trigger_*.js
+*.pyc
+
+# Ignorar archivos locales de entorno por seguridad
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+
+# Ignorar base de datos local si existe
+*.sqlite
+*.db
+
+# Ignorar cualquier otro archivo temporal de scratch
+scratch/
+tmp/
+

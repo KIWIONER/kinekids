@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Sparkles, ArrowDown, ShieldCheck, Heart, Leaf, PackageOpen } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useSearchParams, Suspense } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -16,7 +17,7 @@ import { Product } from "@/lib/ports/catalog.port";
 import { CategoryMeta, DEFAULT_CATEGORIES } from "@/lib/ports/catalog.port";
 import { supabase } from "@/lib/supabase";
 
-export default function Home() {
+function HomeContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<CategoryMeta[]>(DEFAULT_CATEGORIES);
   const searchParams = useSearchParams();
@@ -360,5 +361,14 @@ export default function Home() {
       <Footer />
       <CartDrawer />
     </div>
+  );
+}
+
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-brand-sand flex items-center justify-center"><div className="w-8 h-8 border-2 border-brand-clay border-t-transparent rounded-full animate-spin" /></div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

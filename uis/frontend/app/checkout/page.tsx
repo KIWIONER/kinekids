@@ -71,17 +71,30 @@ export default function CheckoutPage() {
     setIsProcessing(true);
     setProcessingStep("Verificando credenciales bancarias...");
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setProcessingStep("Autorizando transacción en pasarela Stripe Sandbox...");
     }, 1200);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setProcessingStep("Registrando orden dropshipping en Hertwill...");
     }, 2400);
 
-    setTimeout(() => {
-      const orderId = `KK-${Math.floor(100000 + Math.random() * 900000)}`;
-      router.push(`/checkout/success?orderId=${orderId}`);
+    setTimeout(async () => {
+      
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ formData, items })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Error al procesar el pedido en WooCommerce");
+      }
+      
+      router.push(`/checkout/success?orderId=${data.orderId}`);
+
     }, 3600);
   };
 

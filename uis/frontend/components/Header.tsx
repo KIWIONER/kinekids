@@ -115,7 +115,7 @@ export default function Header() {
           {categories.map((cat) => (
             <Link
               key={cat.id}
-              href={`/#${cat.anchor}`}
+              href={`/?cat=${cat.id}`}
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold text-brand-charcoal/80 hover:text-brand-charcoal bg-white/70 hover:bg-white border border-brand-sand-dark/70 hover:border-brand-clay/40 transition-all whitespace-nowrap shadow-2xs hover:shadow-xs hover:scale-[1.02]"
             >
               <span className="text-sm">{cat.icon}</span>

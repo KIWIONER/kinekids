@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Sparkles, ArrowDown, ShieldCheck, Heart, Leaf, PackageOpen } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useSearchParams, Suspense } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -18,6 +19,8 @@ import { supabase } from "@/lib/supabase";
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<CategoryMeta[]>(DEFAULT_CATEGORIES);
+  const searchParams = useSearchParams();
+  const activeCategory = searchParams ? searchParams.get("cat") : null;
   const [isLoading, setIsLoading] = useState(true);
 
   // 1. Carga inmediata desde caché local para evitar parpadeos y preservar scroll al volver
@@ -306,7 +309,9 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-24">
-            {categories.map((cat) => {
+            {categories
+              .filter((cat) => !activeCategory || cat.id === activeCategory)
+              .map((cat) => {
               const catProducts = products.filter((p) => (p.category || "accessory") === cat.id);
               if (catProducts.length === 0) return null;
 
@@ -349,9 +354,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Floating AI Pedagogical Assistant Widget & CTA */}
-      <ChatWidget />
-      <ChatCTAButton />
+
 
       {/* 6. Footer */}
       <Footer />

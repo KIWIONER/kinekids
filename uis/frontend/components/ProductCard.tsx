@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Plus, Check, Sparkles, Heart } from "lucide-react";
+import { Plus, Check, Sparkles, Heart, PackageX } from "lucide-react";
 import { Product } from "@/app/api/products/route";
 import { useCart } from "@/store/useCart";
 import { useWishlist } from "@/store/useWishlist";

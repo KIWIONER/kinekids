@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     shortcut: "/favicon.svg",
     apple: "/favicon.svg",
   },
+  verification: {
+    other: {
+      "p:domain_verify": "4f2d892bb52eda2965361e374656be3c"
+    }
+  }
 };
 
 export default function RootLayout({
